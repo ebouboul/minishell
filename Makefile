@@ -1,39 +1,32 @@
-# Variables
+# Define variables
 NAME = minishell
-LIBFT = libft/libft.a
-CC = gcc
+SRC_NAME = tokenizer.c main.c parser.c
+OBJ_NAME = $(SRC_NAME:.c=.o)
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
-LDFLAGS = -lreadline
-SRCS = minishell.c
-OBJS = $(SRCS:.c=.o)
-LIBFT_DIR = libft
-INCLUDES = -I includes -I $(LIBFT_DIR)/includes
+LIBFT_DIR = ./libft
+LIBFT = $(LIBFT_DIR)/libft.a
+LIBFT_INC = $(LIBFT_DIR)/libft.h
 
-# Rules
+# Define the rules
 all: $(LIBFT) $(NAME)
 
 $(LIBFT):
-	@echo "$(GREEN)Compiling libft...$(NC)"
 	@$(MAKE) -C $(LIBFT_DIR)
 
-$(NAME): $(OBJS)
-	@echo "$(GREEN)Compiling $(NAME)...$(NC)"
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
-	@echo "$(GREEN)$(NAME) is ready!$(NC)"
+$(NAME): $(OBJ_NAME) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ_NAME) $(LIBFT) -o $@
 
 %.o: %.c
-	@echo "$(GREEN)Compiling $<...$(NC)"
-	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@echo "$(RED)Cleaning object files...$(NC)"
-	@rm -f $(OBJS)
-	@$(MAKE) -C $(LIBFT_DIR) clean
+	@rm -f $(OBJ_NAME)
+	@$(MAKE) clean -C $(LIBFT_DIR)
 
 fclean: clean
-	@echo "$(RED)Cleaning all files...$(NC)"
 	@rm -f $(NAME)
-	@$(MAKE) -C $(LIBFT_DIR) fclean
+	@$(MAKE) fclean -C $(LIBFT_DIR)
 
 re: fclean all
 
