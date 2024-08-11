@@ -1,0 +1,34 @@
+4. check double quots ?
+
+
+1 parse error
+2 expand values from env and handle ?
+3 remove quotes while removing the meaning of the meta-characters
+4 pass the struct of cmd and args with no redirections
+5 pass the redirection struct to the executionner
+
+
+struct of cmds
+
+
+---------------
+| char **cmds;           //ls
+| env 
+| env_cp
+| redirection_struct *redirection;
+| Node *next;// NON_NULL
+---------------
+
+
+---------------
+| char *file_name;//file
+| int   type_of _redirection; // red_out
+| redirection_s *next;
+---------------
+
+env 
+---------------
+| char *key;//file
+| char *value; // red_out
+| env *next;
+---------------

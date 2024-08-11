@@ -1,7 +1,4 @@
 #include "minishell.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 TokenNode *create_node(TokenInfo token)
 {
@@ -42,4 +39,43 @@ void print_linked_list(TokenNode *head)
         printf("Token: %s, Type: %d\n", current->info.value, current->info.type);
         current = current->next;
     }
+}
+void free_linked_list(TokenNode *head)
+{
+    TokenNode *current = head;
+    TokenNode *next;
+    while (current != NULL) {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+}
+int is_special_redc(char c) 
+{
+    return  c == '<' || c == '>';
+}
+
+char *ft_strjoin1(char c, char *s)
+{
+    char *result = (char*)malloc(strlen(s) + 2);
+    if (result == NULL) {
+        perror("Memory allocation failed\n");
+        exit(1);
+    }
+    result[0] = c;
+    strcpy(result + 1, s);
+    return result;
+}
+
+
+char **split_by_quots(char *input, char c)
+{
+    char **result = ft_split(input, c);
+    int i = 0;
+    while (result[i]) {
+        result[i] = ft_strjoin(result[i], result[i + 1]);
+        i++;
+    }
+    return result;
+
 }

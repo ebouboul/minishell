@@ -1,6 +1,6 @@
 # Define variables
 NAME = minishell
-SRC_NAME = tokenizer.c main.c parser.c
+SRC_NAME = tokenizer.c main.c parser.c parser_space_quotes.c
 OBJ_NAME = $(SRC_NAME:.c=.o)
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
@@ -15,7 +15,7 @@ $(LIBFT):
 	@$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME): $(OBJ_NAME) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJ_NAME) $(LIBFT) -o $@
+	$(CC) $(CFLAGS) $(OBJ_NAME) $(LIBFT) -lreadline -o $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

@@ -11,10 +11,6 @@ int is_special_char(char c)
     return c == '|' || c == '<' || c == '>' || c == '&' || c == ';';
 }
 
-int is_special_redc(char c) 
-{
-    return  c == '<' || c == '>';
-}
 int ft_strcmp(char *s1, char *s2)
 {
     int i;
@@ -59,7 +55,7 @@ TokenInfo *tokenizer(char **inputs)
         return NULL;
     }
     
-    while (inputs[j]) // ls -la >> text.txt
+    while (inputs[j])
     {
         i = 0;
         int k = 0;

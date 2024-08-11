@@ -5,6 +5,7 @@
 #include "./libft/libft.h"
 #include <readline/readline.h>
 #include <readline/history.h>
+
 #ifndef MINISHELL_H
 #define MINISHELL_H
 
@@ -47,12 +48,12 @@ int is_space(char c);
 TokenNode *ArrayIntoNodes(TokenInfo *tokens);
 TokenNode *create_node(TokenInfo token);
 void print_linked_list(TokenNode *head);
-
-////SYntax Error
-// Double quotes 
-// Special characters must be in middle 
-// 
-
-
+void free_linked_list(TokenNode *head);
+int check_syntax(TokenNode *head);
+int check_special_chars(TokenNode *head);
+void add_spaces(char *input);
+int check_quotes(TokenNode *head, char c);
+int check_quotes_spiclal_chars(TokenNode *head, char c);
+char **split_by_quots(char *input, char c);
 #endif
 
