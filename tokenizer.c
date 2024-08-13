@@ -22,19 +22,20 @@ int ft_strcmp(char *s1, char *s2)
 }
 
 
-TokenType get_token_type(char *c) {
+TokenType get_token_type(char *c) 
+{
     if (ft_strcmp(c, "|") == 0)
         return TOKEN_PIPE;
-         else if (ft_strcmp(c, ">>") == 0)
+    else if (ft_strcmp(c, ">>") == 0)
         return TOKEN_APPEND; 
     else if (ft_strcmp(c, "<") == 0)
         return TOKEN_REDIRECT_IN;
     else if (ft_strcmp(c, ">") == 0)
         return TOKEN_REDIRECT_OUT;
-    else if (ft_strcmp(c, "&") == 0)
-        return TOKEN_AND;
     else if (ft_strcmp(c, ";") == 0)
         return TOKEN_SEMICOLON;
+    else if (ft_strcmp(c, "<<") == 0)
+        return TOKEN_HEREDOC;
 
     else
         return TOKEN_COMMAND;
@@ -48,7 +49,8 @@ TokenInfo *tokenizer(char **inputs)
     i = 0; 
     j = 0;
     token_count = 0;
-    TokenInfo *tokens = malloc((100 ) * sizeof(TokenInfo)); 
+    TokenInfo *tokens = malloc((100) * sizeof(TokenInfo)); 
+
     if (!tokens) 
     {
         perror("Memory allocation failed\n");
@@ -76,7 +78,7 @@ TokenInfo *tokenizer(char **inputs)
                             token_count++;
                         }
                         else if(token_count > 0 &&(tokens[token_count - 1].type == TOKEN_REDIRECT_IN || tokens[token_count - 1].type == TOKEN_REDIRECT_OUT || 
-                        tokens[token_count - 1].type == TOKEN_APPEND))
+                        tokens[token_count - 1].type == TOKEN_APPEND || tokens[token_count - 1].type == TOKEN_HEREDOC))
                         {
                             tokens[token_count].type = TOKEN_FILE;
                             while(inputs[j][k])
@@ -85,7 +87,16 @@ TokenInfo *tokenizer(char **inputs)
                             tokens[token_count].value[k] = '\0';
                             }
                             token_count++;
-
+                        }
+                        else if(token_count > 0 &&(tokens[token_count - 1].type == TOKEN_FILE))
+                        {
+                            tokens[token_count].type = TOKEN_ARG;
+                            while(inputs[j][k])
+                            {
+                            tokens[token_count].value[k++] = inputs[j][i++];
+                            tokens[token_count].value[k] = '\0';
+                            }
+                            token_count++;
                         }
                         else if(token_count > 0 &&(tokens[token_count - 1].type == TOKEN_COMMAND))
                         {
@@ -110,6 +121,7 @@ TokenInfo *tokenizer(char **inputs)
         j++;
     }
     
+    // tokens[token_count].value = malloc(1);
 
     tokens[token_count].type = TOKEN_EOF;
     tokens[token_count].value[0] = '\0';

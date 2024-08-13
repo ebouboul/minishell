@@ -14,20 +14,18 @@ TokenNode *create_node(TokenInfo token)
 
 TokenNode *ArrayIntoNodes(TokenInfo *tokens)
 {
-    if (tokens == NULL || tokens[0].type == TOKEN_EOF) {
+    if (tokens == NULL || tokens[0].type == TOKEN_EOF) 
         return NULL;
-    }
-
     TokenNode *head = create_node(tokens[0]);
     TokenNode *current = head;
     int i = 1;
 
-    while (tokens[i].type != TOKEN_EOF) {
+    while (tokens[i].type != TOKEN_EOF) 
+    {
         current->next = create_node(tokens[i]);
         current = current->next;
         i++;
     }
-
     return head;
 }
 
@@ -35,7 +33,8 @@ TokenNode *ArrayIntoNodes(TokenInfo *tokens)
 void print_linked_list(TokenNode *head)
 {
     TokenNode *current = head;
-    while (current != NULL) {
+    while (current != NULL) 
+    {
         printf("Token: %s, Type: %d\n", current->info.value, current->info.type);
         current = current->next;
     }
@@ -79,3 +78,61 @@ char **split_by_quots(char *input, char c)
     return result;
 
 }
+
+
+// char **split_by_quots(char **input, char c)
+// {
+//     char **result;
+//     int k = 0;
+//     while(input[k])
+//     {
+//         result = ft_split(input[k], c);
+//         k++;
+//     }
+//     int i = 0;
+//     while (result[i]) {
+//         result[i] = ft_strjoin(result[i], result[i + 1]);
+//         i++;
+//     }
+//     return result;
+
+// }
+
+int truck_quots(char *input, char c)
+{
+    int i;
+    int k;
+    i = 0;
+    k = 0;
+    while(input[i])
+    {
+        if (input[i] == c)
+            k++;
+        i++;
+    }
+    if(k % 2 != 0)
+        {
+            printf("syntax Error: --%c--\n", c);
+            return 1;
+        }
+    else
+        return 0;
+}
+
+// int check_RRAH(TokenNode *head)
+// {
+//     TokenNode *current = head;
+//     while (current != NULL) {
+//         if (current->info.type == TOKEN_APPEND || current->info.type == TOKEN_REDIRECT_OUT 
+//         || current->info.type == TOKEN_REDIRECT_IN || current->info.type == HEREDOC)
+//         {
+//             if (current->next == NULL || current->next->info.type != TOKEN_FILE)
+//             {
+//                 printf("syntax Error: --%s--\n", current->info.value);
+//                 return 1;
+//             }
+//         }
+//         current = current->next;
+//     }
+//     return 0;
+// }

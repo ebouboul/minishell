@@ -22,15 +22,13 @@ typedef enum
     TOKEN_APPEND,
     TOKEN_FILE,
     TOKEN_SEMICOLON,
-    TOKEN_AND,
-    TOKEN_OR,
     TOKEN_EOF,
-    HEREDOC
+    TOKEN_HEREDOC
 } TokenType;
 
 typedef struct 
 {
-    char value[MAX_TOKEN_LENGTH];
+    char value[2];
     TokenType type;
     int token_count;
 } TokenInfo;
@@ -40,6 +38,20 @@ typedef struct TokenNode
     TokenInfo info;
     struct TokenNode *next;
 } TokenNode;
+
+typedef struct 
+{
+    char *key;
+    char *value;
+} env;
+
+typedef struct t_env
+{
+    env *env;
+    // int *index;
+   struct t_env *next;
+} t_env;
+
 
 TokenInfo *tokenizer(char **inputs);
 TokenType get_token_type(char *c);
@@ -55,5 +67,18 @@ void add_spaces(char *input);
 int check_quotes(TokenNode *head, char c);
 int check_quotes_spiclal_chars(TokenNode *head, char c);
 char **split_by_quots(char *input, char c);
+int truck_quots(char *input, char c);
+void unset_env(char **env, char *input);
+// void export_env(char **env, char *var);
+void fill_env_list(char **env, t_env *env_list);
+void print_env_list(t_env *env_list);
+int check_key_if_deja(t_env *env_list, char *var);
+// int check_RRAH(TokenNode *head);
+int check_special_validity(TokenNode *head);
+int check_syntax_special_Face_to_Face(TokenNode *head);
+char *check_value_env(char *str, t_env *head);
+void expansion_process(TokenNode *head, t_env *key);
+
+
 #endif
 

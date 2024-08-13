@@ -1,6 +1,6 @@
 # Define variables
 NAME = minishell
-SRC_NAME = tokenizer.c main.c parser.c parser_space_quotes.c
+SRC_NAME = tokenizer.c main.c parser.c parser_space_quotes.c env.c expander.c
 OBJ_NAME = $(SRC_NAME:.c=.o)
 CC = cc
 CFLAGS = -Wall -Wextra -Werror

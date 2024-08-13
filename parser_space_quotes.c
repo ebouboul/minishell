@@ -64,7 +64,7 @@ int check_quotes_spiclal_chars(TokenNode *head, char c)
     }
     return 0;
 }
-int check_syntax(TokenNode *head)
+int check_syntax_double_commands(TokenNode *head)
 {
     TokenNode *current = head;
     while (current != NULL) {
@@ -81,14 +81,73 @@ int check_syntax(TokenNode *head)
 int check_special_chars(TokenNode *head)
 {
     TokenNode *current = head;
-    if (current->info.type == TOKEN_PIPE || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT || current->info.type == TOKEN_APPEND || current->info.type == TOKEN_SEMICOLON || current->info.type == TOKEN_AND || current->info.type == TOKEN_OR) {
+    if (current->info.type == TOKEN_PIPE || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT || current->info.type == TOKEN_APPEND || current->info.type == TOKEN_SEMICOLON ) 
+    {
         printf("Syntax Error: Special character at the beginning of the command\n");
         return 1;
     }
     while (current != NULL) {
-        if (current->info.type == TOKEN_PIPE || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT || current->info.type == TOKEN_APPEND || current->info.type == TOKEN_SEMICOLON || current->info.type == TOKEN_AND || current->info.type == TOKEN_OR) {
+        if (current->info.type == TOKEN_PIPE || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT || current->info.type == TOKEN_APPEND || current->info.type == TOKEN_SEMICOLON || current->info.type == TOKEN_HEREDOC) 
+        {
             if (current->next == NULL) {
                 printf("Syntax Error: Special character at the end of the command\n");
+                return 1;
+            }
+        }
+        current = current->next;
+    }
+    return 0;
+}
+int check_syntax_double_special_charcters(TokenNode *head)
+{
+    TokenNode *current = head;
+    while (current != NULL) {
+        if (current->info.type == TOKEN_APPEND || current->info.type == TOKEN_HEREDOC || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT) 
+        {
+            if (current->next != NULL && current->next->info.type == TOKEN_FILE) 
+            {
+                printf("Syntax Error: Two specials in a row\n");
+                return 1;
+            }
+        }
+        current = current->next;
+    }
+    return 0;
+}
+int check_syntax_special_Face_to_Face(TokenNode *head)
+{
+    TokenNode *current = head;
+    while (current != NULL) {
+        if (current->info.type == TOKEN_APPEND || current->info.type == TOKEN_HEREDOC || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT) 
+        {
+            if ((current->next != NULL && current->next->info.type == TOKEN_APPEND) || (current->next != NULL && current->next->info.type == TOKEN_HEREDOC) || (current->next != NULL && current->next->info.type == TOKEN_REDIRECT_IN)|| (current->next != NULL && current->next->info.type == TOKEN_REDIRECT_OUT)) 
+            {
+                printf("Syntax Error: Face to Face\n");
+                return 1;
+            }
+        }
+        else if (current->info.type == TOKEN_PIPE)
+            {
+                if(current->next->info.type == TOKEN_PIPE)
+                {
+                    printf("Syntax Error: Pipe to Pipe\n");
+                    return 1;
+                }
+            }
+        current = current->next;
+    }
+    return 0;
+}
+int check_special_validity(TokenNode *head)
+{
+    TokenNode *current = head;
+    while (current != NULL) 
+    {
+        if (current->info.type == TOKEN_COMMAND) 
+        {
+            if (strchr(current->info.value, '<') || strchr(current->info.value, '>')) 
+            {
+                printf("Syntax Error: Two specials in a row\n");
                 return 1;
             }
         }
