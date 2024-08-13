@@ -19,7 +19,6 @@ char* check_value_env(char *str, t_env *head)
 void expansion_process(TokenNode *head, t_env *key)
 {
     TokenNode *current = head;
-    (void) key;
     while(current)
     {
         if(current->info.value[0] == '$')

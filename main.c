@@ -68,7 +68,7 @@ int main(int argc, char **argv, char **env)
         // check_syntax(list_head);
         // check_quotes(list_head, '"');
         // check_quotes(list_head, '\'');
-        // expansion_process(list_head, env_list);
+        expansion_process(list_head, env_list);
         print_linked_list(list_head);
         // check_quotes_spiclal_chars(list_head, '"');
         // check_quotes_spiclal_chars(list_head, '\'');
