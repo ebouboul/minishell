@@ -41,8 +41,11 @@ int main(int argc, char **argv, char **env)
         // }
         truck_quots(input, '"');
         truck_quots(input, '\'');
+        replace_quotes_by_spaces_and_join(input, 0);
+
         add_spaces(input);
         inp = ft_split(input, ' ');
+
         // char **sp = split_by_quots(input, '"');
         // char **sp2 = split_by_quots(input, '\'');
         // int i = 0;
@@ -65,17 +68,18 @@ int main(int argc, char **argv, char **env)
         }
         // check_RRAH(list_head);
         check_special_chars(list_head);
+        fill_env_list(env, env_list);
         // check_syntax(list_head);
         // check_quotes(list_head, '"');
         // check_quotes(list_head, '\'');
         expansion_process(list_head, env_list);
         print_linked_list(list_head);
-        // check_quotes_spiclal_chars(list_head, '"');
-        // check_quotes_spiclal_chars(list_head, '\'');
+        // // check_quotes_spiclal_chars(list_head, '"');
+        // // check_quotes_spiclal_chars(list_head, '\'');
         check_special_validity(list_head);
         check_syntax_special_Face_to_Face(list_head);
-        fill_env_list(env, env_list);
-        check_value_env(inp[0], env_list);
+
+        // check_value_env(inp[0], env_list);
 
     }
 

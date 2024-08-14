@@ -6,15 +6,14 @@ char* check_value_env(char *str, t_env *head)
     char *val;
     while(current != NULL)
     {
-        if(strcmp(current->env->key, str +1 ) == 0)
+        if(strcmp(current->env->key, str + 1) == 0)
         {
-            printf("%s\n", current->env->key);
             val = current->env->value;
             return val;
         }
         current = current->next;
     }
-    return NULL;
+    return str;
 }
 void expansion_process(TokenNode *head, t_env *key)
 {
@@ -28,3 +27,4 @@ void expansion_process(TokenNode *head, t_env *key)
         current = current->next;
     }
 }
+

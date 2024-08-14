@@ -128,7 +128,7 @@ int check_syntax_special_Face_to_Face(TokenNode *head)
         }
         else if (current->info.type == TOKEN_PIPE)
             {
-                if(current->next->info.type == TOKEN_PIPE)
+                if(current->next == NULL || current->next->info.type == TOKEN_PIPE )
                 {
                     printf("Syntax Error: Pipe to Pipe\n");
                     return 1;
@@ -155,3 +155,37 @@ int check_special_validity(TokenNode *head)
     }
     return 0;
 }
+void replace_quotes_by_spaces_and_join(char *input, int closed)
+{
+    int i = 0;
+    int j = 0;
+    
+    while (!closed && input[i] != '\0') 
+    {
+        if (input[i] == '"' || input[i] == '\'')
+        {
+            i++;
+        }
+        else
+        {
+            input[j] = input[i];
+            i++;
+            j++;
+        }
+    }
+
+    input[j] = '\0';
+}
+void remove_quotes(char *input, int closed)
+{
+    int i = 0;
+    while (input[i] != '\0') 
+    {
+        if (!closed && (input[i] == '"' || input[i] == '\'')) 
+        {
+            input[i] = input[i + 1];
+        }
+        i++;
+    }
+}
+

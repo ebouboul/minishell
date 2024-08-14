@@ -66,7 +66,7 @@ int check_special_chars(TokenNode *head);
 void add_spaces(char *input);
 int check_quotes(TokenNode *head, char c);
 int check_quotes_spiclal_chars(TokenNode *head, char c);
-char **split_by_quots(char *input, char c);
+char **split_by_quots(char *input);
 int truck_quots(char *input, char c);
 void unset_env(char **env, char *input);
 // void export_env(char **env, char *var);
@@ -78,7 +78,9 @@ int check_special_validity(TokenNode *head);
 int check_syntax_special_Face_to_Face(TokenNode *head);
 char *check_value_env(char *str, t_env *head);
 void expansion_process(TokenNode *head, t_env *key);
-
+void replace_quotes_by_spaces(char *input);
+void replace_quotes_by_spaces_and_join(char *input, int closed);
+void remove_quotes(char *input, int closed);
 
 #endif
 

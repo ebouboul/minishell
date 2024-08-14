@@ -109,6 +109,16 @@ TokenInfo *tokenizer(char **inputs)
                             }
                             token_count++;
                         }
+                        else if(token_count > 0 &&(tokens[token_count - 1].type == TOKEN_ARG))
+                        {
+                            tokens[token_count].type = TOKEN_ARG;
+                            while(inputs[j][k])
+                            {
+                            tokens[token_count].value[k++] = inputs[j][i++];
+                            tokens[token_count].value[k] = '\0';
+                            }
+                            token_count++;
+                        }
                         else
                         {
                             int o = 0;
