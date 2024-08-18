@@ -21,7 +21,6 @@ typedef enum
     TOKEN_REDIRECT_OUT,
     TOKEN_APPEND,
     TOKEN_FILE,
-    TOKEN_SEMICOLON,
     TOKEN_EOF,
     TOKEN_HEREDOC
 } TokenType;

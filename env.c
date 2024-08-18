@@ -88,6 +88,7 @@ void print_env_list(t_env *env_list)
     {
         printf("%s=%s\n", current->env->key, current->env->value);
         // current->index++;
+        current = current->next;
        
     }
 }

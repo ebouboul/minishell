@@ -32,8 +32,6 @@ TokenType get_token_type(char *c)
         return TOKEN_REDIRECT_IN;
     else if (ft_strcmp(c, ">") == 0)
         return TOKEN_REDIRECT_OUT;
-    else if (ft_strcmp(c, ";") == 0)
-        return TOKEN_SEMICOLON;
     else if (ft_strcmp(c, "<<") == 0)
         return TOKEN_HEREDOC;
 
@@ -123,7 +121,7 @@ TokenInfo *tokenizer(char **inputs)
                         {
                             int o = 0;
                             tokens[token_count].type = TOKEN_COMMAND;
-                            while (inputs[j][i] != '\0' && !is_space(inputs[j][i]) && !is_special_char(inputs[j][i]) && o < MAX_TOKEN_LENGTH - 1) 
+                            while (inputs[j][i] != '\0'  && o < MAX_TOKEN_LENGTH - 1) 
                                 tokens[token_count].value[o++] = inputs[j][i++];
                             tokens[token_count].value[o] = '\0';
                             token_count++;

@@ -81,13 +81,13 @@ int check_syntax_double_commands(TokenNode *head)
 int check_special_chars(TokenNode *head)
 {
     TokenNode *current = head;
-    if (current->info.type == TOKEN_PIPE || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT || current->info.type == TOKEN_APPEND || current->info.type == TOKEN_SEMICOLON ) 
+    if (current->info.type == TOKEN_PIPE || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT || current->info.type == TOKEN_APPEND ) 
     {
         printf("Syntax Error: Special character at the beginning of the command\n");
         return 1;
     }
     while (current != NULL) {
-        if (current->info.type == TOKEN_PIPE || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT || current->info.type == TOKEN_APPEND || current->info.type == TOKEN_SEMICOLON || current->info.type == TOKEN_HEREDOC) 
+        if (current->info.type == TOKEN_PIPE || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT || current->info.type == TOKEN_APPEND || current->info.type == TOKEN_HEREDOC) 
         {
             if (current->next == NULL) {
                 printf("Syntax Error: Special character at the end of the command\n");

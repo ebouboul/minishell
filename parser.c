@@ -67,50 +67,7 @@ char *ft_strjoin1(char c, char *s)
 }
 
 
-char **split_by_quots(char *input)
-{
-    int i = 0;
-    while(input[i] && (input[i] != '"' || input[i] != '\''))
-    i++;
-    if(input[i] == '"')
-        {
-            char **result = ft_split(input, '"');
-            i = 0;
-            while (result[i]) {
-                result[i] = ft_strjoin(result[i], result[i + 1]);
-                i++;
-            }
-            i = 0;
-            while (result[i]) {
-                printf("%s\n", result[i]);
-                i++;
-            }
-            i = 0;
-            while (result[i]) {
-                printf("%s\n", result[i]);
-                i++;
-            }
-            return result;
-        }
-    else if(input[i] == '\'')
-        {
-            char **result = ft_split(input, '\'');
-            int i = 0;
-            while (result[i]) {
-                result[i] = ft_strjoin(result[i], result[i + 1]);
-                i++;
-            }
-            i = 0;
-            while (result[i]) {
-                printf("%s\n", result[i]);
-                i++;
-            }
-            return result;
-        }
-    else
-        return NULL;
 
-}
 
 
 // char **split_by_quots(char **input, char c)

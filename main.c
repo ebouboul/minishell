@@ -28,30 +28,22 @@ int main(int argc, char **argv, char **env)
                 i++;
             }
         }
-        // if(strncmp(input, "unset", 5) == 0)
-        // {
-        //     unset_env(env, input + 6);
-        // }
-        // if(strncmp(input, "export", 6) == 0)
-        // {
-            // fill_env_list(env, env_list);
-        //     // print_env_list(env_list);
-        //     // check_key_if_deja(env_list, input + 7);
-        //     print_env_list(env_list);
-        // }
-        truck_quots(input, '"');
-        truck_quots(input, '\'');
-        replace_quotes_by_spaces_and_join(input, 0);
+        if(strncmp(input, "unset", 5) == 0)
+        {
+            unset_env(env, input + 6);
+        }
+        if(strncmp(input, "export", 6) == 0)
+        {
+            fill_env_list(env, env_list);
+            print_env_list(env_list);
+            // check_key_if_deja(env_list, input + 7);
+            // print_env_list(env_list);
+        }
+
 
         add_spaces(input);
-        inp = ft_split(input, ' ');
+        inp = ft_split(input);
 
-        // char **sp = split_by_quots(input, '"');
-        // char **sp2 = split_by_quots(input, '\'');
-        // int i = 0;
-        // while (sp[i])
-        // printf("%s\n", sp[i++]);
-        
 
         tokens = tokenizer(inp);
         if (tokens == NULL) 

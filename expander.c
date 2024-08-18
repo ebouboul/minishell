@@ -13,7 +13,7 @@ char* check_value_env(char *str, t_env *head)
         }
         current = current->next;
     }
-    return str;
+    return "(null)";
 }
 void expansion_process(TokenNode *head, t_env *key)
 {
