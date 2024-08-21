@@ -1,23 +1,5 @@
 #include "minishell.h"
 
-void unset_env(char **env, char *var)
-{
-    int i = 0;
-    while(env[i])
-    {
-        if (ft_strncmp(env[i], var, ft_strlen(var)) == 0)
-        {
-            while(env[i])
-            {
-                env[i] = env[i + 1];
-                i++;
-            }
-            break;
-        }
-        i++;
-    }
-    printf("Variable %s unset\n", var);
-}
 char *ft_strndup(char *s, int n)
 {
     char *result = (char*)malloc(n + 1);
@@ -112,6 +94,7 @@ int check_key_if_deja(t_env *env_list, char *var)
     char *key = strtok(var, "=");
     return check_key_from_env(current, key);
 }
+
 
 
 

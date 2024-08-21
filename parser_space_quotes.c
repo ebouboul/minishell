@@ -176,6 +176,26 @@ void replace_quotes_by_spaces_and_join(char *input, int closed)
 
     input[j] = '\0';
 }
+void remove_quotes_from_first_and_last(char *input)
+{
+    int i = 0;
+    int flag;
+    if(input[0] == '"')
+        flag = 1;
+    else
+        flag = 0;
+    if(flag == 1 && input[strlen(input) - 1] == '"')
+            input[strlen(input) - 1] = '\0';
+     else if(flag == 0 && input[strlen(input) - 1] == '\'')
+            input[strlen(input) - 1] = '\0';
+    while (input[i] != '\0')
+    {
+        
+        input[i] = input[i + 1];
+        i++;
+    }
+
+}
 void remove_quotes(char *input, int closed)
 {
     int i = 0;
@@ -186,6 +206,19 @@ void remove_quotes(char *input, int closed)
             input[i] = input[i + 1];
         }
         i++;
+    }
+}
+
+void remove_quotes_and_join(TokenNode *head)
+{
+    TokenNode *current = head;
+    while (current != NULL) 
+    {
+        if (current->info.type == TOKEN_COMMAND || current->info.type == TOKEN_ARG)
+            if(current->info.value[0] == '"' || current->info.value[0] == '\'')
+          remove_quotes_from_first_and_last(current->info.value);
+
+        current = current->next;
     }
 }
 

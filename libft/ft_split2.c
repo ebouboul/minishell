@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/29 20:14:19 by amousaid          #+#    #+#             */
-/*   Updated: 2024/08/13 10:53:14 by amousaid         ###   ########.fr       */
+/*   Created: 2024/08/21 15:20:34 by ebouboul          #+#    #+#             */
+/*   Updated: 2024/08/21 15:20:35 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "libft.h"
 

@@ -32,3 +32,6 @@ env
 | char *value; // red_out
 | env *next;
 ---------------
+
+
+ls -la >> file -a  | "'"cd j nfs f n''"
