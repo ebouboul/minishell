@@ -10,6 +10,7 @@ int main(int argc, char **argv, char **env)
     t_env *env_list = (t_env*)malloc(sizeof(t_env));
     char *input;
     char **inp;
+    fill_env_list(env, env_list);
     while(1)
     {
         input = readline("minishell$ ");
@@ -61,7 +62,6 @@ int main(int argc, char **argv, char **env)
         }
         // check_RRAH(list_head);
         check_special_chars(list_head);
-        fill_env_list(env, env_list);
         // check_syntax(list_head);
         // check_quotes(list_head, '"');
         // check_quotes(list_head, '\'');
@@ -69,8 +69,9 @@ int main(int argc, char **argv, char **env)
         remove_quotes_and_join(list_head);
         node = convert_to_node_list(list_head);
         print_node_list(node);
-        expansion_process(list_head, env_list);
-        execute_builtin(list_head, env_list);
+        
+        // expansion_process(list_head, env_list);
+        execute_builtin(list_head, &env_list);
         // print_linked_list(list_head);
         // // check_quotes_spiclal_chars(list_head, '"');
         // // check_quotes_spiclal_chars(list_head, '\'');

@@ -14,11 +14,11 @@
 int ft_echo(TokenNode *head);
 int ft_cd(TokenNode *head, t_env *env_list);
 int ft_pwd();
-int ft_export(TokenNode *head, t_env *env_list);
-int ft_unset(TokenNode *head, t_env *env_list);
+// int ft_export(TokenNode *head, t_env *env_list, char **env);
+// int ft_unset(TokenNode *head, t_env *env_list);
 int ft_env(t_env *env_list);
-void unset_env(t_env *env_list, char *input);
-void add_env(t_env *env_list, char *input);
+// void unset_env(t_env *env_list, char *input);
+// void add_env(char **env, char *input);
 char *get_env_value(t_env *env_list, char *key);
 
 
@@ -56,6 +56,17 @@ int ft_echo(TokenNode *head)
     }
     printf("\n");
     return 0;
+}
+char *get_env_value(t_env *env_list, char *key)
+{
+    t_env *current = env_list;
+    while (current != NULL)
+    {
+        if (strcmp(current->env->key, key) == 0)
+            return current->env->value;
+        current = current->next;
+    }
+    return NULL;
 }
 int ft_cd(TokenNode *head, t_env *env_list)
 {
@@ -97,117 +108,17 @@ int ft_pwd()
     free(path);
     return 0;
 }
-int ft_export(TokenNode *head, t_env *env_list)
-{
-    TokenNode *current = head;
-    while (current != NULL)
-    {
-        if (current->info.type == TOKEN_ARG)
-        {
-            if (ft_strchr(current->info.value, '=') == NULL)
-            {
-                printf("export: '%s': not a valid identifier\n", current->info.value);
-                return 1;
-            }
-            add_env(env_list, current->info.value);
-        }
-        else if (current->info.type == TOKEN_COMMAND)
-        {
-            char *value = get_env_value(env_list, current->info.value);
-            if (value != NULL)
-                printf("declare -x %s=\"%s\"\n", current->info.value, value);
-        }
-        current = current->next;
-    }
-    return 0;
-}
-int ft_unset(TokenNode *head, t_env *env_list)
-{
-    TokenNode *current = head;
-    while (current != NULL)
-    {
-        if (current->info.type == TOKEN_ARG)
-            unset_env(env_list, current->info.value);
-        current = current->next;
-    }
-    return 0;
-}
+
+
 int ft_env(t_env *env_list)
 {
     print_env_list(env_list);
     return 0;
 }
-void unset_env(t_env *env_list, char *input)
-{
-    t_env *current = env_list;
-    t_env *prev = NULL;
-    while (current != NULL)
-    {
-        if (strcmp(current->env->key, input) == 0)
-        {
-            if (prev == NULL)
-                env_list = current->next;
-            else
-                prev->next = current->next;
-            free(current->env->key);
-            free(current->env->value);
-            free(current);
-            return;
-        }
-        prev = current;
-        current = current->next;
-    }
-}
-void add_envv_node(t_env **current, char *key, char *value) {
-    t_env *new_node = (t_env *)malloc(sizeof(t_env));
-    
-    new_node->env = (env *)malloc(sizeof(env));
-    new_node->env->key = ft_strdup(key);
-    new_node->env->value = ft_strdup(value);
-    
-    new_node->next = NULL;
-    
-    (*current)->next = new_node;
-    *current = new_node;
-}
-void add_env(t_env *env_list, char *input)
-{
-    char *key;
-    char *value;
-    t_env *current = env_list;
-    key = ft_strndup(input, ft_strchr(input, '=') - input);
-    value = ft_strdup(ft_strchr(input, '=') + 1);
-    // while (current != NULL)
-    // {
-    //     if (strcmp(current->env->key, key) == 0)
-    //     {
-    //         free(current->env->value);
-    //         current->env->value = value;
-    //         free(key);
-    //         return;
-    //     }
-    //     current = current->next;
-    // }
-    // current = env_list;
-    // while (current->next != NULL)
-    //     current = current->next;
-    // current->next = malloc(sizeof(t_env));
-    // current->next->env->key = key;
-    // current->next->env->value = value;
-    // current->next->next = NULL;
-    add_envv_node(&current, key, value);
-}
-char *get_env_value(t_env *env_list, char *key)
-{
-    t_env *current = env_list;
-    while (current != NULL)
-    {
-        if (strcmp(current->env->key, key) == 0)
-            return current->env->value;
-        current = current->next;
-    }
-    return NULL;
-}
+
+
+
+
 int ft_exit(TokenNode *head)
 {
     TokenNode *current = head;
@@ -221,25 +132,190 @@ int ft_exit(TokenNode *head)
     exit(atoi(current->info.value));
     return 0;
 }
+int check_key_from_env(t_env *env_list, char *key)
+{
+    t_env *current = env_list;
+    while (current != NULL)
+    {
+        if (strcmp(current->env->key, key) == 0)
+            return 1;
+        current = current->next;
+    }
+    return 0;
+}
+void add_env_node(t_env **current, char *key, char *value)
+{
+
+    t_env *new_node = (t_env *)malloc(sizeof(t_env));
+    new_node->env = (env *)malloc(sizeof(env));
+    new_node->env->key = ft_strdup(key);
+    new_node->env->value = ft_strdup(value);
+    new_node->next = NULL;
+    (*current)->next = new_node;
+    *current = new_node;
+    // printf("%s\n", new_node->env->key);
+}
 
 
-int execute_builtin(TokenNode *head, t_env *env_list) 
+
+
+// void add_env_node(t_env **current, char *key, char *value) {
+//     t_env *new_node = (t_env *)malloc(sizeof(t_env));
+    
+//     new_node->env = (env *)malloc(sizeof(env));
+//     new_node->env->key = ft_strdup(key);
+//     new_node->env->value = ft_strdup(value);
+    
+//     new_node->next = NULL;
+    
+//     (*current)->next = new_node;
+//     *current = new_node;
+// }
+
+
+
+int ft_export(TokenNode *head, t_env **env_list)
 {
     TokenNode *current = head;
+    char *key;
+    char *value;
+    char **key_value;
+    t_env *current_env;
+    t_env *new_node;
 
+    while (current != NULL)
+    {
+        if (current->info.type == TOKEN_ARG)
+        {
+            key_value = get_key_value(current->info.value);
+            key = key_value[0];
+            value = key_value[1];
+            printf("key: %s\n", key);
+            printf("value: %s\n", value);
+
+            // Free key_value array
+            free(key_value[0]);
+            free(key_value[1]);
+            free(key_value);
+
+            current_env = *env_list;
+
+            // Check if the key exists in the environment list
+            while (current_env != NULL)
+            {
+                if (strcmp(current_env->env->key, key) == 0)
+                {
+                    // Key exists, update its value
+                    free(current_env->env->value);
+                    current_env->env->value = ft_strdup(value);
+                    break;
+                }
+                current_env = current_env->next;
+            }
+
+            // If the key was not found, add a new node
+            if (current_env == NULL)
+            {
+                new_node = (t_env *)malloc(sizeof(t_env));
+                if (new_node == NULL) {
+                    perror("Memory allocation failed");
+                    exit(1);
+                }
+                new_node->env = (env *)malloc(sizeof(env));
+                if (new_node->env == NULL) {
+                    perror("Memory allocation failed");
+                    exit(1);
+                }
+                new_node->env->key = ft_strdup(key);
+                new_node->env->value = ft_strdup(value);
+                new_node->next = NULL;
+
+                // Add the new node to the end of the list
+                if (*env_list == NULL)
+                {
+                    *env_list = new_node;
+                }
+                else
+                {
+                    t_env *last = *env_list;
+                    while (last->next != NULL)
+                    {
+                        last = last->next;
+                    }
+                    last->next = new_node;
+                }
+            }
+        }
+        current = current->next;
+    }
+
+    printf("%s=%s\n", (*env_list)->env->key, (*env_list)->env->value);
+
+    return 0;
+}
+
+
+
+int ft_unset(TokenNode *head, t_env **env_list)
+{
+    TokenNode *current = head;
+    char *key;
+
+    while (current != NULL)
+    {
+        if (current->info.type == TOKEN_ARG)
+        {
+            key = current->info.value;
+            t_env *current_env = *env_list;
+            t_env *prev = NULL;
+
+            while (current_env != NULL)
+            {
+                if (strcmp(current_env->env->key, key) == 0)
+                {
+                    if (prev == NULL)
+                    {
+                        *env_list = current_env->next;
+                    }
+                    else
+                    {
+                        prev->next = current_env->next;
+                    }
+
+                    free(current_env->env->key);
+                    free(current_env->env->value);
+                    free(current_env->env);
+                    free(current_env);
+                    break;
+                }
+                prev = current_env;
+                current_env = current_env->next;
+            }
+        }
+        current = current->next;
+    }
+    print_env_list(*env_list);
+
+    return 0;
+}
+
+
+int execute_builtin(TokenNode *head, t_env **env_list) 
+{
+    TokenNode *current = head;
     if (strcmp(current->info.value, "echo") == 0)
         return ft_echo(current->next);
     else if (strcmp(current->info.value, "cd") == 0)
-        return ft_cd(current->next, env_list);
+        return ft_cd(current->next, *env_list);
     else if (strcmp(current->info.value, "pwd") == 0)
         return ft_pwd();
+    else if (strcmp(current->info.value, "env") == 0)
+        return ft_env(*env_list);
+    else if (strcmp(current->info.value, "exit") == 0)
+        return ft_exit(current->next);
     else if (strcmp(current->info.value, "export") == 0)
         return ft_export(current->next, env_list);
     else if (strcmp(current->info.value, "unset") == 0)
         return ft_unset(current->next, env_list);
-    else if (strcmp(current->info.value, "env") == 0)
-        return ft_env(env_list);
-    else if (strcmp(current->info.value, "exit") == 0)
-        return ft_exit(current->next);
     return 0;
 }
