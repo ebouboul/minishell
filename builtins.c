@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/24 03:42:59 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/24 16:06:56 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,48 @@ int is_builtin(char *command)
     return 0;
 }
 
+int process_echo_option(TokenNode *current, int *option)
+{
+    int i = 2;
+    while (current->info.value[i])
+    {
+        if (current->info.value[i] != 'n')
+        {
+            printf("%s ", current->info.value);
+            return 1;
+        }
+        i++;
+    }
+    *option = 1;
+    return 0;
+}
+
 int ft_echo(TokenNode *head)
 {
     TokenNode *current = head;
+    int option = 0;
+
     while (current != NULL)
     {
         if (current->info.type == TOKEN_ARG)
         {
-            printf("%s", current->info.value);
-            if (current->next != NULL)
-                printf(" ");
+            if (strncmp(current->info.value, "-n", 2) == 0)
+            {
+                if (process_echo_option(current, &option))
+                {
+                    current = current->next;
+                    continue;
+                }
+            }
+            else if (current->next != NULL)
+                printf("%s ", current->info.value);
+            else
+                printf("%s", current->info.value);
         }
         current = current->next;
     }
-    printf("\n");
+    if (option == 0)
+        printf("\n");
     return 0;
 }
 char *get_env_value(t_env *env_list, char *key)
