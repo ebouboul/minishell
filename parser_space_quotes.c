@@ -210,6 +210,18 @@ void remove_quotes(char *input, int closed)
         i++;
     }
 }
+void replace_quotes_by_spaces(char *input)
+{
+    int i = 0;
+    while (input[i] != '\0') 
+    {
+        if (input[i] == '"' || input[i] == '\'') 
+        {
+            input[i] = ' ';
+        }
+        i++;
+    }
+}
 
 // void remove_quotes_and_join(TokenNode *head)
 // {
