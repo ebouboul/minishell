@@ -191,25 +191,19 @@ void expansion_process(t_node **head, t_env *env_list)
                 j = 0;
                 while (args[i][j] != '\0')
                 {
-                    if (args[i][j] == '$')
+                    if (args[i][j] == '$' && args[i][j - 1] != '\'')
                     {
                         k = j;
                         while (args[i][k] && (isalpha(args[i][k + 1]) || isdigit(args[i][k + 1]) || args[i][k + 1] == '_'))
-                        {
                             k++;
-                        }
                         // Get the value of the environment variable
                         value = check_value_env(ft_substr(args[i], j, k - j + 1), env_list);
-
                         temp = new_arg;
                         new_arg = ft_strjoin(temp, value);
                         free(temp);
-
                         // Skip over the variable name in the original string
                         while (args[i][j] && (isalpha(args[i][j + 1]) || isdigit(args[i][j + 1]) || args[i][j + 1] == '_'))
-                        {
                             j++;
-                        }
                     }
                     else
                     {
@@ -223,6 +217,10 @@ void expansion_process(t_node **head, t_env *env_list)
 
                 // Handle case where args[i] contains quotes and needs to be split
                 if (args[i][0] == '"')
+                {
+                    args[i++] = new_arg; // Replace with the expanded string
+                }
+                else
                 {
                     split_args = ft_split3(new_arg, ' ');
                     free(new_arg);
@@ -256,10 +254,6 @@ void expansion_process(t_node **head, t_env *env_list)
                     }
                     free(split_args);
                     i += k;
-                }
-                else
-                {
-                    args[i++] = new_arg; // Replace with the expanded string
                 }
             }
             current_command->args = args;
