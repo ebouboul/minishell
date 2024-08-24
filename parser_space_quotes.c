@@ -209,16 +209,41 @@ void remove_quotes(char *input, int closed)
     }
 }
 
-void remove_quotes_and_join(TokenNode *head)
+// void remove_quotes_and_join(TokenNode *head)
+// {
+//     TokenNode *current = head;
+//     while (current != NULL) 
+//     {
+//         if (current->info.type == TOKEN_COMMAND || current->info.type == TOKEN_ARG)
+//             if(current->info.value[0] == '"' || current->info.value[0] == '\'')
+//           remove_quotes_from_first_and_last(current->info.value);
+
+//         current = current->next;
+//     }
+// }
+
+
+
+void remove_quotes_and_join(t_node *head)
 {
-    TokenNode *current = head;
+    t_node *current = head;
     while (current != NULL) 
     {
-        if (current->info.type == TOKEN_COMMAND || current->info.type == TOKEN_ARG)
-            if(current->info.value[0] == '"' || current->info.value[0] == '\'')
-          remove_quotes_from_first_and_last(current->info.value);
-
+        t_command *current_command = current->command;
+        while (current_command != NULL) 
+        {
+            char **args = current_command->args;
+            int i = 0;
+            while (args[i] != NULL) 
+            {
+                if (args[i][0] == '"' || args[i][0] == '\'') 
+                {
+                    remove_quotes_from_first_and_last(args[i]);
+                }
+                i++;
+            }
+            current_command = current_command->next;
+        }
         current = current->next;
     }
 }
-

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 17:53:53 by ebouboul          #+#    #+#             */
-/*   Updated: 2023/11/16 00:19:50 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/24 02:56:37 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int					ft_wordcount(char const *s);
 void				ft_wordcount2(char const *s, int *i, int *count);
 int					w_space(char c);
 char				**ft_freespace(char **str, int size);
+char				**ft_split3(char const *s, char c);
 
 
 

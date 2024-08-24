@@ -66,12 +66,16 @@ int main(int argc, char **argv, char **env)
         // check_quotes(list_head, '"');
         // check_quotes(list_head, '\'');
         // print_env_list(env_list);
-        remove_quotes_and_join(list_head);
+        // remove_quotes_and_join(list_head);
         node = convert_to_node_list(list_head);
-        print_node_list(node);
-        
-        // expansion_process(list_head, env_list);
+        // printf("exit status: %d\n", node->exit_status);
+        // print_node_list(node);
+        expansion_process(&node, env_list);
         execute_builtin(list_head, &env_list);
+        // print_linked_list(list_head);
+        // printf("exit status: %d\n", node->exit_status);
+        remove_quotes_and_join(node);
+        print_node_list(node);
         // print_linked_list(list_head);
         // // check_quotes_spiclal_chars(list_head, '"');
         // // check_quotes_spiclal_chars(list_head, '\'');

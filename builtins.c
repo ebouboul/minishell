@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/21 20:30:54 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/24 03:42:59 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,8 +148,8 @@ void add_env_node(t_env **current, char *key, char *value)
 
     t_env *new_node = (t_env *)malloc(sizeof(t_env));
     new_node->env = (env *)malloc(sizeof(env));
-    new_node->env->key = ft_strdup(key);
-    new_node->env->value = ft_strdup(value);
+    new_node->env->key = ft_strdup((const char *)key);
+    new_node->env->value = ft_strdup((const char *)value);
     new_node->next = NULL;
     (*current)->next = new_node;
     *current = new_node;
@@ -179,78 +179,44 @@ int ft_export(TokenNode *head, t_env **env_list)
     TokenNode *current = head;
     char *key;
     char *value;
-    char **key_value;
-    t_env *current_env;
-    t_env *new_node;
+    t_env *current_env = *env_list;
+    // t_env *prev = NULL;
 
     while (current != NULL)
     {
         if (current->info.type == TOKEN_ARG)
         {
-            key_value = get_key_value(current->info.value);
-            key = key_value[0];
-            value = key_value[1];
-            printf("key: %s\n", key);
-            printf("value: %s\n", value);
-
-            // Free key_value array
-            free(key_value[0]);
-            free(key_value[1]);
-            free(key_value);
-
-            current_env = *env_list;
-
-            // Check if the key exists in the environment list
-            while (current_env != NULL)
+            key = current->info.value;
+            if (current->next != NULL && current->next->info.type == TOKEN_ARG)
             {
-                if (strcmp(current_env->env->key, key) == 0)
-                {
-                    // Key exists, update its value
-                    free(current_env->env->value);
-                    current_env->env->value = ft_strdup(value);
-                    break;
-                }
-                current_env = current_env->next;
+                value = current->next->info.value;
+                current = current->next;
             }
-
-            // If the key was not found, add a new node
-            if (current_env == NULL)
+            else
             {
-                new_node = (t_env *)malloc(sizeof(t_env));
-                if (new_node == NULL) {
-                    perror("Memory allocation failed");
-                    exit(1);
-                }
-                new_node->env = (env *)malloc(sizeof(env));
-                if (new_node->env == NULL) {
-                    perror("Memory allocation failed");
-                    exit(1);
-                }
-                new_node->env->key = ft_strdup(key);
-                new_node->env->value = ft_strdup(value);
-                new_node->next = NULL;
-
-                // Add the new node to the end of the list
-                if (*env_list == NULL)
+                value = "";
+            }
+            if (check_key_from_env(*env_list, key))
+            {
+                while (current_env != NULL)
                 {
-                    *env_list = new_node;
-                }
-                else
-                {
-                    t_env *last = *env_list;
-                    while (last->next != NULL)
+                    if (strcmp(current_env->env->key, key) == 0)
                     {
-                        last = last->next;
+                        free(current_env->env->value);
+                        current_env->env->value = ft_strdup(value);
+                        break;
                     }
-                    last->next = new_node;
+                    current_env = current_env->next;
                 }
+            }
+            else
+            {
+                add_env_node(&current_env, key, value);
+                print_env_list(*env_list);
             }
         }
         current = current->next;
     }
-
-    printf("%s=%s\n", (*env_list)->env->key, (*env_list)->env->value);
-
     return 0;
 }
 
