@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 17:23:01 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/21 19:55:53 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/25 22:27:14 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ t_command *convert_to_command(TokenNode **current) {
             cmd->redirect = redir;
             *current = (*current)->next;  
         }
+        
         *current = (*current)->next;
     }
     cmd->args[arg_count] = NULL;  
