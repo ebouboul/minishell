@@ -216,11 +216,12 @@ void expansion_process(t_node **head, t_env *env_list)
                 }
 
                 // Handle case where args[i] contains quotes and needs to be split
-                if (args[i][0] == '"')
+                if (args[i][0] == '"' && ft_strchr(args[i] + 1, '"'))
                 {
                     printf("new_arg: %s\n", new_arg);
-                    remove_quotes(new_arg, 0); // Remove the quotes from the expanded string
-                    args[i++] = new_arg; // Replace with the expanded string
+                    args[i] = new_arg; // Replace with the expanded string
+                    remove_all_quotes_and_join(args[i]);
+                    i++;
                 }
                 else
                 {
@@ -252,6 +253,7 @@ void expansion_process(t_node **head, t_env *env_list)
                     while (split_args[k] != NULL)
                     {
                         args[i + k] = split_args[k];
+                        remove_all_quotes_and_join(args[i + k]);
                         k++;
                     }
                     free(split_args);

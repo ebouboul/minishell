@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:20:19 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/24 03:21:53 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/25 21:34:51 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ char *check_value_env(char *str, t_env *head);
 void replace_quotes_by_spaces(char *input);
 void replace_quotes_by_spaces_and_join(char *input, int closed);
 void remove_quotes(char *input, int closed);
-int execute_builtin(TokenNode *head, t_env **env_list);
+int execute_builtin(t_node *head, t_env **env_list);
 char *ft_strndup(char *s, int n);
 void add_env_node(t_env **current, char *key, char *value);
 t_node *convert_to_node_list(TokenNode *token_list);
@@ -124,7 +124,7 @@ char **get_key_value(char *var);
 int check_key_from_env(t_env *env_list, char *key);
 char **get_key_value(char *var);
 void expansion_process(t_node **head, t_env *key);
-
+void remove_all_quotes_and_join(char *input);
 
 #endif
 

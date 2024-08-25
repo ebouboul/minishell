@@ -200,16 +200,39 @@ void remove_quotes_from_first_and_last(char *input)
 }
 void remove_quotes(char *input, int closed)
 {
-    int i = 0;
+     int i = 0;
+     (void)closed;
     while (input[i] != '\0') 
     {
-        if (!closed && (input[i] == '"' || input[i] == '\'')) 
-        {
-            input[i] = input[i + 1];
-        }
+        input[i] = input[i + 1];
+        if(input[i] == '"' || input[i] == '\'')
+            input[i] = ' ';
         i++;
     }
+
 }
+void remove_all_quotes_and_join(char *input)
+{
+    int i = 0;
+    int j = 0;
+    while (input[i] != '\0') 
+    {
+        if (input[i] == '"' || input[i] == '\'') 
+        {
+            i++;
+        }
+        else 
+        {
+            input[j] = input[i];
+            i++;
+            j++;
+        }
+    }
+    input[j] = '\0';
+}
+
+
+
 void replace_quotes_by_spaces(char *input)
 {
     int i = 0;

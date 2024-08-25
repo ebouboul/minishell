@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/24 16:06:56 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/08/25 21:42:18 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-int ft_echo(TokenNode *head);
-int ft_cd(TokenNode *head, t_env *env_list);
-int ft_pwd();
-// int ft_export(TokenNode *head, t_env *env_list, char **env);
-// int ft_unset(TokenNode *head, t_env *env_list);
-int ft_env(t_env *env_list);
-// void unset_env(t_env *env_list, char *input);
-// void add_env(char **env, char *input);
-char *get_env_value(t_env *env_list, char *key);
+// int ft_echo(TokenNode *head);
+// int ft_cd(TokenNode *head, t_env *env_list);
+// int ft_pwd();
+// // int ft_export(TokenNode *head, t_env *env_list, char **env);
+// // int ft_unset(TokenNode *head, t_env *env_list);
+// int ft_env(t_env *env_list);
+// // void unset_env(t_env *env_list, char *input);
+// // void add_env(char **env, char *input);
+// char *get_env_value(t_env *env_list, char *key);
 
 
 int is_builtin(char *command)
@@ -41,50 +41,41 @@ int is_builtin(char *command)
     return 0;
 }
 
-int process_echo_option(TokenNode *current, int *option)
+int process_echo_option(char *option, int *option_value)
 {
-    int i = 2;
-    while (current->info.value[i])
+    int i = 0;
+    while (option[i] != '\0')
     {
-        if (current->info.value[i] != 'n')
-        {
-            printf("%s ", current->info.value);
-            return 1;
-        }
+        if (option[i] != 'n')
+            return 0;
         i++;
     }
-    *option = 1;
-    return 0;
+    *option_value = 1;
+    return 1;
 }
 
-int ft_echo(TokenNode *head)
+int ft_echo(t_command *command)
 {
-    TokenNode *current = head;
     int option = 0;
-
+    t_command *current = command;
     while (current != NULL)
     {
-        if (current->info.type == TOKEN_ARG)
+        if (current->args[1] != NULL && strcmp(current->args[1], "-n") == 0)
         {
-            if (strncmp(current->info.value, "-n", 2) == 0)
-            {
-                if (process_echo_option(current, &option))
-                {
-                    current = current->next;
-                    continue;
-                }
-            }
-            else if (current->next != NULL)
-                printf("%s ", current->info.value);
-            else
-                printf("%s", current->info.value);
+            if (process_echo_option(current->args[1], &option))
+                break;
+        }
+        else
+        {
+            printf("%s ", current->args[1]);
         }
         current = current->next;
     }
-    if (option == 0)
+    if (!option)
         printf("\n");
     return 0;
 }
+
 char *get_env_value(t_env *env_list, char *key)
 {
     t_env *current = env_list;
@@ -96,11 +87,10 @@ char *get_env_value(t_env *env_list, char *key)
     }
     return NULL;
 }
-int ft_cd(TokenNode *head, t_env *env_list)
+int ft_cd(t_command *command, t_env *env_list)
 {
-    TokenNode *current = head;
     char *path;
-    if (current == NULL)
+    if (command->args[1] == NULL)
     {
         path = get_env_value(env_list, "HOME");
         if (path == NULL)
@@ -109,13 +99,10 @@ int ft_cd(TokenNode *head, t_env *env_list)
             return 1;
         }
     }
-    else if (current->next != NULL)
-    {
-        printf("cd: too many arguments\n");
-        return 1;
-    }
     else
-        path = current->info.value;
+    {
+        path = command->args[1];
+    }
     if (chdir(path) == -1)
     {
         printf("cd: %s: %s\n", path, strerror(1));
@@ -147,17 +134,14 @@ int ft_env(t_env *env_list)
 
 
 
-int ft_exit(TokenNode *head)
+int ft_exit(t_command *command)
 {
-    TokenNode *current = head;
-    if (current == NULL)
-        exit(0);
-    if (current->next != NULL)
+    if (command->args[1] != NULL)
     {
-        printf("exit: too many arguments\n");
+        printf("exit\n");
+        exit(atoi(command->args[1]));
         return 1;
     }
-    exit(atoi(current->info.value));
     return 0;
 }
 int check_key_from_env(t_env *env_list, char *key)
@@ -202,46 +186,24 @@ void add_env_node(t_env **current, char *key, char *value)
 
 
 
-int ft_export(TokenNode *head, t_env **env_list)
+int ft_export(t_command *command, t_env **env_list)
 {
-    TokenNode *current = head;
-    char *key;
-    char *value;
+    t_command *current = command;
     t_env *current_env = *env_list;
-    // t_env *prev = NULL;
-
     while (current != NULL)
     {
-        if (current->info.type == TOKEN_ARG)
+        if (current->args[1] == NULL)
         {
-            key = current->info.value;
-            if (current->next != NULL && current->next->info.type == TOKEN_ARG)
+            while (current_env != NULL)
             {
-                value = current->next->info.value;
-                current = current->next;
+                printf("declare -x %s=\"%s\"\n", current_env->env->key, current_env->env->value);
+                current_env = current_env->next;
             }
-            else
-            {
-                value = "";
-            }
-            if (check_key_from_env(*env_list, key))
-            {
-                while (current_env != NULL)
-                {
-                    if (strcmp(current_env->env->key, key) == 0)
-                    {
-                        free(current_env->env->value);
-                        current_env->env->value = ft_strdup(value);
-                        break;
-                    }
-                    current_env = current_env->next;
-                }
-            }
-            else
-            {
-                add_env_node(&current_env, key, value);
-                print_env_list(*env_list);
-            }
+            return 0;
+        }
+        else
+        {
+            get_env_value(*env_list, current->args[1]);
         }
         current = current->next;
     }
@@ -250,36 +212,40 @@ int ft_export(TokenNode *head, t_env **env_list)
 
 
 
-int ft_unset(TokenNode *head, t_env **env_list)
+int ft_unset(t_command *command, t_env **env_list)
 {
-    TokenNode *current = head;
-    char *key;
-
+    t_command *current = command;
+    t_env *current_env = *env_list;
+    t_env *prev = NULL;
     while (current != NULL)
     {
-        if (current->info.type == TOKEN_ARG)
+        if (current->args[1] == NULL)
         {
-            key = current->info.value;
-            t_env *current_env = *env_list;
-            t_env *prev = NULL;
-
+            printf("unset: not enough arguments\n");
+            return 1;
+        }
+        if (check_key_from_env(*env_list, current->args[1]))
+        {
             while (current_env != NULL)
             {
-                if (strcmp(current_env->env->key, key) == 0)
+                if (strcmp(current_env->env->key, current->args[1]) == 0)
                 {
                     if (prev == NULL)
                     {
                         *env_list = current_env->next;
+                        free(current_env->env->key);
+                        free(current_env->env->value);
+                        free(current_env->env);
+                        free(current_env);
+                        current_env = *env_list;
+                        break;
                     }
-                    else
-                    {
-                        prev->next = current_env->next;
-                    }
-
+                    prev->next = current_env->next;
                     free(current_env->env->key);
                     free(current_env->env->value);
                     free(current_env->env);
                     free(current_env);
+                    current_env = prev->next;
                     break;
                 }
                 prev = current_env;
@@ -288,28 +254,27 @@ int ft_unset(TokenNode *head, t_env **env_list)
         }
         current = current->next;
     }
-    print_env_list(*env_list);
-
     return 0;
 }
 
 
-int execute_builtin(TokenNode *head, t_env **env_list) 
+int execute_builtin(t_node *head, t_env **env_list)
 {
-    TokenNode *current = head;
-    if (strcmp(current->info.value, "echo") == 0)
-        return ft_echo(current->next);
-    else if (strcmp(current->info.value, "cd") == 0)
-        return ft_cd(current->next, *env_list);
-    else if (strcmp(current->info.value, "pwd") == 0)
-        return ft_pwd();
-    else if (strcmp(current->info.value, "env") == 0)
-        return ft_env(*env_list);
-    else if (strcmp(current->info.value, "exit") == 0)
-        return ft_exit(current->next);
-    else if (strcmp(current->info.value, "export") == 0)
-        return ft_export(current->next, env_list);
-    else if (strcmp(current->info.value, "unset") == 0)
-        return ft_unset(current->next, env_list);
-    return 0;
+    t_node *current = head;
+    int status = 0;
+    if (strcmp(current->command->args[0], "echo") == 0)
+        status = ft_echo(current->command);
+    else if (strcmp(current->command->args[0], "cd") == 0)
+        status = ft_cd(current->command, *env_list);
+    else if (strcmp(current->command->args[0], "pwd") == 0)
+        status = ft_pwd();
+    else if (strcmp(current->command->args[0], "export") == 0)
+        status = ft_export(current->command, env_list);
+    else if (strcmp(current->command->args[0], "unset") == 0)
+        status = ft_unset(current->command, env_list);
+    else if (strcmp(current->command->args[0], "env") == 0)
+        status = ft_env(*env_list);
+    else if (strcmp(current->command->args[0], "exit") == 0)
+        status = ft_exit(current->command);
+    return status;
 }

@@ -71,10 +71,10 @@ int main(int argc, char **argv, char **env)
         // printf("exit status: %d\n", node->exit_status);
         // print_node_list(node);
         expansion_process(&node, env_list);
-        execute_builtin(list_head, &env_list);
         // print_linked_list(list_head);
         // printf("exit status: %d\n", node->exit_status);
         remove_quotes_and_join(node);
+        execute_builtin(node, &env_list);
         print_node_list(node);
         // print_linked_list(list_head);
         // // check_quotes_spiclal_chars(list_head, '"');
