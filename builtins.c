@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/25 21:42:18 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/26 06:34:22 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int ft_echo(t_command *command)
         printf("\n");
     return 0;
 }
+
 
 char *get_env_value(t_env *env_list, char *key)
 {
@@ -147,7 +148,7 @@ int ft_exit(t_command *command)
 int check_key_from_env(t_env *env_list, char *key)
 {
     t_env *current = env_list;
-    while (current != NULL)
+    while (current->next != NULL)
     {
         if (strcmp(current->env->key, key) == 0)
             return 1;
@@ -163,37 +164,26 @@ void add_env_node(t_env **current, char *key, char *value)
     new_node->env->key = ft_strdup((const char *)key);
     new_node->env->value = ft_strdup((const char *)value);
     new_node->next = NULL;
-    (*current)->next = new_node;
+    // printf("key: %s\n", key);
+    // (*current)->next = new_node;
     *current = new_node;
-    // printf("%s\n", new_node->env->key);
+    // printf("%s\n", (*current)->env->key);
 }
 
-
-
-
-// void add_env_node(t_env **current, char *key, char *value) {
-//     t_env *new_node = (t_env *)malloc(sizeof(t_env));
-    
-//     new_node->env = (env *)malloc(sizeof(env));
-//     new_node->env->key = ft_strdup(key);
-//     new_node->env->value = ft_strdup(value);
-    
-//     new_node->next = NULL;
-    
-//     (*current)->next = new_node;
-//     *current = new_node;
-// }
 
 
 
 int ft_export(t_command *command, t_env **env_list)
 {
     t_command *current = command;
-    t_env *current_env = *env_list;
+    t_env *current_env = *env_list; // Reset current_env to start of the list
+    
     while (current != NULL)
     {
+
         if (current->args[1] == NULL)
         {
+            // Print all environment variables
             while (current_env != NULL)
             {
                 printf("declare -x %s=\"%s\"\n", current_env->env->key, current_env->env->value);
@@ -203,13 +193,67 @@ int ft_export(t_command *command, t_env **env_list)
         }
         else
         {
-            get_env_value(*env_list, current->args[1]);
+            // Parse the key-value pair
+            char **key_value = get_key_value(current->args[1]);
+            
+            if (key_value[1] == NULL)
+            {
+                // Case: Only a key is provided, check if it exists in env_list
+                if (check_key_from_env(*env_list, key_value[0]))
+                {
+                    while (current_env != NULL)
+                    {
+                        if (strcmp(current_env->env->key, key_value[0]) == 0)
+                        {
+                            printf("declare -x %s=\"%s\"\n", current_env->env->key, current_env->env->value);
+                            break;
+                        }
+                        current_env = current_env->next;
+                    }
+                }
+            }
+            else
+            {
+                // Case: Key and value are provided
+                if (check_key_from_env(*env_list, key_value[0]))
+                {
+                    // Update the value if the key exists
+                    while (current_env != NULL)
+                    {
+                        if (strcmp(current_env->env->key, key_value[0]) == 0)
+                        {
+                            free(current_env->env->value);
+                            current_env->env->value = ft_strdup(key_value[1]);
+                            break;
+                        }
+                        current_env = current_env->next;
+                    }
+                }
+                else
+                {
+                    // Find the last node in the list
+                    while (current_env->next != NULL)
+                    {
+                        current_env = current_env->next;
+                    }
+                    current_env->next = (t_env *)malloc(sizeof(t_env));
+                    current_env->next->env = (env *)malloc(sizeof(env));
+                    current_env->next->env->key = ft_strdup(key_value[0]);
+                    current_env->next->env->value = ft_strdup(key_value[1]);
+                    current_env->next->next = NULL;
+                    
+                    //print_env_list(*env_list);
+                    
+                }
+            }
+            
+            free(key_value);
         }
         current = current->next;
     }
+
     return 0;
 }
-
 
 
 int ft_unset(t_command *command, t_env **env_list)

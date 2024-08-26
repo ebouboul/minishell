@@ -14,25 +14,24 @@ char *ft_strndup(char *s, int n)
     result[n] = '\0';
     return result;
 }
-void fill_env_list(char **env, t_env *env_list) 
+void fill_env_list(char **envv, t_env *env_list) 
 {
-    int i = 0;
-    
     t_env *current = env_list;
-    
-    char **key_value = get_key_value(env[i]);
-    env_list->env = malloc(sizeof(env));
-    env_list->env->key = ft_strdup(key_value[0]);
-    env_list->env->value = ft_strdup(key_value[1]);
-    env_list->next = NULL;
+    int i = 0;
+    while(envv[i])
+    {
+        char **key_value = get_key_value(envv[i]);
+        current->env = (env *)malloc(sizeof(env));
+        current->env->key = ft_strdup(key_value[0]);
+        current->env->value = ft_strdup(key_value[1]);
+        current->next = (t_env *)malloc(sizeof(t_env));
+        current = current->next;
+        // current->next = NULL;
 
-    i++;
-
-    while (env[i]) {
-        key_value = get_key_value(env[i]);
-        add_env_node(&current, key_value[0], key_value[1]);
         i++;
+        
     }
+    current = NULL; 
 }
 
 void print_env_list(t_env *env_list)
@@ -40,7 +39,7 @@ void print_env_list(t_env *env_list)
     
     t_env *current = env_list;
     // current->index = 0;
-    while(current->next != NULL)
+    while(current != NULL)
     {
         printf("%s=%s\n", current->env->key, current->env->value);
         // current->index++;

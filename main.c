@@ -10,7 +10,14 @@ int main(int argc, char **argv, char **env)
     t_env *env_list = (t_env*)malloc(sizeof(t_env));
     char *input;
     char **inp;
+    int i = 0;
+    // while(env[i])
+    // {
+    //     printf("%s\n", env[i]);
+    //     i++;
+    // }
     fill_env_list(env, env_list);
+     print_env_list(env_list);
     while(1)
     {
         input = readline("minishell$ ");
@@ -95,11 +102,8 @@ int main(int argc, char **argv, char **env)
     free_linked_list(list_head);
 
 
-    int i = 0;
-    while (inp[i])
-    {
-        free(inp[i++]);
-    }
+     i = 0;
+   
     free(inp);
     free(tokens);
     return 0;
