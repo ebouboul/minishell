@@ -74,7 +74,8 @@ int main(int argc, char **argv, char **env)
         // print_linked_list(list_head);
         // printf("exit status: %d\n", node->exit_status);
         remove_quotes_and_join(node);
-        execute_builtin(node, &env_list);
+        // execute_builtin(node, &env_list);
+        execute_commands(node, &env_list);
         print_node_list(node);
         // print_linked_list(list_head);
         // // check_quotes_spiclal_chars(list_head, '"');

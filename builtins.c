@@ -3,24 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/25 21:42:18 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/27 14:21:08 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-// int ft_echo(TokenNode *head);
-// int ft_cd(TokenNode *head, t_env *env_list);
-// int ft_pwd();
-// // int ft_export(TokenNode *head, t_env *env_list, char **env);
-// // int ft_unset(TokenNode *head, t_env *env_list);
-// int ft_env(t_env *env_list);
-// // void unset_env(t_env *env_list, char *input);
-// // void add_env(char **env, char *input);
-// char *get_env_value(t_env *env_list, char *key);
-
 
 int is_builtin(char *command)
 {
@@ -56,20 +46,21 @@ int process_echo_option(char *option, int *option_value)
 
 int ft_echo(t_command *command)
 {
+    int i = 1;
     int option = 0;
-    t_command *current = command;
-    while (current != NULL)
+
+     while (command->args[i] && strncmp(command->args[i], "-n", 2) == 0)
     {
-        if (current->args[1] != NULL && strcmp(current->args[1], "-n") == 0)
-        {
-            if (process_echo_option(current->args[1], &option))
-                break;
-        }
-        else
-        {
-            printf("%s ", current->args[1]);
-        }
-        current = current->next;
+        if (!process_echo_option(command->args[i] + 1, &option))
+            break;
+        i++;
+    }
+    while (command->args[i])
+    {
+        printf("%s", command->args[i]);
+        if (command->args[i + 1])
+            printf(" ");
+        i++;
     }
     if (!option)
         printf("\n");
@@ -100,9 +91,7 @@ int ft_cd(t_command *command, t_env *env_list)
         }
     }
     else
-    {
         path = command->args[1];
-    }
     if (chdir(path) == -1)
     {
         printf("cd: %s: %s\n", path, strerror(1));
@@ -124,15 +113,11 @@ int ft_pwd()
     return 0;
 }
 
-
 int ft_env(t_env *env_list)
 {
     print_env_list(env_list);
     return 0;
 }
-
-
-
 
 int ft_exit(t_command *command)
 {
@@ -167,10 +152,6 @@ void add_env_node(t_env **current, char *key, char *value)
     *current = new_node;
     // printf("%s\n", new_node->env->key);
 }
-
-
-
-
 // void add_env_node(t_env **current, char *key, char *value) {
 //     t_env *new_node = (t_env *)malloc(sizeof(t_env));
     
@@ -183,7 +164,6 @@ void add_env_node(t_env **current, char *key, char *value)
 //     (*current)->next = new_node;
 //     *current = new_node;
 // }
-
 
 
 int ft_export(t_command *command, t_env **env_list)
@@ -201,7 +181,7 @@ int ft_export(t_command *command, t_env **env_list)
             }
             return 0;
         }
-        else
+    else
         {
             get_env_value(*env_list, current->args[1]);
         }
@@ -209,8 +189,6 @@ int ft_export(t_command *command, t_env **env_list)
     }
     return 0;
 }
-
-
 
 int ft_unset(t_command *command, t_env **env_list)
 {
@@ -256,7 +234,6 @@ int ft_unset(t_command *command, t_env **env_list)
     }
     return 0;
 }
-
 
 int execute_builtin(t_node *head, t_env **env_list)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:20:19 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/25 21:34:51 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/27 21:19:06 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <fcntl.h>
+#include <sys/wait.h>
 #include "./libft/libft.h"
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -59,8 +61,7 @@ typedef struct
 typedef struct t_env
 {
     env *env;
-    // int *index;
-   struct t_env *next;
+    struct t_env *next;
 } t_env;
 
 typedef struct t_redirect
@@ -125,6 +126,18 @@ int check_key_from_env(t_env *env_list, char *key);
 char **get_key_value(char *var);
 void expansion_process(t_node **head, t_env *key);
 void remove_all_quotes_and_join(char *input);
+
+// execution functions 1st part:
+int is_builtin(char *command);
+void execute_commands(t_node *head, t_env **env_list);
+void execute_single_command(t_node *node, t_env **env_list);
+void handle_redirections(t_redirect *redirect);
+// execution functions 2nd part:
+void execute_external(t_command *command, t_env *env_list);
+char join_command_with_path_and_access(char *command, char **paths, int n);
+char split_path_in_env(char *path, char **paths);
+int check_env_for_path(t_env *env_list);
+
 
 #endif
 
