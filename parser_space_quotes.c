@@ -179,6 +179,8 @@ void remove_quotes_from_first_and_last(char *input)
 {
     int i = 0;
     int flag = 0;
+    if(ft_strlen(input) == 0)
+        return;
     if(input[0] == '"')
         flag = 1;
     else if(input[0] == '\'')

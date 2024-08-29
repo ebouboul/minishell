@@ -29,7 +29,7 @@ char* check_value_env(char *str, t_env *head)
     }
 
     // free(env_name);
-    return "(null)";
+    return "";
 }
 int ft_strlen1(char **str)
 {
@@ -52,7 +52,7 @@ char **resize_args(char **args, int new_size)
     if (new_args == NULL)
     {
         perror("Memory allocation failed\n");
-        exit(1);
+        return NULL;
     }
 
     while (args[i] != NULL)
@@ -62,7 +62,7 @@ char **resize_args(char **args, int new_size)
     }
 
     new_args[i] = NULL;
-    // free(args);
+    gc_free(args);
     return new_args;
 }
 
@@ -90,8 +90,21 @@ void expansion_process(t_node **head, t_env *env_list)
                 j = 0;
                 while (args[i][j] != '\0')
                 {
-                    if (args[i][j] == '$' && ( j == 0||(j != 0 && args[i][j - 1] != '\'')) && args[i][j + 1] != '\0' && (isalpha(args[i][j + 1]) || args[i][j + 1] == '_'))
+                    if (args[i][j] == '$' && ( j == 0||(j != 0 && args[i][j - 1] != '\'')) && args[i][j + 1] != '\0' && (isalpha(args[i][j + 1]) 
+                        || args[i][j + 1] == '_' || args[i][j + 1] == '?' || args[i][j + 1] == '$'))
                     {
+                        if(args[i][j + 1] == '?')
+                        {
+                            value = ft_itoa(current->exit_status);
+                            temp = new_arg;
+                            new_arg = ft_strjoin(temp, value);
+                            j++;
+                            // free(temp);
+                            j++;
+                            continue;
+                        }
+                        else
+                        {
 
                         k = j;
                         while (args[i][k] && (isalpha(args[i][k + 1]) || isdigit(args[i][k + 1]) || args[i][k + 1] == '_'))
@@ -104,6 +117,7 @@ void expansion_process(t_node **head, t_env *env_list)
                         // Skip over the variable name in the original string
                         while (args[i][j] && (isalpha(args[i][j + 1]) || isdigit(args[i][j + 1]) || args[i][j + 1] == '_'))
                             j++;
+                        }
                     }
                     else
                     {
@@ -114,19 +128,26 @@ void expansion_process(t_node **head, t_env *env_list)
                     }
                     j++;
                 }
-
+                if(new_arg[0] == '\0')
+                {
+                    args[i] = new_arg;
+                    i++;
+                    continue;
+                }
+                
                 // Handle case where args[i] contains quotes and needs to be split
-                if (args[i][0] == '"' && ft_strchr(args[i] + 1, '"'))
+                if (args[i][0] == '"' && ft_strchr(args[i] + 1, '"') && new_arg[0] != '\0' && ft_strchr(args[i] + k, '"' ) )
                 {
                     args[i] = new_arg; // Replace with the expanded string
                     remove_all_quotes_and_join(args[i]);
                     i++;
                 }
-                else
+                else if(new_arg[0] != '\0')
                 {
                     split_args = ft_split3(new_arg, ' ');
                     // free(new_arg);
-
+                    if (split_args[0] != NULL)
+                    {
                     // Calculate the size of the args array
                     original_size = 0;
                     while (args[original_size] != NULL)
@@ -157,7 +178,9 @@ void expansion_process(t_node **head, t_env *env_list)
                     }
                     // free(split_args);
                     i += k;
+                    }
                 }
+                
             }
             current_command->args = args;
             current_command = current_command->next;

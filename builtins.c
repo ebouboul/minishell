@@ -6,27 +6,38 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/29 03:43:20 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/29 23:45:34 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int ft_strcmp(const char *s1, const char *s2)
+{
+    int i = 0;
+    while (s1 && s2 && s1[i] != '\0' && s2[i] != '\0')
+    {
+        if (s1[i] != s2[i])
+            return s1[i] - s2[i];
+        i++;
+    }
+    return s1[i] - s2[i];
+}
 int is_builtin(char *command)
 {
-    if (strcmp(command, "echo") == 0)
+    if (ft_strcmp(command, "echo") == 0)
         return 1;
-    else if (strcmp(command, "cd") == 0)
+    else if (ft_strcmp(command, "cd") == 0)
         return 1;
-    else if (strcmp(command, "pwd") == 0)
+    else if (ft_strcmp(command, "pwd") == 0)
         return 1;
-    else if (strcmp(command, "export") == 0)
+    else if (ft_strcmp(command, "export") == 0)
         return 1;
-    else if (strcmp(command, "unset") == 0)
+    else if (ft_strcmp(command, "unset") == 0)
         return 1;
-    else if (strcmp(command, "env") == 0)
+    else if (ft_strcmp(command, "env") == 0)
         return 1;
-    else if (strcmp(command, "exit") == 0)
+    else if (ft_strcmp(command, "exit") == 0)
         return 1;
     return 0;
 }
@@ -51,7 +62,7 @@ int ft_echo(t_command *command)
     t_command *current = command;
     while (current->args[i] != NULL)
     {
-        if (current->args[i] != NULL && strcmp(current->args[i], "-n") == 0)
+        if (current->args[i] != NULL && ft_strcmp(current->args[i], "-n") == 0)
         {
             if (process_echo_option(current->args[i], &option))
                 break;
@@ -74,7 +85,7 @@ char *get_env_value(t_env *env_list, char *key)
     t_env *current = env_list;
     while (current != NULL)
     {
-        if (strcmp(current->env->key, key) == 0)
+        if (ft_strcmp(current->env->key, key) == 0)
             return current->env->value;
         current = current->next;
     }
@@ -85,7 +96,7 @@ void replace_env_value(t_env *env_list, char *key, char *value)
     t_env *current = env_list;
     while (current != NULL)
     {
-        if (strcmp(current->env->key, key) == 0)
+        if (ft_strcmp(current->env->key, key) == 0)
         {
             gc_free(current->env->value);
             current->env->value = ft_strdup(value);
@@ -169,7 +180,7 @@ int check_key_from_env(t_env *env_list, char *key)
     t_env *current = env_list;
     while (current != NULL)
     {
-        if (strcmp(current->env->key, key) == 0)
+        if (ft_strcmp(current->env->key, key) == 0)
         {
             return 1;
         }
@@ -185,10 +196,7 @@ void add_env_node(t_env **current, char *key, char *value)
     new_node->env->key = ft_strdup((const char *)key);
     new_node->env->value = ft_strdup((const char *)value);
     new_node->next = NULL;
-    // printf("key: %s\n", key);
-    // (*current)->next = new_node;
     *current = new_node;
-    // printf("%s\n", (*current)->env->key);
 }
 
 char **get_key_value_for_plus(char *var)
@@ -204,6 +212,55 @@ char **get_key_value_for_plus(char *var)
     key_value[2] = NULL;
     return key_value;
 }
+void ft_sort(char **keys, char **values)
+{
+    int i = 0;
+    int j = 0;
+    char *temp;
+    while (keys[i] != NULL)
+    {
+        j = i + 1;
+        while (keys[j] != NULL)
+        {
+            if (ft_strcmp(keys[i], keys[j]) > 0)
+            {
+                temp = keys[i];
+                keys[i] = keys[j];
+                keys[j] = temp;
+                temp = values[i];
+                values[i] = values[j];
+                values[j] = temp;
+            }
+            j++;
+        }
+        i++;
+    }
+}
+void print_export_sorted(t_env *env_list)
+{
+    t_env *current = env_list;
+    char **keys = (char **)gc_malloc(100 * sizeof(char *));
+    char **values = (char **)gc_malloc(100 * sizeof(char *));
+    int i = 0;
+    while (current != NULL)
+    {
+        keys[i] = current->env->key;
+        values[i] = current->env->value;
+        i++;
+        current = current->next;
+    }
+    keys[i] = NULL;
+    values[i] = NULL;
+    ft_sort(keys, values);
+    i = 0;
+    while (keys[i] != NULL)
+    {
+        printf("declare -x %s=\"%s\"\n", keys[i], values[i]);
+        i++;
+    }
+    gc_free(keys);
+    gc_free(values);
+}
 
 
 int ft_export(t_command *command, t_env **env_list)
@@ -218,11 +275,7 @@ int ft_export(t_command *command, t_env **env_list)
         if (current->args[1] == NULL)
         {
             // Print all environment variables
-            while (current_env != NULL)
-            {
-                printf("declare -x %s=\"%s\"\n", current_env->env->key, current_env->env->value);
-                current_env = current_env->next;
-            }
+            print_export_sorted(*env_list);
             return 0;
         }
         // else if((ft_strchr(current->args[1], '+'))[1] == '=')
@@ -239,7 +292,7 @@ int ft_export(t_command *command, t_env **env_list)
                 {
                     while (current_env != NULL)
                     {
-                        if (strcmp(current_env->env->key, key_value[0]) == 0)
+                        if (ft_strcmp(current_env->env->key, key_value[0]) == 0)
                         {
                             printf("declare -x %s=\"%s\"\n", current_env->env->key, current_env->env->value);
                             break;
@@ -255,7 +308,7 @@ int ft_export(t_command *command, t_env **env_list)
                 {
                     while (current_env != NULL)
                     {
-                        if (strcmp(current_env->env->key, key_value_plus[0]) == 0)
+                        if (ft_strcmp(current_env->env->key, key_value_plus[0]) == 0)
                         {
                             char *new_value = ft_strjoin(current_env->env->value, key_value_plus[1]);
                             gc_free(current_env->env->value);
@@ -274,7 +327,7 @@ int ft_export(t_command *command, t_env **env_list)
                     // Update the value if the key exists
                     while (current_env != NULL)
                     {
-                        if (strcmp(current_env->env->key, key_value[0]) == 0)
+                        if (ft_strcmp(current_env->env->key, key_value[0]) == 0)
                         {
                             gc_free(current_env->env->value);
                             current_env->env->value = ft_strdup(key_value[1]);
@@ -326,7 +379,7 @@ int ft_unset(t_command *command, t_env **env_list)
         {
             while (current_env != NULL)
             {
-                if (strcmp(current_env->env->key, current->args[1]) == 0)
+                if (ft_strcmp(current_env->env->key, current->args[1]) == 0)
                 {
                     if (prev == NULL)
                     {
@@ -360,19 +413,19 @@ int execute_builtin(t_node *head, t_env **env_list)
 {
     t_node *current = head;
     int status = 0;
-    if (strcmp(current->command->args[0], "echo") == 0)
+    if (ft_strcmp(current->command->args[0], "echo") == 0)
         status = ft_echo(current->command);
-    else if (strcmp(current->command->args[0], "cd") == 0)
+    else if (ft_strcmp(current->command->args[0], "cd") == 0)
         status = ft_cd(current->command, env_list);
-    else if (strcmp(current->command->args[0], "pwd") == 0)
+    else if (ft_strcmp(current->command->args[0], "pwd") == 0)
         status = ft_pwd();
-    else if (strcmp(current->command->args[0], "export") == 0)
+    else if (ft_strcmp(current->command->args[0], "export") == 0)
         status = ft_export(current->command, env_list);
-    else if (strcmp(current->command->args[0], "unset") == 0)
+    else if (ft_strcmp(current->command->args[0], "unset") == 0)
         status = ft_unset(current->command, env_list);
-    else if (strcmp(current->command->args[0], "env") == 0)
+    else if (ft_strcmp(current->command->args[0], "env") == 0)
         status = ft_env(*env_list);
-    else if (strcmp(current->command->args[0], "exit") == 0)
+    else if (ft_strcmp(current->command->args[0], "exit") == 0)
         status = ft_exit(current->command);
     return status;
 }

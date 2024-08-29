@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:20:19 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/29 03:41:44 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/29 23:46:06 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ TokenNode *ArrayIntoNodes(TokenInfo *tokens);
 TokenNode *create_node(TokenInfo token);
 void print_linked_list(TokenNode *head);
 void free_linked_list(TokenNode *head);
+int ft_strcmp(const char *s1, const char *s2);
 
 int check_special_chars(TokenNode *head);
 void add_spaces(char *input);
