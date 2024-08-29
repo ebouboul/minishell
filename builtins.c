@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/29 01:40:08 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/29 03:43:20 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void replace_env_value(t_env *env_list, char *key, char *value)
     {
         if (strcmp(current->env->key, key) == 0)
         {
-            free(current->env->value);
+            gc_free(current->env->value);
             current->env->value = ft_strdup(value);
             break;
         }
@@ -160,6 +160,7 @@ int ft_exit(t_command *command)
     {
         status = ft_atoi(command->args[1]);
     }
+    gc_free_all();
     exit(status);
     return 0;
 }
@@ -179,8 +180,8 @@ int check_key_from_env(t_env *env_list, char *key)
 void add_env_node(t_env **current, char *key, char *value)
 {
 
-    t_env *new_node = (t_env *)malloc(sizeof(t_env));
-    new_node->env = (env *)malloc(sizeof(env));
+    t_env *new_node = (t_env *)gc_malloc(sizeof(t_env));
+    new_node->env = (env *)gc_malloc(sizeof(env));
     new_node->env->key = ft_strdup((const char *)key);
     new_node->env->value = ft_strdup((const char *)value);
     new_node->next = NULL;
@@ -192,7 +193,7 @@ void add_env_node(t_env **current, char *key, char *value)
 
 char **get_key_value_for_plus(char *var)
 {
-    char **key_value = (char **)malloc(3 * sizeof(char *));
+    char **key_value = (char **)gc_malloc(3 * sizeof(char *));
     if (key_value == NULL)
     {
         perror("Memory allocation failed\n");
@@ -257,7 +258,7 @@ int ft_export(t_command *command, t_env **env_list)
                         if (strcmp(current_env->env->key, key_value_plus[0]) == 0)
                         {
                             char *new_value = ft_strjoin(current_env->env->value, key_value_plus[1]);
-                            free(current_env->env->value);
+                            gc_free(current_env->env->value);
                             current_env->env->value = new_value;
                             break;
                         }
@@ -275,7 +276,7 @@ int ft_export(t_command *command, t_env **env_list)
                     {
                         if (strcmp(current_env->env->key, key_value[0]) == 0)
                         {
-                            free(current_env->env->value);
+                            gc_free(current_env->env->value);
                             current_env->env->value = ft_strdup(key_value[1]);
                             break;
                         }
@@ -289,8 +290,8 @@ int ft_export(t_command *command, t_env **env_list)
                     {
                         current_env = current_env->next;
                     }
-                    current_env->next = (t_env *)malloc(sizeof(t_env));
-                    current_env->next->env = (env *)malloc(sizeof(env));
+                    current_env->next = (t_env *)gc_malloc(sizeof(t_env));
+                    current_env->next->env = (env *)gc_malloc(sizeof(env));
                     current_env->next->env->key = ft_strdup(key_value[0]);
                     current_env->next->env->value = ft_strdup(key_value[1]);
                     current_env->next->next = NULL;
@@ -300,7 +301,7 @@ int ft_export(t_command *command, t_env **env_list)
                 }
             }
             
-            free(key_value);
+            gc_free(key_value);
         }
         current = current->next;
     }
@@ -330,18 +331,18 @@ int ft_unset(t_command *command, t_env **env_list)
                     if (prev == NULL)
                     {
                         *env_list = current_env->next;
-                        free(current_env->env->key);
-                        free(current_env->env->value);
-                        free(current_env->env);
-                        free(current_env);
+                        gc_free(current_env->env->key);
+                        gc_free(current_env->env->value);
+                        gc_free(current_env->env);
+                        gc_free(current_env);
                         current_env = *env_list;
                         break;
                     }
                     prev->next = current_env->next;
-                    free(current_env->env->key);
-                    free(current_env->env->value);
-                    free(current_env->env);
-                    free(current_env);
+                    gc_free(current_env->env->key);
+                    gc_free(current_env->env->value);
+                    gc_free(current_env->env);
+                    gc_free(current_env);
                     current_env = prev->next;
                     break;
                 }

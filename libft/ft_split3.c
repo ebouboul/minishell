@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 23:44:02 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/24 02:55:27 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/29 02:54:03 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	**ft_split3(char const *s, char c)
 	size_t	j;
 	size_t	k;
 
-	tab = (char **)malloc(sizeof(char *) * (ft_countword(s, c) + 1));
+	tab = (char **)gc_malloc(sizeof(char *) * (ft_countword(s, c) + 1));
 	if (!s || !tab)
 		return (NULL);
 	i = 0;

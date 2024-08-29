@@ -47,7 +47,7 @@ TokenInfo *tokenizer(char **inputs)
     i = 0; 
     j = 0;
     token_count = 0;
-    TokenInfo *tokens = malloc((100) * sizeof(TokenInfo)); 
+    TokenInfo *tokens = gc_malloc((100) * sizeof(TokenInfo)); 
 
     if (!tokens) 
     {
@@ -59,7 +59,7 @@ TokenInfo *tokenizer(char **inputs)
     {
         i = 0;
         int k = 0;
-        tokens[token_count].value = malloc(ft_strlen(inputs[j]) + 1);
+        tokens[token_count].value = gc_malloc(ft_strlen(inputs[j]) + 1);
                 while (inputs[j][i] != '\0' && token_count < MAX_TOKENS )
                     {
                         while (is_space(inputs[j][i])) 
@@ -130,7 +130,7 @@ TokenInfo *tokenizer(char **inputs)
         j++;
     }
     
-    tokens[token_count].value = malloc(1);
+    tokens[token_count].value = gc_malloc(1);
 
     tokens[token_count].type = TOKEN_EOF;
     tokens[token_count].value[0] = '\0';

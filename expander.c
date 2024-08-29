@@ -22,13 +22,13 @@ char* check_value_env(char *str, t_env *head)
         if (strcmp(current->env->key, env_name) == 0)
         {
             val = current->env->value;
-            free(env_name);
+            // free(env_name);
             return val;
         }
         current = current->next;
     }
 
-    free(env_name);
+    // free(env_name);
     return "(null)";
 }
 int ft_strlen1(char **str)
@@ -42,112 +42,11 @@ int ft_strlen1(char **str)
 }
 
 
-// char **resize_args(char **args, int new_size)
-// {
-//     char **new_args = (char **)malloc(sizeof(char *) * (new_size + 1));
-//     int i = 0;
-
-//     if (new_args == NULL)
-//     {
-//         perror("Memory allocation failed\n");
-//         exit(1);
-//     }
-
-//     while (args[i] != NULL)
-//     {
-//         new_args[i] = args[i];
-//         i++;
-//     }
-
-//     new_args[i] = NULL;
-//     free(args);
-//     return new_args;
-// }
-
-// void expansion_process(t_node **head, t_env *env_list)
-// {
-//     t_node *current = *head;
-//     t_command *current_command;
-//     char **args;
-//     char **split_args;
-//     char *value;
-//     char *new_arg;
-//     char *temp;
-//     int i, j, k;
-
-//     while (current != NULL)
-//     {
-//         current_command = current->command;
-//         while (current_command != NULL)
-//         {
-//             args = current_command->args;
-//             i = 0;
-//             while (args[i] != NULL)
-//             {
-//                 new_arg = ft_strdup("");
-//                 j = 0;
-//                 while (args[i][j] != '\0')
-//                 {
-//                     if (args[i][j] == '$')
-//                     {
-//                         k = j;
-//                         while (args[i][k] && (isalpha(args[i][k + 1]) || isdigit(args[i][k + 1]) || args[i][k + 1] == '_'))
-//                         {
-//                             k++;
-//                         }
-//                         // Get the value of the environment variable
-//                         value = check_value_env(ft_substr(args[i], j, k - j + 1), env_list);
-                    
-//                         temp = new_arg;
-//                         new_arg = ft_strjoin(temp, value);
-//                         free(temp);
-
-//                         // Skip over the variable name in the original string
-//                         while (args[i][j] && (isalpha(args[i][j + 1]) || isdigit(args[i][j + 1]) || args[i][j + 1] == '_'))
-//                         {
-//                             j++;
-//                         }
-//                     }
-//                     else
-//                     {
-//                         // Append the current character if it's not part of an environment variable
-//                         temp = new_arg;
-//                         new_arg = ft_strjoin(temp, ft_substr(args[i], j, 1));
-//                         free(temp);
-//                     }
-//                     j++;
-//                 }
-//                 // free(args[i]);
-//                 if(args[i][0] == '"')
-//                 {
-//                 split_args = ft_split3(new_arg, ' ');
-//                 free(new_arg);
-//                 // args = resize_args(args, ft_strlen1(split_args) + ft_strlen1(args));
-//                 int c = 0;
-//                 k = i;
-//                 while (split_args[c] != NULL)
-//                 {
-//                     args[i] = split_args[c];
-//                     i++;
-//                     c++;
-//                 }
-//                 args[i] = NULL;
-//                 printf("--------------------\n");
-//                 }
-//                 else
-//                 args[i++] = new_arg; // Replace with the expanded string
-//             }
-//             current_command = current_command->next;
-//         }
-//         current = current->next;
-//     }
-    
-// }
 
 
 char **resize_args(char **args, int new_size)
 {
-    char **new_args = (char **)malloc(sizeof(char *) * (new_size + 1));
+    char **new_args = (char **)gc_malloc(sizeof(char *) * (new_size + 1));
     int i = 0;
 
     if (new_args == NULL)
@@ -163,7 +62,7 @@ char **resize_args(char **args, int new_size)
     }
 
     new_args[i] = NULL;
-    free(args);
+    // free(args);
     return new_args;
 }
 
@@ -191,8 +90,9 @@ void expansion_process(t_node **head, t_env *env_list)
                 j = 0;
                 while (args[i][j] != '\0')
                 {
-                    if (args[i][j] == '$' && args[i][j - 1] != '\'')
+                    if (args[i][j] == '$' && ( j == 0||(j != 0 && args[i][j - 1] != '\'')) && args[i][j + 1] != '\0' && (isalpha(args[i][j + 1]) || args[i][j + 1] == '_'))
                     {
+
                         k = j;
                         while (args[i][k] && (isalpha(args[i][k + 1]) || isdigit(args[i][k + 1]) || args[i][k + 1] == '_'))
                             k++;
@@ -200,7 +100,7 @@ void expansion_process(t_node **head, t_env *env_list)
                         value = check_value_env(ft_substr(args[i], j, k - j + 1), env_list);
                         temp = new_arg;
                         new_arg = ft_strjoin(temp, value);
-                        free(temp);
+                        // free(temp);
                         // Skip over the variable name in the original string
                         while (args[i][j] && (isalpha(args[i][j + 1]) || isdigit(args[i][j + 1]) || args[i][j + 1] == '_'))
                             j++;
@@ -210,7 +110,7 @@ void expansion_process(t_node **head, t_env *env_list)
                         // Append the current character if it's not part of an environment variable
                         temp = new_arg;
                         new_arg = ft_strjoin(temp, ft_substr(args[i], j, 1));
-                        free(temp);
+                        // free(temp);
                     }
                     j++;
                 }
@@ -225,7 +125,7 @@ void expansion_process(t_node **head, t_env *env_list)
                 else
                 {
                     split_args = ft_split3(new_arg, ' ');
-                    free(new_arg);
+                    // free(new_arg);
 
                     // Calculate the size of the args array
                     original_size = 0;
@@ -255,7 +155,7 @@ void expansion_process(t_node **head, t_env *env_list)
                         remove_all_quotes_and_join(args[i + k]);
                         k++;
                     }
-                    free(split_args);
+                    // free(split_args);
                     i += k;
                 }
             }

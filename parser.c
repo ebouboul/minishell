@@ -2,7 +2,7 @@
 
 TokenNode *create_node(TokenInfo token)
 {
-    TokenNode *new_node = (TokenNode*)malloc(sizeof(TokenNode));
+    TokenNode *new_node = (TokenNode*)gc_malloc(sizeof(TokenNode));
     if (new_node == NULL) {
         perror("Memory allocation failed\n");
         exit(1);
@@ -56,7 +56,7 @@ int is_special_redc(char c)
 
 char *ft_strjoin1(char c, char *s)
 {
-    char *result = (char*)malloc(strlen(s) + 2);
+    char *result = (char*)gc_malloc(strlen(s) + 2);
     if (result == NULL) {
         perror("Memory allocation failed\n");
         exit(1);

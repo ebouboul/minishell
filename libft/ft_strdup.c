@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 17:47:16 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/23 23:55:17 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/29 02:53:36 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_strdup(const char *src)
 	char	*dest;
 
 	size = ft_strlen(src);
-	dest = (char *)malloc(size * sizeof(char) + 1);
+	dest = (char *)gc_malloc(size * sizeof(char) + 1);
 	if (dest == NULL)
 		return (0);
 	ft_memcpy(dest, src, size);

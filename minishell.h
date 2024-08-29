@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:20:19 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/29 01:36:05 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/29 03:41:44 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,11 @@ void execute_external(t_command *command, t_env *env_list);
 char join_command_with_path_and_access(char *command, char **paths, int n);
 char split_path_in_env(char *path, char **paths);
 int check_env_for_path(t_env *env_list);
+
+// free functions
+void *gc_malloc(size_t size);
+void gc_free_all();
+void gc_free(void *ptr);
 
 
 #endif

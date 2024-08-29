@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 17:53:53 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/24 02:56:37 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/29 02:55:44 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include <stddef.h>
 # include <stdlib.h>
 # include <unistd.h>
+#include "../minishell.h"
 
 typedef struct s_list
 {

@@ -4,13 +4,11 @@ int main(int argc, char **argv, char **env)
 {
     (void)argc;
     (void)argv;
-    TokenNode *list_head = NULL;
     TokenInfo *tokens;
     t_node *node;
-    t_env *env_list = (t_env*)malloc(sizeof(t_env));
+    t_env *env_list = (t_env*)gc_malloc(sizeof(t_env));
     char *input;
     char **inp;
-    int i = 0;
   
     fill_env_list(env, env_list);
     while(1)
@@ -51,6 +49,7 @@ int main(int argc, char **argv, char **env)
         check_syntax_double_special_charcters(list_head);
         check_syntax_special_Face_to_Face(list_head);
         node = convert_to_node_list(list_head);
+        expansion_process(&node, env_list);
         remove_quotes_and_join(node);
         execute_builtin(node, &env_list);
         // execute_commands(node, &env_list);
@@ -59,18 +58,18 @@ int main(int argc, char **argv, char **env)
 
     }
 
-
+        gc_free_all();
 
 //  printf("Linked List of Tokens:\n");
  
 
 
-    free_linked_list(list_head);
+    // free_linked_list(list_head);
 
 
-     i = 0;
+    //  i = 0;
    
-    free(inp);
-    free(tokens);
+    // free(inp);
+    // free(tokens);
     return 0;
 }

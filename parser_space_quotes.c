@@ -5,13 +5,13 @@ void add_spaces(char *input)
 {
     int i = 0;
     int j = 0;
-    char *new_input = (char*)malloc(strlen(input) * 2 + 1);
+    char *new_input = (char*)gc_malloc(strlen(input) * 2 + 1);
     if (new_input == NULL) {
         perror("Memory allocation failed\n");
         exit(1);
     }
     while (input[i] != '\0') {
-        if ((input[i] == '|' || input[i] == ';' || input[i] == '&' || input[i] == '|') && (i == 0 || input[i - 1] != ' ')) 
+        if ((input[i] == '|' ) && (i == 0 || input[i - 1] != ' ')) 
         {
             {
                 new_input[j++] = ' ';
@@ -27,7 +27,6 @@ void add_spaces(char *input)
     new_input[j] = '\0';
 
     strcpy(input, new_input);
-    free(new_input);
 
 }
 

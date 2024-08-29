@@ -5,7 +5,7 @@
 
 char *ft_strndup(char *s, int n)
 {
-    char *result = (char*)malloc(n + 1);
+    char *result = (char*)gc_malloc(n + 1);
     if (result == NULL) {
         perror("Memory allocation failed\n");
         exit(1);
@@ -21,10 +21,10 @@ char *ft_strndup(char *s, int n)
 //     while(envv[i])
 //     {
 //         char **key_value = get_key_value(envv[i]);
-//         current->env = (env *)malloc(sizeof(env));
+//         current->env = (env *)gc_malloc(sizeof(env));
 //         current->env->key = ft_strdup(key_value[0]);
 //         current->env->value = ft_strdup(key_value[1]);
-//         current->next = (t_env *)malloc(sizeof(t_env));
+//         current->next = (t_env *)gc_malloc(sizeof(t_env));
 //         current = current->next;
 //         // current->next = NULL;
 
@@ -45,11 +45,11 @@ void fill_env_list(char **envv, t_env *env_list)
         char **key_value = get_key_value(envv[i]);
 
         // Allocate memory for the current environment variable
-        current->env = (env *)malloc(sizeof(env));
+        current->env = (env *)gc_malloc(sizeof(env));
         if (current->env == NULL)
         {
-            // Handle malloc failure
-            perror("malloc failed");
+            // Handle gc_malloc failure
+            perror("gc_malloc failed");
             exit(EXIT_FAILURE);
         }
 
@@ -60,10 +60,10 @@ void fill_env_list(char **envv, t_env *env_list)
         // Allocate memory for the next node and prepare it
         if (envv[i + 1]) // Allocate a new node only if there are more environment variables to process
         {
-            current->next = (t_env *)malloc(sizeof(t_env));
+            current->next = (t_env *)gc_malloc(sizeof(t_env));
             if (current->next == NULL)
             {
-                perror("malloc failed");
+                perror("gc_malloc failed");
                 exit(EXIT_FAILURE);
             }
             current = current->next;
@@ -74,19 +74,18 @@ void fill_env_list(char **envv, t_env *env_list)
         }
 
         i++;
-        free(key_value); // Clean up key_value after use
+        // free(key_value); // Clean up key_value after use
     }
 }
 
 void print_env_list(t_env *env_list)
 {
     
-    t_env *current = env_list;
-    // current->index = 0;
+    t_env *current;
+    current = env_list;
     while(current != NULL)
     {
         printf("%s=%s\n", current->env->key, current->env->value);
-        // current->index++;
         current = current->next;
        
     }
@@ -94,7 +93,7 @@ void print_env_list(t_env *env_list)
 
 char **get_key_value(char *var)
 {
-    char **key_value = (char**)malloc(3 * sizeof(char*));
+    char **key_value = (char**)gc_malloc(3 * sizeof(char*));
 
     if (key_value == NULL) {
         perror("Memory allocation failed\n");
@@ -110,9 +109,9 @@ char **get_key_value(char *var)
 
 
 // void add_env_node(t_env **current, char *key, char *value) {
-//     t_env *new_node = (t_env *)malloc(sizeof(t_env));
+//     t_env *new_node = (t_env *)gc_malloc(sizeof(t_env));
     
-//     new_node->env = (env *)malloc(sizeof(env));
+//     new_node->env = (env *)gc_malloc(sizeof(env));
 //     new_node->env->key = ft_strdup(key);
 //     new_node->env->value = ft_strdup(value);
     

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 17:47:01 by ebouboul          #+#    #+#             */
-/*   Updated: 2023/11/03 17:47:03 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/29 02:55:15 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	len = nmemb * size;
 	if (nmemb != 0 && len / nmemb != size)
 		return (NULL);
-	array = (void *)malloc(len);
+	array = gc_malloc(len);
 	if (array == NULL)
 		return (NULL);
 	ft_bzero(array, (len));
