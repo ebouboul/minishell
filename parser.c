@@ -70,23 +70,7 @@ char *ft_strjoin1(char c, char *s)
 
 
 
-// char **split_by_quots(char **input, char c)
-// {
-//     char **result;
-//     int k = 0;
-//     while(input[k])
-//     {
-//         result = ft_split(input[k], c);
-//         k++;
-//     }
-//     int i = 0;
-//     while (result[i]) {
-//         result[i] = ft_strjoin(result[i], result[i + 1]);
-//         i++;
-//     }
-//     return result;
 
-// }
 
 int truck_quots(char *input, char c)
 {
@@ -109,20 +93,7 @@ int truck_quots(char *input, char c)
         return 0;
 }
 
-// int check_RRAH(TokenNode *head)
-// {
-//     TokenNode *current = head;
-//     while (current != NULL) {
-//         if (current->info.type == TOKEN_APPEND || current->info.type == TOKEN_REDIRECT_OUT 
-//         || current->info.type == TOKEN_REDIRECT_IN || current->info.type == HEREDOC)
-//         {
-//             if (current->next == NULL || current->next->info.type != TOKEN_FILE)
-//             {
-//                 printf("syntax Error: --%s--\n", current->info.value);
-//                 return 1;
-//             }
-//         }
-//         current = current->next;
-//     }
-//     return 0;
-// }
+
+
+
+

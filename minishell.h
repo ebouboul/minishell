@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:20:19 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/25 21:34:51 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/29 01:36:05 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <fcntl.h>
+#include <sys/wait.h>
 #include "./libft/libft.h"
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -59,8 +61,7 @@ typedef struct
 typedef struct t_env
 {
     env *env;
-    // int *index;
-   struct t_env *next;
+    struct t_env *next;
 } t_env;
 
 typedef struct t_redirect
@@ -93,20 +94,20 @@ TokenNode *ArrayIntoNodes(TokenInfo *tokens);
 TokenNode *create_node(TokenInfo token);
 void print_linked_list(TokenNode *head);
 void free_linked_list(TokenNode *head);
-int check_syntax(TokenNode *head);
+
 int check_special_chars(TokenNode *head);
 void add_spaces(char *input);
 int check_quotes(TokenNode *head, char c);
 int check_quotes_spiclal_chars(TokenNode *head, char c);
 char **split_by_quots(char *input);
 int truck_quots(char *input, char c);
-// void unset_env(char **env, char *input);
-// void export_env(char **env, char *var);
+
 void fill_env_list(char **env, t_env *env_list);
 void print_env_list(t_env *env_list);
 int check_key_if_deja(t_env *env_list, char *var);
-// int check_RRAH(TokenNode *head);
 int check_special_validity(TokenNode *head);
+int check_syntax_double_special_charcters(TokenNode *head);
+
 int check_syntax_special_Face_to_Face(TokenNode *head);
 char *check_value_env(char *str, t_env *head);
 // void expansion_process(TokenNode *head, t_env *key);
@@ -125,6 +126,18 @@ int check_key_from_env(t_env *env_list, char *key);
 char **get_key_value(char *var);
 void expansion_process(t_node **head, t_env *key);
 void remove_all_quotes_and_join(char *input);
+
+// execution functions 1st part:
+int is_builtin(char *command);
+void execute_commands(t_node *head, t_env **env_list);
+void execute_single_command(t_node *node, t_env **env_list);
+void handle_redirections(t_redirect *redirect);
+// execution functions 2nd part:
+void execute_external(t_command *command, t_env *env_list);
+char join_command_with_path_and_access(char *command, char **paths, int n);
+char split_path_in_env(char *path, char **paths);
+int check_env_for_path(t_env *env_list);
+
 
 #endif
 

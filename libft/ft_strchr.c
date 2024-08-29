@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 17:44:19 by ebouboul          #+#    #+#             */
-/*   Updated: 2023/11/03 17:44:23 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/29 00:40:41 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
+
 
 char	*ft_strchr(char *s, int c)
 {
 	int	i;
 
 	i = 0;
-	while ((char)c != s[i])
+	while (s && (char)c != s[i])
 	{
 		if (s[i] == '\0')
 			return (0);

@@ -6,21 +6,11 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/26 06:34:22 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/29 01:40:08 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-// int ft_echo(TokenNode *head);
-// int ft_cd(TokenNode *head, t_env *env_list);
-// int ft_pwd();
-// // int ft_export(TokenNode *head, t_env *env_list, char **env);
-// // int ft_unset(TokenNode *head, t_env *env_list);
-// int ft_env(t_env *env_list);
-// // void unset_env(t_env *env_list, char *input);
-// // void add_env(char **env, char *input);
-// char *get_env_value(t_env *env_list, char *key);
-
 
 int is_builtin(char *command)
 {
@@ -57,20 +47,22 @@ int process_echo_option(char *option, int *option_value)
 int ft_echo(t_command *command)
 {
     int option = 0;
+    int i = 1;
     t_command *current = command;
-    while (current != NULL)
+    while (current->args[i] != NULL)
     {
-        if (current->args[1] != NULL && strcmp(current->args[1], "-n") == 0)
+        if (current->args[i] != NULL && strcmp(current->args[i], "-n") == 0)
         {
-            if (process_echo_option(current->args[1], &option))
+            if (process_echo_option(current->args[i], &option))
                 break;
         }
         else
         {
-            printf("%s ", current->args[1]);
+            printf("%s ", current->args[i]);
         }
-        current = current->next;
+        i++;
     }
+
     if (!option)
         printf("\n");
     return 0;
@@ -88,12 +80,28 @@ char *get_env_value(t_env *env_list, char *key)
     }
     return NULL;
 }
-int ft_cd(t_command *command, t_env *env_list)
+void replace_env_value(t_env *env_list, char *key, char *value)
+{
+    t_env *current = env_list;
+    while (current != NULL)
+    {
+        if (strcmp(current->env->key, key) == 0)
+        {
+            free(current->env->value);
+            current->env->value = ft_strdup(value);
+            break;
+        }
+        current = current->next;
+    }
+}
+int ft_cd(t_command *command, t_env **env_list)
 {
     char *path;
-    if (command->args[1] == NULL)
+    t_command *current = command;
+    t_env *current_env = *env_list;
+    if (current->args[1] == NULL)
     {
-        path = get_env_value(env_list, "HOME");
+        path = get_env_value(*env_list, "HOME");
         if (path == NULL)
         {
             printf("cd: HOME not set\n");
@@ -102,9 +110,19 @@ int ft_cd(t_command *command, t_env *env_list)
     }
     else
     {
-        path = command->args[1];
+        path = current->args[1];
     }
-    if (chdir(path) == -1)
+    char *oldpwd = getcwd(NULL, 0);
+    int status = chdir(path);
+    if(status != -1)
+    {
+        char *pwd = getcwd(NULL, 0);
+        replace_env_value(current_env, "OLDPWD", oldpwd);
+        replace_env_value(current_env, "PWD", pwd);
+        free(oldpwd);
+        free(pwd);
+    }
+    else
     {
         printf("cd: %s: %s\n", path, strerror(1));
         return 1;
@@ -137,21 +155,23 @@ int ft_env(t_env *env_list)
 
 int ft_exit(t_command *command)
 {
+    int status = 0;
     if (command->args[1] != NULL)
     {
-        printf("exit\n");
-        exit(atoi(command->args[1]));
-        return 1;
+        status = ft_atoi(command->args[1]);
     }
+    exit(status);
     return 0;
 }
 int check_key_from_env(t_env *env_list, char *key)
 {
     t_env *current = env_list;
-    while (current->next != NULL)
+    while (current != NULL)
     {
         if (strcmp(current->env->key, key) == 0)
+        {
             return 1;
+        }
         current = current->next;
     }
     return 0;
@@ -170,13 +190,26 @@ void add_env_node(t_env **current, char *key, char *value)
     // printf("%s\n", (*current)->env->key);
 }
 
-
+char **get_key_value_for_plus(char *var)
+{
+    char **key_value = (char **)malloc(3 * sizeof(char *));
+    if (key_value == NULL)
+    {
+        perror("Memory allocation failed\n");
+        exit(1);
+    }
+    key_value[0] = ft_strndup(var, ft_strchr(var, '+') - var);
+    key_value[1] = ft_strdup(ft_strchr(var, '+') + 2);
+    key_value[2] = NULL;
+    return key_value;
+}
 
 
 int ft_export(t_command *command, t_env **env_list)
 {
     t_command *current = command;
     t_env *current_env = *env_list; // Reset current_env to start of the list
+    char *plus;
     
     while (current != NULL)
     {
@@ -191,6 +224,8 @@ int ft_export(t_command *command, t_env **env_list)
             }
             return 0;
         }
+        // else if((ft_strchr(current->args[1], '+'))[1] == '=')
+        
         else
         {
             // Parse the key-value pair
@@ -206,6 +241,24 @@ int ft_export(t_command *command, t_env **env_list)
                         if (strcmp(current_env->env->key, key_value[0]) == 0)
                         {
                             printf("declare -x %s=\"%s\"\n", current_env->env->key, current_env->env->value);
+                            break;
+                        }
+                        current_env = current_env->next;
+                    }
+                }
+            }
+            else if((plus = ft_strchr(current->args[1], '+')) && plus[1] == '=')
+            {
+                char **key_value_plus = get_key_value_for_plus(current->args[1]);
+                if (check_key_from_env(*env_list, key_value_plus[0]))
+                {
+                    while (current_env != NULL)
+                    {
+                        if (strcmp(current_env->env->key, key_value_plus[0]) == 0)
+                        {
+                            char *new_value = ft_strjoin(current_env->env->value, key_value_plus[1]);
+                            free(current_env->env->value);
+                            current_env->env->value = new_value;
                             break;
                         }
                         current_env = current_env->next;
@@ -309,7 +362,7 @@ int execute_builtin(t_node *head, t_env **env_list)
     if (strcmp(current->command->args[0], "echo") == 0)
         status = ft_echo(current->command);
     else if (strcmp(current->command->args[0], "cd") == 0)
-        status = ft_cd(current->command, *env_list);
+        status = ft_cd(current->command, env_list);
     else if (strcmp(current->command->args[0], "pwd") == 0)
         status = ft_pwd();
     else if (strcmp(current->command->args[0], "export") == 0)

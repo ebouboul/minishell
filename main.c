@@ -11,13 +11,8 @@ int main(int argc, char **argv, char **env)
     char *input;
     char **inp;
     int i = 0;
-    // while(env[i])
-    // {
-    //     printf("%s\n", env[i]);
-    //     i++;
-    // }
+  
     fill_env_list(env, env_list);
-     print_env_list(env_list);
     while(1)
     {
         input = readline("minishell$ ");
@@ -28,36 +23,19 @@ int main(int argc, char **argv, char **env)
             continue;
         }
         add_history(input);
-        // if(strcmp(input, "env") == 0)
-        // {
-        //     int i = 0;
-        //     while(env[i])
-        //     {
-        //         printf("%s\n", env[i]);
-        //         i++;
-        //     }
-        // }
-        // if(strncmp(input, "unset", 5) == 0)
-        // {
-        //     unset_env(env, input + 6);
-        // }
-        // if(strncmp(input, "exlort", 6) == 0)
-        // {
-        //     fill_env_list(env, env_list);
-        //     print_env_list(env_list);
-        //     // check_key_if_deja(env_list, input + 7);
-        //     // print_env_list(env_list);
-        // }
-
 
         add_spaces(input);
+        if(truck_quots(input, '"') == 1 || truck_quots(input, '\'') == 1)
+        {
+            perror("Error: quotes not closed\n");
+            continue;
+        }
         inp = ft_split(input);
 
 
         tokens = tokenizer(inp);
         if (tokens == NULL) 
         {
-            perror("Memory allocation failed\n");
             return 1;
         }
 
@@ -67,29 +45,17 @@ int main(int argc, char **argv, char **env)
             perror("Memory allocation failed\n");
             return 1;
         }
-        // check_RRAH(list_head);
         check_special_chars(list_head);
-        // check_syntax(list_head);
-        // check_quotes(list_head, '"');
-        // check_quotes(list_head, '\'');
-        // print_env_list(env_list);
-        // remove_quotes_and_join(list_head);
+
+
+        check_syntax_double_special_charcters(list_head);
+        check_syntax_special_Face_to_Face(list_head);
         node = convert_to_node_list(list_head);
-        // printf("exit status: %d\n", node->exit_status);
-        // print_node_list(node);
-        expansion_process(&node, env_list);
-        // print_linked_list(list_head);
-        // printf("exit status: %d\n", node->exit_status);
         remove_quotes_and_join(node);
         execute_builtin(node, &env_list);
+        // execute_commands(node, &env_list);
         print_node_list(node);
-        // print_linked_list(list_head);
-        // // check_quotes_spiclal_chars(list_head, '"');
-        // // check_quotes_spiclal_chars(list_head, '\'');
         check_special_validity(list_head);
-        check_syntax_special_Face_to_Face(list_head);
-
-        // check_value_env(inp[0], env_list);
 
     }
 

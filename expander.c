@@ -218,7 +218,6 @@ void expansion_process(t_node **head, t_env *env_list)
                 // Handle case where args[i] contains quotes and needs to be split
                 if (args[i][0] == '"' && ft_strchr(args[i] + 1, '"'))
                 {
-                    printf("new_arg: %s\n", new_arg);
                     args[i] = new_arg; // Replace with the expanded string
                     remove_all_quotes_and_join(args[i]);
                     i++;

@@ -14,24 +14,68 @@ char *ft_strndup(char *s, int n)
     result[n] = '\0';
     return result;
 }
+// void fill_env_list(char **envv, t_env *env_list) 
+// {
+//     t_env *current = env_list;
+//     int i = 0;
+//     while(envv[i])
+//     {
+//         char **key_value = get_key_value(envv[i]);
+//         current->env = (env *)malloc(sizeof(env));
+//         current->env->key = ft_strdup(key_value[0]);
+//         current->env->value = ft_strdup(key_value[1]);
+//         current->next = (t_env *)malloc(sizeof(t_env));
+//         current = current->next;
+//         // current->next = NULL;
+
+//         i++;
+        
+//     }
+//     current = NULL; 
+// }
+
+
 void fill_env_list(char **envv, t_env *env_list) 
 {
     t_env *current = env_list;
     int i = 0;
-    while(envv[i])
+
+    while (envv[i])
     {
         char **key_value = get_key_value(envv[i]);
+
+        // Allocate memory for the current environment variable
         current->env = (env *)malloc(sizeof(env));
+        if (current->env == NULL)
+        {
+            // Handle malloc failure
+            perror("malloc failed");
+            exit(EXIT_FAILURE);
+        }
+
+        // Set key and value
         current->env->key = ft_strdup(key_value[0]);
         current->env->value = ft_strdup(key_value[1]);
-        current->next = (t_env *)malloc(sizeof(t_env));
-        current = current->next;
-        // current->next = NULL;
+
+        // Allocate memory for the next node and prepare it
+        if (envv[i + 1]) // Allocate a new node only if there are more environment variables to process
+        {
+            current->next = (t_env *)malloc(sizeof(t_env));
+            if (current->next == NULL)
+            {
+                perror("malloc failed");
+                exit(EXIT_FAILURE);
+            }
+            current = current->next;
+        }
+        else
+        {
+            current->next = NULL; // Set the next pointer of the last node to NULL
+        }
 
         i++;
-        
+        free(key_value); // Clean up key_value after use
     }
-    current = NULL; 
 }
 
 void print_env_list(t_env *env_list)
