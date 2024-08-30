@@ -103,7 +103,7 @@ int check_syntax_double_special_charcters(TokenNode *head)
     while (current != NULL) {
         if (current->info.type == TOKEN_APPEND || current->info.type == TOKEN_HEREDOC || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT) 
         {
-            if (current->next != NULL && current->next->info.type == TOKEN_FILE) 
+            if (current->next != NULL && current->next->info.type != TOKEN_FILE) 
             {
                 printf("Syntax Error: Two specials in a row\n");
                 return 1;
@@ -146,7 +146,7 @@ int check_special_validity(TokenNode *head)
         {
             if (strchr(current->info.value, '<') || strchr(current->info.value, '>')) 
             {
-                printf("Syntax Error: Two specials in a row\n");
+                printf("Syntax Error: Two s55pecials in a row\n");
                 return 1;
             }
         }

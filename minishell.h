@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:20:19 by ebouboul          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/08/29 23:46:06 by ebouboul         ###   ########.fr       */
+=======
+/*   Updated: 2024/08/30 22:46:49 by ansoulai         ###   ########.fr       */
+>>>>>>> f6b26a4 (execution)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,10 +138,11 @@ void execute_commands(t_node *head, t_env **env_list);
 void execute_single_command(t_node *node, t_env **env_list);
 void handle_redirections(t_redirect *redirect);
 // execution functions 2nd part:
-void execute_external(t_command *command, t_env *env_list);
+int execute_external(t_command *command, t_env *env_list);
 char join_command_with_path_and_access(char *command, char **paths, int n);
 char split_path_in_env(char *path, char **paths);
 int check_env_for_path(t_env *env_list);
+char *gett_env_value(const char *key, t_env *env_list);
 
 // free functions
 void *gc_malloc(size_t size);

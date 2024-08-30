@@ -51,8 +51,8 @@ int main(int argc, char **argv, char **env)
         node = convert_to_node_list(list_head);
         expansion_process(&node, env_list);
         remove_quotes_and_join(node);
-        execute_builtin(node, &env_list);
-        // execute_commands(node, &env_list);
+        // execute_builtin(node, &env_list);
+        execute_commands(node, &env_list);
         print_node_list(node);
         check_special_validity(list_head);
 
