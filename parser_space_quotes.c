@@ -37,10 +37,7 @@ int check_quotes(TokenNode *head, char c)
         if (current->info.type == TOKEN_COMMAND || current->info.type == TOKEN_ARG) 
         {
             if (current->info.value[0] == c && current->info.value[strlen(current->info.value) - 1] != c)
-            {
-                printf("Syntax Error: Double quotes not closed\n");
-                return 1;
-            }
+                return(print_error("Error: quotes not closed\n"));
         }
         current = current->next;
     }
@@ -54,10 +51,7 @@ int check_quotes_spiclal_chars(TokenNode *head, char c)
         if (current->info.type == TOKEN_COMMAND || current->info.type == TOKEN_ARG) 
         {
             if (current->info.value[0] == c && current->next != NULL && current->next->info.type != TOKEN_COMMAND && current->next->info.type != TOKEN_ARG) 
-            {
-                printf("Syntax Error: Double quotes must not contain special characters\n");
-                return 1;
-            }
+                return(print_error("Error: special characters not allowed after quotes\n"));
         }
         current = current->next;
     }
@@ -68,10 +62,8 @@ int check_syntax_double_commands(TokenNode *head)
     TokenNode *current = head;
     while (current != NULL) {
         if (current->info.type == TOKEN_COMMAND) {
-            if (current->next != NULL && current->next->info.type == TOKEN_COMMAND) {
-                printf("Syntax Error: Two commands in a row\n");
-                return 1;
-            }
+            if (current->next != NULL && current->next->info.type == TOKEN_COMMAND) 
+                return(print_error("Error: Double commands\n"));
         }
         current = current->next;
     }
@@ -81,17 +73,12 @@ int check_special_chars(TokenNode *head)
 {
     TokenNode *current = head;
     if (current->info.type == TOKEN_PIPE || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT || current->info.type == TOKEN_APPEND ) 
-    {
-        printf("Syntax Error: Special character at the beginning of the command\n");
-        return 1;
-    }
+        return(print_error("Error: Special character at the beginning of the command\n"));
     while (current != NULL) {
         if (current->info.type == TOKEN_PIPE || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT || current->info.type == TOKEN_APPEND || current->info.type == TOKEN_HEREDOC) 
         {
-            if (current->next == NULL) {
-                printf("Syntax Error: Special character at the end of the command\n");
-                return 1;
-            }
+            if (current->next == NULL) 
+            return(print_error("Error: Special character at the end of the command\n"));
         }
         current = current->next;
     }
@@ -104,10 +91,7 @@ int check_syntax_double_special_charcters(TokenNode *head)
         if (current->info.type == TOKEN_APPEND || current->info.type == TOKEN_HEREDOC || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT) 
         {
             if (current->next != NULL && current->next->info.type != TOKEN_FILE) 
-            {
-                printf("Syntax Error: Two specials in a row\n");
-                return 1;
-            }
+            return(print_error("Error: Double special characters\n"));
         }
         current = current->next;
     }
@@ -120,18 +104,12 @@ int check_syntax_special_Face_to_Face(TokenNode *head)
         if (current->info.type == TOKEN_APPEND || current->info.type == TOKEN_HEREDOC || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT) 
         {
             if ((current->next != NULL && current->next->info.type == TOKEN_APPEND) || (current->next != NULL && current->next->info.type == TOKEN_HEREDOC) || (current->next != NULL && current->next->info.type == TOKEN_REDIRECT_IN)|| (current->next != NULL && current->next->info.type == TOKEN_REDIRECT_OUT)) 
-            {
-                printf("Syntax Error: Face to Face\n");
-                return 1;
-            }
+            return(print_error("Error: Face to Face\n"));
         }
         else if (current->info.type == TOKEN_PIPE)
             {
                 if(current->next == NULL || current->next->info.type == TOKEN_PIPE )
-                {
-                    printf("Syntax Error: Pipe to Pipe\n");
-                    return 1;
-                }
+                return(print_error("Error: Face to Face\n"));
             }
         current = current->next;
     }
@@ -146,8 +124,7 @@ int check_special_validity(TokenNode *head)
         {
             if (strchr(current->info.value, '<') || strchr(current->info.value, '>')) 
             {
-                printf("Syntax Error: Two s55pecials in a row\n");
-                return 1;
+                return(print_error("Error: special characters not allowed in command\n"));
             }
         }
         current = current->next;

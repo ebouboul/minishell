@@ -70,7 +70,12 @@ char *ft_strjoin1(char c, char *s)
 
 
 
+int print_error(char *str)
+{
 
+    write(2, str, ft_strlen(str));
+    return 2;
+}
 
 int truck_quots(char *input, char c)
 {
@@ -85,10 +90,7 @@ int truck_quots(char *input, char c)
         i++;
     }
     if(k % 2 != 0)
-        {
-            printf("syntax Error: --%c--\n", c);
-            return 1;
-        }
+        return(print_error("Error: quotes not closed\n"));
     else
         return 0;
 }

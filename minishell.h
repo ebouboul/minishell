@@ -1,18 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/21 15:20:19 by ebouboul          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/08/29 23:46:06 by ebouboul         ###   ########.fr       */
-=======
-/*   Updated: 2024/08/30 22:46:49 by ansoulai         ###   ########.fr       */
->>>>>>> f6b26a4 (execution)
-/*                                                                            */
-/* ************************************************************************** */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -106,6 +91,7 @@ int check_quotes(TokenNode *head, char c);
 int check_quotes_spiclal_chars(TokenNode *head, char c);
 char **split_by_quots(char *input);
 int truck_quots(char *input, char c);
+int print_error(char *str);
 
 void fill_env_list(char **env, t_env *env_list);
 void print_env_list(t_env *env_list);

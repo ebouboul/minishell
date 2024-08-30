@@ -20,7 +20,7 @@ void execute_single_command(t_node *node, t_env **env_list)
     }
     else
     {
-        printf("DEBUG: Executing external command: %s\n", cmd);
+        // printf("DEBUG: Executing external command: %s\n", cmd);
         node->exit_status = execute_external(node->command, *env_list);
     }
 }
@@ -116,7 +116,7 @@ char *gett_env_value(const char *key, t_env *env_list)
 int execute_external(t_command *command, t_env *env_list)
 {
     char *path_value = gett_env_value("PATH", env_list);
-    printf("DEBUG: PATH value: %s\n", path_value);
+    // printf("DEBUG: PATH value: %s\n", path_value);
     
     if (path_value == NULL)
     {
@@ -126,7 +126,7 @@ int execute_external(t_command *command, t_env *env_list)
     
     char **paths = split_path(path_value);
     char *executable_path = find_executable(command->args[0], paths);
-    printf("DEBUG: Executable path found: %s\n", executable_path);
+    // printf("DEBUG: Executable path found: %s\n", executable_path);
     
     if (executable_path == NULL)
     {
@@ -145,7 +145,7 @@ int execute_external(t_command *command, t_env *env_list)
     if (pid == 0)
     {
         char **env_array = create_env_array(env_list);
-        printf("DEBUG: Executing command: %s\n", executable_path);
+        // printf("DEBUG: Executing command: %s\n", executable_path);
         execve(executable_path, command->args, env_array);
         perror("execve");
         exit(1);
