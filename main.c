@@ -1,75 +1,99 @@
 #include "minishell.h"
 
+
+char *read_user_input(void) 
+{
+    char *input = readline("minishell$ ");
+    if (input)
+        add_history(input);
+    return input;
+}
+
+int validate_input(char *input, t_node **head)
+{
+    if (ft_strlen(input) == 0)
+        return 0;  // Empty input, skip processing
+
+    input = add_spaces(input); //check it
+    (*head)->exit_status = truck_quots(input);
+    if((*head)->exit_status == 2)
+        return 0;  // Invalid input 
+
+    
+    return 1;  // Input is valid
+}
+
+int checking(TokenNode *list_head)
+{
+    if(check_special_chars(list_head) == 2)
+        return 2;
+    else if(check_syntax_double_special_charcters(list_head) == 2)
+        return 2;
+    else if(check_syntax_special_Face_to_Face(list_head) == 2)
+        return 2;
+    else if(check_special_validity(list_head) == 2)
+        return 2;
+    return 0;
+}
+
+TokenInfo *process_input(char *input, t_node **head) 
+{
+    char **inp;
+    TokenInfo *tokens;
+    inp = ft_split(input);
+    tokens = tokenizer(inp);
+
+    if (!tokens) 
+        return NULL;
+
+    TokenNode *list_head = ArrayIntoNodes(tokens);
+    (*head)->exit_status = checking(list_head);
+    if((*head)->exit_status == 2)
+        return NULL;
+    
+    return tokens;
+}
+
+t_node *prepare_execution(TokenInfo *tokens, t_env *env_list) 
+{
+    TokenNode *list_head = ArrayIntoNodes(tokens);
+    t_node *node = convert_to_node_list(list_head);
+
+    expansion_process(&node, env_list);
+    remove_quotes_and_join(node);
+    return node;
+}
+
+
+
 int main(int argc, char **argv, char **env) 
 {
     (void)argc;
     (void)argv;
-    TokenInfo *tokens;
-    t_node *node;
+    
     t_env *env_list = (t_env*)gc_malloc(sizeof(t_env));
-    char *input;
-    char **inp;
-  
+    t_node *node = (t_node*)gc_malloc(sizeof(t_node));
+    char *input = NULL;
     fill_env_list(env, env_list);
-    while(1)
+
+    while (1) 
     {
-        input = readline("minishell$ ");
-        if (input == NULL) {
+        input = read_user_input();
+        if (!input)
             break;
-        }
-        if (ft_strlen(input) == 0) {
-            continue;
-        }
-        add_history(input);
 
-        add_spaces(input);
-        if(truck_quots(input, '"') == 1 || truck_quots(input, '\'') == 1)
+        if(validate_input(input, &node))
         {
-            perror("Error: quotes not closed\n");
-            continue;
+            TokenInfo *tokens = process_input(input, &node);
+            if (!tokens)
+                continue;
+
+            node = prepare_execution(tokens, env_list);
+            print_node_list(node);
+            execute_commands(node, &env_list);
         }
-        inp = ft_split(input);
-
-
-        tokens = tokenizer(inp);
-        if (tokens == NULL) 
-        {
-            return 1;
-        }
-
-        TokenNode *list_head = ArrayIntoNodes(tokens);
-        if (list_head == NULL) 
-        {
-            perror("Memory allocation failed\n");
-            return 1;
-        }
-        check_special_chars(list_head);
-
-
-        check_syntax_double_special_charcters(list_head);
-        check_syntax_special_Face_to_Face(list_head);
-        node = convert_to_node_list(list_head);
-        expansion_process(&node, env_list);
-        remove_quotes_and_join(node);
-        // execute_builtin(node, &env_list);
-        execute_commands(node, &env_list);
-        print_node_list(node);
-        check_special_validity(list_head);
-
     }
 
-        gc_free_all();
-
-//  printf("Linked List of Tokens:\n");
- 
-
-
-    // free_linked_list(list_head);
-
-
-    //  i = 0;
-   
-    // free(inp);
-    // free(tokens);
+    gc_free_all();
     return 0;
 }

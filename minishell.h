@@ -86,11 +86,11 @@ void free_linked_list(TokenNode *head);
 int ft_strcmp(const char *s1, const char *s2);
 
 int check_special_chars(TokenNode *head);
-void add_spaces(char *input);
+char *add_spaces(char *input);
 int check_quotes(TokenNode *head, char c);
 int check_quotes_spiclal_chars(TokenNode *head, char c);
 char **split_by_quots(char *input);
-int truck_quots(char *input, char c);
+int truck_quots(char *input);
 int print_error(char *str);
 
 void fill_env_list(char **env, t_env *env_list);

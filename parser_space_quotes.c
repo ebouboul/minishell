@@ -1,15 +1,18 @@
 #include "minishell.h"
 
 
-void add_spaces(char *input)
+char *add_spaces(char *input)
 {
-    int i = 0;
+    int i = 1;
     int j = 0;
-    char *new_input = (char*)gc_malloc(strlen(input) * 2 + 1);
+    while (input[i] != '\0' && input[i] == '|')
+        i++;
+    char *new_input = (char*)gc_malloc(strlen(input) + i * 2 + 1);
     if (new_input == NULL) {
         perror("Memory allocation failed\n");
         exit(1);
     }
+    i = 0;
     while (input[i] != '\0') {
         if ((input[i] == '|' ) && (i == 0 || input[i - 1] != ' ')) 
         {
@@ -20,14 +23,12 @@ void add_spaces(char *input)
             } 
          }
          else 
-         {
+            {
                 new_input[j++] = input[i++];
             }
     }
     new_input[j] = '\0';
-
-    strcpy(input, new_input);
-
+    return new_input;
 }
 
 int check_quotes(TokenNode *head, char c)
@@ -73,12 +74,12 @@ int check_special_chars(TokenNode *head)
 {
     TokenNode *current = head;
     if (current->info.type == TOKEN_PIPE || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT || current->info.type == TOKEN_APPEND ) 
-        return(print_error("Error: Special character at the beginning of the command\n"));
+            return(print_error("Error: Special character at the beginning of the command\n"));
     while (current != NULL) {
         if (current->info.type == TOKEN_PIPE || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT || current->info.type == TOKEN_APPEND || current->info.type == TOKEN_HEREDOC) 
         {
             if (current->next == NULL) 
-            return(print_error("Error: Special character at the end of the command\n"));
+                return(print_error("Error: Special character at the end of the command\n"));
         }
         current = current->next;
     }
@@ -91,7 +92,7 @@ int check_syntax_double_special_charcters(TokenNode *head)
         if (current->info.type == TOKEN_APPEND || current->info.type == TOKEN_HEREDOC || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT) 
         {
             if (current->next != NULL && current->next->info.type != TOKEN_FILE) 
-            return(print_error("Error: Double special characters\n"));
+                return(print_error("Error: Double special characters\n"));
         }
         current = current->next;
     }
@@ -104,12 +105,12 @@ int check_syntax_special_Face_to_Face(TokenNode *head)
         if (current->info.type == TOKEN_APPEND || current->info.type == TOKEN_HEREDOC || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT) 
         {
             if ((current->next != NULL && current->next->info.type == TOKEN_APPEND) || (current->next != NULL && current->next->info.type == TOKEN_HEREDOC) || (current->next != NULL && current->next->info.type == TOKEN_REDIRECT_IN)|| (current->next != NULL && current->next->info.type == TOKEN_REDIRECT_OUT)) 
-            return(print_error("Error: Face to Face\n"));
+                return(print_error("Error: Face to Face\n"));
         }
         else if (current->info.type == TOKEN_PIPE)
             {
                 if(current->next == NULL || current->next->info.type == TOKEN_PIPE )
-                return(print_error("Error: Face to Face\n"));
+                    return(print_error("Error: Face to Face\n"));
             }
         current = current->next;
     }
@@ -124,7 +125,7 @@ int check_special_validity(TokenNode *head)
         {
             if (strchr(current->info.value, '<') || strchr(current->info.value, '>')) 
             {
-                return(print_error("Error: special characters not allowed in command\n"));
+                    return(print_error("Error: special characters not allowed in command\n"));
             }
         }
         current = current->next;
