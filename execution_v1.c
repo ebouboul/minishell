@@ -27,11 +27,6 @@ void execute_single_command(t_node *node, t_env **env_list)
     if (is_builtin(cmd))
         node->exit_status = execute_builtin(node, env_list);
     else
-<<<<<<< HEAD:execution.c
-    {
-        // printf("DEBUG: Executing external command: %s\n", cmd);
-=======
->>>>>>> 43306e9 (exe):execution_v1.c
         node->exit_status = execute_external(node->command, *env_list);
 }
 char *find_executable(const char *command, char **paths)
@@ -106,85 +101,3 @@ char **split_path(const char *path)
     free(path_copy);
     return paths;
 }
-<<<<<<< HEAD:execution.c
-char *gett_env_value(const char *key, t_env *env_list)
-{
-    while (env_list != NULL)
-    {
-        if (strcmp(env_list->env->key, key) == 0)
-            return env_list->env->value;
-        env_list = env_list->next;
-    }
-    return NULL;
-}
-
-int execute_external(t_command *command, t_env *env_list)
-{
-    char *path_value = gett_env_value("PATH", env_list);
-    // printf("DEBUG: PATH value: %s\n", path_value);
-    
-    if (path_value == NULL)
-    {
-        fprintf(stderr, "minishell: %s: command not found\n", command->args[0]);
-        return 127;
-    }
-    
-    char **paths = split_path(path_value);
-    char *executable_path = find_executable(command->args[0], paths);
-    // printf("DEBUG: Executable path found: %s\n", executable_path);
-    
-    if (executable_path == NULL)
-    {
-        fprintf(stderr, "minishell: %s: command not found\n", command->args[0]);
-        int i = 0;
-        while (paths[i] != NULL)
-        {
-            free(paths[i]);
-            i++;
-        }
-        free(paths);
-        return 127;
-    }
-    
-    pid_t pid = fork();
-    if (pid == 0)
-    {
-        char **env_array = create_env_array(env_list);
-        // printf("DEBUG: Executing command: %s\n", executable_path);
-        execve(executable_path, command->args, env_array);
-        perror("execve");
-        exit(1);
-    }
-    else if (pid > 0)
-    {
-        int status;
-        waitpid(pid, &status, 0);
-        free(executable_path);
-        int i = 0;
-        while (paths[i] != NULL)
-        {
-            free(paths[i]);
-            i++;
-        }
-        free(paths);
-        if (WIFEXITED(status))
-            return WEXITSTATUS(status);
-        else
-            return 1;
-    }
-    else
-    {
-        perror("fork");
-        free(executable_path);
-        int i = 0;
-        while (paths[i] != NULL)
-        {
-            free(paths[i]);
-            i++;
-        }
-        free(paths);
-        return 1;
-    }
-}
-=======
->>>>>>> 43306e9 (exe):execution_v1.c

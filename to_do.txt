@@ -10,7 +10,6 @@
 
 struct of cmds
 
-
 ---------------
 | char **cmds;           //ls
 | env 
@@ -33,5 +32,7 @@ env
 | env *next;
 ---------------
 
-
 ls -la >> file -a  | "'"cd j nfs f n''"
+
+
+multiple pipes / heredoc / redirections / status / signals
