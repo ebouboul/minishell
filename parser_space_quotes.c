@@ -7,7 +7,7 @@ char *add_spaces(char *input)
     int j = 0;
     while (input[i] != '\0')
     {
-        if(input[i] == '|')
+        if(is_special_char(input[i]))
             j++;
         i++;
     }
@@ -16,13 +16,12 @@ char *add_spaces(char *input)
     j = 0;
     while (input[i] != '\0') 
     {
-        if ((input[i] == '|' ) && (i == 0 || input[i - 1] != ' ' || input[i + 1] != ' ')) 
+        if (is_special_char(input[i]) && (i == 0 || input[i - 1] != ' ' || input[i + 1] != ' ')) 
         {
             {
                 new_input[j++] = ' ';
-                new_input[j++] = '|';
+                new_input[j++] = input[i++];
                 new_input[j++] = ' ';
-                i++;
             } 
          }
          else 
