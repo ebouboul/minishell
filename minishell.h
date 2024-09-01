@@ -119,17 +119,21 @@ char **get_key_value(char *var);
 void expansion_process(t_node **head, t_env *key);
 void remove_all_quotes_and_join(char *input);
 
-// execution functions 1st part:
+// builtins functions:
 int is_builtin(char *command);
+
+// execution functions v1:
 void execute_commands(t_node *head, t_env **env_list);
 void execute_single_command(t_node *node, t_env **env_list);
-void handle_redirections(t_redirect *redirect);
-// execution functions 2nd part:
-int execute_external(t_command *command, t_env *env_list);
-char join_command_with_path_and_access(char *command, char **paths, int n);
-char split_path_in_env(char *path, char **paths);
-int check_env_for_path(t_env *env_list);
+char *find_executable(const char *command, char **paths);
+char **create_env_array(t_env *env_list);
+char **split_path(const char *path);
+
+
+// execution functions v2:
 char *gett_env_value(const char *key, t_env *env_list);
+int execute_external(t_command *command, t_env *env_list);
+void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list);
 
 // free functions
 void *gc_malloc(size_t size);

@@ -5,24 +5,34 @@ void execute_commands(t_node *head, t_env **env_list)
     t_node *current = head;
     while (current != NULL)
     {
-        execute_single_command(current, env_list);
-        current = current->next;
+        if(current->next != NULL)
+        {
+            handle_pipe_and_multiple_commands(current, env_list);
+            return;
+        }
+        else
+        {
+            execute_single_command(current, env_list);
+            current = current->next;
+        }
     }
 }
+
+
 void execute_single_command(t_node *node, t_env **env_list)
 {
     if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
         return;
     char *cmd = node->command->args[0];
     if (is_builtin(cmd))
-    {
         node->exit_status = execute_builtin(node, env_list);
-    }
     else
+<<<<<<< HEAD:execution.c
     {
         // printf("DEBUG: Executing external command: %s\n", cmd);
+=======
+>>>>>>> 43306e9 (exe):execution_v1.c
         node->exit_status = execute_external(node->command, *env_list);
-    }
 }
 char *find_executable(const char *command, char **paths)
 {
@@ -33,11 +43,8 @@ char *find_executable(const char *command, char **paths)
     {
         full_path = malloc(strlen(paths[i]) + strlen(command) + 2);
         sprintf(full_path, "%s/%s", paths[i], command);
-
         if (access(full_path, X_OK) == 0)
-        {
             return full_path;
-        }
 
         free(full_path);
         i++;
@@ -89,19 +96,17 @@ char **split_path(const char *path)
         }
         end++;
     }
-
     if (start != end)
     {
         paths = realloc(paths, sizeof(char *) * (count + 1));
         paths[count++] = strdup(start);
     }
-
     paths = realloc(paths, sizeof(char *) * (count + 1));
     paths[count] = NULL;
-
     free(path_copy);
     return paths;
 }
+<<<<<<< HEAD:execution.c
 char *gett_env_value(const char *key, t_env *env_list)
 {
     while (env_list != NULL)
@@ -181,3 +186,5 @@ int execute_external(t_command *command, t_env *env_list)
         return 1;
     }
 }
+=======
+>>>>>>> 43306e9 (exe):execution_v1.c

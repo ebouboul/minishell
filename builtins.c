@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/29 23:45:34 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/08/31 16:08:46 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,39 +42,45 @@ int is_builtin(char *command)
     return 0;
 }
 
-int process_echo_option(char *option, int *option_value)
+int process_echo_option(char *option)
 {
-    int i = 0;
+    int i = 1;  // Start from 1 to skip the '-'
     while (option[i] != '\0')
     {
         if (option[i] != 'n')
-            return 0;
+        {
+            return 0;  // Not a valid -n option
+        }
         i++;
     }
-    *option_value = 1;
-    return 1;
+    return 1;  // Valid -n option
 }
 
 int ft_echo(t_command *command)
 {
-    int option = 0;
+    int option_n = 0;
     int i = 1;
-    t_command *current = command;
-    while (current->args[i] != NULL)
+    int first_arg = 1;
+    
+    while (command->args[i] != NULL && command->args[i][0] == '-')
     {
-        if (current->args[i] != NULL && ft_strcmp(current->args[i], "-n") == 0)
+        if (process_echo_option(command->args[i]))
         {
-            if (process_echo_option(current->args[i], &option))
-                break;
+            option_n = 1;
+            i++;
         }
         else
-        {
-            printf("%s ", current->args[i]);
-        }
+            break;
+    }
+    while (command->args[i] != NULL)
+    {
+        if (!first_arg)
+            printf(" ");
+        printf("%s", command->args[i]);
+        first_arg = 0;
         i++;
     }
-
-    if (!option)
+    if (!option_n)
         printf("\n");
     return 0;
 }
@@ -154,15 +160,11 @@ int ft_pwd()
     return 0;
 }
 
-
 int ft_env(t_env *env_list)
 {
     print_env_list(env_list);
     return 0;
 }
-
-
-
 
 int ft_exit(t_command *command)
 {
