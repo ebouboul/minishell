@@ -13,16 +13,23 @@ char *gett_env_value(const char *key, t_env *env_list)
 
 int execute_external(t_command *command, t_env *env_list)
 {
-    char *path_value = gett_env_value("PATH", env_list);
-
-    if (path_value == NULL)
+    char *executable_path = NULL;
+    char **paths = NULL;
+    if(access(command->args[0], X_OK) == 0)
+        executable_path = strdup(command->args[0]);
+    else
     {
-        fprintf(stderr, "minishell: %s: command not found\n", command->args[0]);
-        return 127;
+        char *path_value = gett_env_value("PATH", env_list);
+
+        if (path_value == NULL)
+        {
+            fprintf(stderr, "minishell: %s: commakknd not found\n", command->args[0]);
+            return 127;
+        }
+        
+        paths = split_path(path_value);
+        executable_path = find_executable(command->args[0], paths);
     }
-    
-    char **paths = split_path(path_value);
-    char *executable_path = find_executable(command->args[0], paths);
     
     if (executable_path == NULL)
     {
@@ -50,7 +57,7 @@ int execute_external(t_command *command, t_env *env_list)
         waitpid(pid, &status, 0);
         free(executable_path);
         int i = 0;
-        while (paths[i] != NULL)
+        while ( paths && paths[i] != NULL)
         {
             free(paths[i]);
             i++;

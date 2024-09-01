@@ -33,10 +33,12 @@ char *find_executable(const char *command, char **paths)
 {
     int i = 0;
     char *full_path;
+    
 
     while (paths[i] != NULL)
     {
         full_path = malloc(strlen(paths[i]) + strlen(command) + 2);
+        
         sprintf(full_path, "%s/%s", paths[i], command);
         if (access(full_path, X_OK) == 0)
             return full_path;
@@ -44,6 +46,7 @@ char *find_executable(const char *command, char **paths)
         free(full_path);
         i++;
     }
+
 
     return NULL;
 }
