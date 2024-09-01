@@ -3,29 +3,30 @@
 
 char *add_spaces(char *input)
 {
-    int i = 1;
+    int i = 0;
     int j = 0;
-    while (input[i] != '\0' && input[i] == '|')
+    while (input[i] != '\0')
+    {
+        if(input[i] == '|')
+            j++;
         i++;
-    char *new_input = (char*)gc_malloc(strlen(input) + i * 2 + 1);
-    if (new_input == NULL) {
-        perror("Memory allocation failed\n");
-        exit(1);
     }
+    char *new_input = (char*)gc_malloc(ft_strlen(input) + (j + 1) * 2 + 1);
     i = 0;
-    while (input[i] != '\0') {
-        if ((input[i] == '|' ) && (i == 0 || input[i - 1] != ' ')) 
+    j = 0;
+    while (input[i] != '\0') 
+    {
+        if ((input[i] == '|' ) && (i == 0 || input[i - 1] != ' ' || input[i + 1] != ' ')) 
         {
             {
                 new_input[j++] = ' ';
-                new_input[j++] = input[i++];
+                new_input[j++] = '|';
                 new_input[j++] = ' ';
+                i++;
             } 
          }
          else 
-            {
                 new_input[j++] = input[i++];
-            }
     }
     new_input[j] = '\0';
     return new_input;
@@ -252,9 +253,6 @@ void remove_quotes_and_join(t_node *head)
             int i = 0;
             while (args[i] != NULL) 
             {
-                // if (args[i][0] == '"' || args[i][0] == '\'') 
-                // {
-                // }
                     remove_quotes_from_first_and_last(args[i]);
 
                 i++;

@@ -75,24 +75,33 @@ int print_error(char *str)
     write(2, str, ft_strlen(str));
     return 2;
 }
-
 int truck_quots(char *input)
 {
     int i = 0;
-    int count = 0;
-    int clont2 = 0;
-    while (input[i] != '\0') 
+    while(input[i] != '\0')
     {
-        if (input[i] == '"')
-            count++;
-        if (input[i] == '\'')
-            clont2++;
+        if(input[i] == '"')
+        {
+            i++;
+            while(input[i] != '\0' && input[i] != '"')
+                i++;
+            if(input[i] == '\0')
+                return(print_error("Error: quotes not closed\n"));
+        }
+        if(input[i] == '\'')
+        {
+            i++;
+            while(input[i] != '\0' && input[i] != '\'')
+                i++;
+            if(input[i] == '\0')
+                return(print_error("Error: quotes not closed\n"));
+        }
         i++;
     }
-    if (count % 2 != 0 || clont2 % 2 != 0)
-        return(print_error("Error: quotes not closed\n"));
     return 0;
 }
+
+
 
 
 

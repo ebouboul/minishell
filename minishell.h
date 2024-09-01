@@ -105,6 +105,7 @@ char *check_value_env(char *str, t_env *head);
 void replace_quotes_by_spaces(char *input);
 void replace_quotes_by_spaces_and_join(char *input, int closed);
 void remove_quotes(char *input, int closed);
+void remove_quotes_from_first_and_last(char *input);
 int execute_builtin(t_node *head, t_env **env_list);
 char *ft_strndup(char *s, int n);
 void add_env_node(t_env **current, char *key, char *value);

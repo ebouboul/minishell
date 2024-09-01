@@ -14,7 +14,6 @@ int validate_input(char *input, t_node **head)
     if (ft_strlen(input) == 0)
         return 0;  // Empty input, skip processing
 
-    input = add_spaces(input); //check it
     (*head)->exit_status = truck_quots(input);
     if((*head)->exit_status == 2)
         return 0;  // Invalid input 
@@ -40,6 +39,8 @@ TokenInfo *process_input(char *input, t_node **head)
 {
     char **inp;
     TokenInfo *tokens;
+
+    input = add_spaces(input);
     inp = ft_split(input);
     tokens = tokenizer(inp);
 
@@ -58,10 +59,30 @@ t_node *prepare_execution(TokenInfo *tokens, t_env *env_list)
 {
     TokenNode *list_head = ArrayIntoNodes(tokens);
     t_node *node = convert_to_node_list(list_head);
+    (void)env_list;
 
     expansion_process(&node, env_list);
+    
     remove_quotes_and_join(node);
     return node;
+}
+
+void increment_shlvl(t_env *env_list)
+{
+    t_env *current = env_list;
+    while (current != NULL) 
+    {
+        if (ft_strcmp(current->env->key, "SHLVL") == 0) 
+        {
+            int value = ft_atoi(current->env->value);
+            value++;
+            char *new_value = ft_itoa(value);
+            gc_free(current->env->value);
+            current->env->value = new_value;
+            break;
+        }
+        current = current->next;
+    }
 }
 
 
@@ -75,6 +96,7 @@ int main(int argc, char **argv, char **env)
     t_node *node = (t_node*)gc_malloc(sizeof(t_node));
     char *input = NULL;
     fill_env_list(env, env_list);
+    increment_shlvl(env_list);
 
     while (1) 
     {
@@ -85,6 +107,7 @@ int main(int argc, char **argv, char **env)
         if(validate_input(input, &node))
         {
             TokenInfo *tokens = process_input(input, &node);
+            free(input);
             if (!tokens)
                 continue;
 
