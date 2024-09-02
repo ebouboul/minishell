@@ -241,13 +241,13 @@ void ft_sort(char **keys, char **values)
 void print_export_sorted(t_env *env_list)
 {
     t_env *current = env_list;
-    char **keys = (char **)gc_malloc(100 * sizeof(char *));
-    char **values = (char **)gc_malloc(100 * sizeof(char *));
+    char **keys = (char **)gc_malloc(1000 * sizeof(char *));
+    char **values = (char **)gc_malloc(1000 * sizeof(char *));
     int i = 0;
     while (current != NULL)
     {
-        keys[i] = current->env->key;
-        values[i] = current->env->value;
+        keys[i] = ft_strdup(current->env->key);
+        values[i] = ft_strdup(current->env->value);
         i++;
         current = current->next;
     }
