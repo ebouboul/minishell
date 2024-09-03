@@ -11,9 +11,6 @@ int is_special_char(char c)
     return c == '|' || c == '<' || c == '>' || c == '&' || c == ';';
 }
 
-
-
-
 TokenType get_token_type(char *c) 
 {
     if (ft_strcmp(c, "|") == 0)
@@ -123,7 +120,6 @@ TokenInfo *tokenizer(char **inputs)
     }
     
     tokens[token_count].value = gc_malloc(1);
-
     tokens[token_count].type = TOKEN_EOF;
     tokens[token_count].value[0] = '\0';
 

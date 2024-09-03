@@ -65,17 +65,12 @@ char *ft_strjoin1(char c, char *s)
     strcpy(result + 1, s);
     return result;
 }
-
-
-
-
-
 int print_error(char *str)
 {
     write(2, str, ft_strlen(str));
     return 2;
 }
-int truck_quots(char *input)
+int track_quots(char *input)
 {
     int i = 0;
     while(input[i] != '\0')
@@ -100,7 +95,6 @@ int truck_quots(char *input)
     }
     return 0;
 }
-
 
 
 

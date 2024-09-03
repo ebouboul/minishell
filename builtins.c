@@ -6,7 +6,7 @@
 /*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/31 16:08:46 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/03 21:46:35 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int ft_echo(t_command *command)
     int option_n = 0;
     int i = 1;
     int first_arg = 1;
-    
+
     while (command->args[i] != NULL && command->args[i][0] == '-')
     {
         if (process_echo_option(command->args[i]))
@@ -84,7 +84,6 @@ int ft_echo(t_command *command)
         printf("\n");
     return 0;
 }
-
 
 char *get_env_value(t_env *env_list, char *key)
 {
@@ -113,6 +112,11 @@ void replace_env_value(t_env *env_list, char *key, char *value)
 }
 int ft_cd(t_command *command, t_env **env_list)
 {
+    if(command->args[1] && command->args[2])
+    {
+        printf("cd: too many arguments\n");
+        return 1;
+    }
     char *path;
     t_command *current = command;
     t_env *current_env = *env_list;

@@ -90,7 +90,7 @@ char *add_spaces(char *input);
 int check_quotes(TokenNode *head, char c);
 int check_quotes_spiclal_chars(TokenNode *head, char c);
 char **split_by_quots(char *input);
-int truck_quots(char *input);
+int track_quots(char *input);
 int print_error(char *str);
 
 void fill_env_list(char **env, t_env *env_list);
@@ -121,6 +121,7 @@ void remove_all_quotes_and_join(char *input);
 
 // builtins functions:
 int is_builtin(char *command);
+char *get_env_value(t_env *env_list, char *key);
 
 // execution functions v1:
 void execute_commands(t_node *head, t_env **env_list);
@@ -134,6 +135,7 @@ char **split_path(const char *path);
 char *gett_env_value(const char *key, t_env *env_list);
 int execute_external(t_command *command, t_env *env_list);
 void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list);
+void handle_heredoc_token(t_node *head, t_env **env_list);
 
 // free functions
 void *gc_malloc(size_t size);

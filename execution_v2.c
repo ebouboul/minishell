@@ -25,8 +25,7 @@ int execute_external(t_command *command, t_env *env_list)
         {
             fprintf(stderr, "minishell: %s: commakknd not found\n", command->args[0]);
             return 127;
-        }
-        
+        }    
         paths = split_path(path_value);
         executable_path = find_executable(command->args[0], paths);
     }
@@ -77,7 +76,7 @@ int execute_external(t_command *command, t_env *env_list)
         {
             free(paths[i]);
             i++;
-        }
+    }
         free(paths);
         return 1;
     }

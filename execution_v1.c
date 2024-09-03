@@ -17,8 +17,6 @@ void execute_commands(t_node *head, t_env **env_list)
         }
     }
 }
-
-
 void execute_single_command(t_node *node, t_env **env_list)
 {
     if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
@@ -33,7 +31,6 @@ char *find_executable(const char *command, char **paths)
 {
     int i = 0;
     char *full_path;
-    
 
     while (paths[i] != NULL)
     {
@@ -46,8 +43,6 @@ char *find_executable(const char *command, char **paths)
         free(full_path);
         i++;
     }
-
-
     return NULL;
 }
 
@@ -104,3 +99,4 @@ char **split_path(const char *path)
     free(path_copy);
     return paths;
 }
+
