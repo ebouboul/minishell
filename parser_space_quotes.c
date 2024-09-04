@@ -415,7 +415,7 @@ char *remove_all_quotes(const char *str)
 
     int i = 0, j = 0;
     int len = strlen(str);
-    char *result = (char *)malloc(len + 1); // Allocate memory for the result
+    char *result = (char *)gc_malloc(len + 1); // Allocate memory for the result
 
     if (result == NULL)
     {
