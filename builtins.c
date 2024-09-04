@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/03 21:46:35 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/04 01:06:50 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,6 +269,26 @@ void print_export_sorted(t_env *env_list)
 }
 
 
+int check_export(char *args)
+{
+    int i = 0;
+    if(ft_isalpha(args[0]) == 0 )
+        {
+            printf("export: not a valid identifier\n");
+            return 1;
+        }
+    while (args[i] != '\0')
+    {
+        if (args[i] == '=' && (isalpha(args[i - 1]) == 0  && args[i - 1] != '_' && args[i - 1] != '+'))
+           {
+               printf("export: not a valid identifier\n");
+               return 1;
+           }
+        i++;
+    }
+    return 0;
+}
+
 int ft_export(t_command *command, t_env **env_list)
 {
     t_command *current = command;
@@ -284,9 +304,7 @@ int ft_export(t_command *command, t_env **env_list)
             print_export_sorted(*env_list);
             return 0;
         }
-        // else if((ft_strchr(current->args[1], '+'))[1] == '=')
-        
-        else
+        else if(!check_export(current->args[1]))
         {
             // Parse the key-value pair
             char **key_value = get_key_value(current->args[1]);

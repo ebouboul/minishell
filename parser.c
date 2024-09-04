@@ -70,6 +70,7 @@ int print_error(char *str)
     write(2, str, ft_strlen(str));
     return 2;
 }
+
 int track_quots(char *input)
 {
     int i = 0;
@@ -93,8 +94,11 @@ int track_quots(char *input)
         }
         i++;
     }
+
     return 0;
 }
+
+
 
 
 

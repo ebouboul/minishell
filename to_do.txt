@@ -34,11 +34,12 @@ env
 
 ls -la >> file -a  | "'"cd j nfs f n''"
 
-export="$ls - al"
-echo $PWD  = FIXED //should expand env before executing echo command
-$HO ls -al 
+export="$ls - al"//done
+echo $PWD  = FIXED //done
+$HO ls -al // done
 cd Desktop/ asd = FIXED
 exit with max long long
+<< fix it // done
 
 
 multiple pipes / heredoc / redirections / status / signals

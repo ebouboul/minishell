@@ -205,6 +205,16 @@ int dollar_position(char *str)
 //         current = current->next;
 //     }
 // }
+void remove_args(char **args, int i)
+{
+    int j = i;
+    while (args[j] != NULL)
+    {
+        args[j] = args[j + 1];
+        j++;
+    }
+}
+
 void handle_expansion(char **args, int i, t_env *env_list, int exit_status)
 {
     char *new_arg = ft_strdup("");
@@ -242,12 +252,13 @@ void handle_expansion(char **args, int i, t_env *env_list, int exit_status)
             j++;
         }
     }
-    if(new_arg[0] == '\0')
+    if(new_arg[0] != '\0' )
     {
         args[i] = new_arg;
         return;
     }
-    args[i] = new_arg;
+    else
+    remove_args(args, i);
 }
 
 void handle_splitting(char ***args, int i)
@@ -287,13 +298,61 @@ void process_arguments(t_command *current_command, t_env *env_list, int exit_sta
         if (ft_strchr(args[i], '$') != NULL)
         {
             handle_expansion(args, i, env_list, exit_status);
-            if (args[i][0] != '"' && ft_strchr(args[i], ' ') != NULL)
+            if (args[i] && args[i][0] != '"' && ft_strchr(args[i], ' ') != NULL && ft_strncmp(args[0], "export", 6) != 0)
                 handle_splitting(&args, i);
-        }
+        if(args[i])
         remove_quotes_from_first_and_last(args[i]);
+        }
         i++;
     }
     current_command->args = args;
+}
+void expansion_redirection(t_command *red, t_env *env)
+{
+    while(red->redirect)
+    {
+        if(ft_strchr(red->redirect->str, '$') != NULL)
+        {
+            char *new_arg = ft_strdup("");
+            char *temp, *value;
+            int j = 0, k;
+            while (red->redirect->str[j] != '\0')
+            {
+                if (red->redirect->str[j] == '$' && (j == 0 || (j != 0 && red->redirect->str[j - 1] != '\'')) && red->redirect->str[j + 1] != '\0' &&
+                    (isalpha(red->redirect->str[j + 1]) || red->redirect->str[j + 1] == '_' || red->redirect->str[j + 1] == '?' || red->redirect->str[j + 1] == '$'))
+                {
+                    
+                    k = j;
+                    while (red->redirect->str[k] && (isalpha(red->redirect->str[k + 1]) || isdigit(red->redirect->str[k + 1]) || red->redirect->str[k + 1] == '_'))
+                        k++;
+                    value = check_value_env(ft_substr(red->redirect->str, j, k - j + 1), env);
+                    temp = new_arg;
+                    new_arg = ft_strjoin(temp, value);
+                    gc_free(temp);
+                    j = k + 1;
+                }
+                else
+                {
+                    temp = new_arg;
+                    new_arg = ft_strjoin(temp, ft_substr(red->redirect->str, j, 1));
+                    gc_free(temp);
+                    j++;
+                }
+            }
+            if(new_arg[0] != '\0' )
+            {
+                red->redirect->str = new_arg;
+            }
+            else
+            {
+                red->redirect = red->redirect->next;
+            }
+        }
+        else
+        {
+            red->redirect = red->redirect->next;
+        }
+    }
 }
 
 void expansion_process(t_node **head, t_env *env_list)
@@ -306,6 +365,8 @@ void expansion_process(t_node **head, t_env *env_list)
         while (current_command != NULL)
         {
             process_arguments(current_command, env_list, current->exit_status);
+            // expansion_redirection(current_command, env_list);
+
             current_command = current_command->next;
         }
         current = current->next;
