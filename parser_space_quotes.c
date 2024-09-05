@@ -406,6 +406,30 @@ int is_quote(char c)
 {
     return (c == '\'' || c == '"');
 }
+char *remove_all_quotes22(const char *input) {
+    if (input == NULL)
+        return NULL;
+
+    int i = 0, j = 0;
+    int len = strlen(input);
+    char *result = (char *)gc_malloc(len + 1); // Allocate memory for the result string
+
+    if (!result) {
+        perror("Memory allocation failed\n");
+        return NULL;
+    }
+
+    while (input[i] != '\0') {
+        if (input[i] != '"' && input[i] != '\'') {
+            result[j++] = input[i]; // Copy characters that are not quotes
+        }
+        i++;
+    }
+
+    result[j] = '\0'; // Null-terminate the result string
+    return result;
+}
+
 
 // Function to remove all quotes before and after any character
 char *remove_all_quotes(const char *str)
@@ -439,6 +463,7 @@ char *remove_all_quotes(const char *str)
     return result;
 }
 
+
 void remove_quotes_and_join(t_node *head)
 {
     t_node *current = head;
@@ -453,6 +478,7 @@ void remove_quotes_and_join(t_node *head)
             {
                 args[i] = remove_all_quotes(args[i]);
                 // remove_quotes_from_first_and_last(args[i]);
+                args[i] = remove_all_quotes22(args[i]);
                 remove_quotes_after_equal(args[i]);
                 i++;
             }

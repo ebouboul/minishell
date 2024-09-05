@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 17:39:43 by ebouboul          #+#    #+#             */
-/*   Updated: 2023/11/03 22:10:13 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/05 03:39:16 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
 size_t	ft_strlen(const char *s)
@@ -16,7 +17,7 @@ size_t	ft_strlen(const char *s)
 	size_t	i;
 
 	i = 0;
-	while (*s)
+	while (s && *s)
 	{
 		i++;
 		s++;

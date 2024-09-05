@@ -85,6 +85,7 @@ void print_env_list(t_env *env_list)
     current = env_list;
     while(current != NULL)
     {
+        if (current->env->value != NULL && (current->env->value && current->env->value[0] != '\0'))
         printf("%s=%s\n", current->env->key, current->env->value);
         current = current->next;
        
@@ -98,6 +99,13 @@ char **get_key_value(char *var)
     if (key_value == NULL) {
         perror("Memory allocation failed\n");
         exit(1);
+    }
+    if(ft_strchr(var, '=') == NULL)
+    {
+        key_value[0] = ft_strdup(var);
+        key_value[1] = NULL;
+        key_value[2] = NULL;
+        return key_value;
     }
     key_value[0] = ft_strndup(var, ft_strchr(var, '=') - var);
     key_value[1] = ft_strdup(ft_strchr(var, '=') + 1);

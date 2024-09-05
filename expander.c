@@ -64,15 +64,13 @@ char **resize_args(char **args, int new_size)
 }
 int dollar_position(char *str)
 {
-    int i = 1;
+    int i = 0;
     while (str[i] != '\0')
     {
         if (str[i] == '$')
             return i;
         i++;
     }
-    if(str[0] == '$')
-        return 1;
     return -1;
 }
 
@@ -236,7 +234,7 @@ void handle_expansion(char **args, int i, t_env *env_list, int exit_status)
                 continue;
             }
             k = j;
-            while (args[i][k] && (isalpha(args[i][k + 1]) || isdigit(args[i][k + 1]) || args[i][k + 1] == '_'))
+            while (args[i][k] && (isalpha(args[i][k + 1]) || isdigit(args[i][k + 1]) || args[i][k + 1] == '_' ))
                 k++;
             value = check_value_env(ft_substr(args[i], j, k - j + 1), env_list);
             temp = new_arg;
@@ -252,6 +250,7 @@ void handle_expansion(char **args, int i, t_env *env_list, int exit_status)
             j++;
         }
     }
+    printf("new_arg = %s\n", new_arg);
     if(new_arg[0] != '\0' )
     {
         args[i] = new_arg;
@@ -279,13 +278,13 @@ void handle_splitting(char ***args, int i)
         (*args)[k] = (*args)[k - num_splits + 1];
         k--;
     }
-
-    for (k = 0; k < num_splits; k++)
+    k = 0;
+    while (k < num_splits)
     {
         (*args)[i + k] = split_args[k];
         remove_all_quotes_and_join((*args)[i + k]);
-    }
-    gc_free(split_args);
+        k++;
+    }  gc_free(split_args);
 }
 
 void process_arguments(t_command *current_command, t_env *env_list, int exit_status)
@@ -293,9 +292,9 @@ void process_arguments(t_command *current_command, t_env *env_list, int exit_sta
     char **args = current_command->args;
     int i = 0;
 
-    while (args[i] != NULL)
+    while (args[i] != NULL )
     {
-        if (ft_strchr(args[i], '$') != NULL)
+        if (ft_strchr(args[i], '$') != NULL )
         {
             handle_expansion(args, i, env_list, exit_status);
             if (args[i] && args[i][0] != '"' && ft_strchr(args[i], ' ') != NULL && ft_strncmp(args[0], "export", 6) != 0)
@@ -303,6 +302,8 @@ void process_arguments(t_command *current_command, t_env *env_list, int exit_sta
         if(args[i])
         remove_quotes_from_first_and_last(args[i]);
         }
+        if (ft_strchr(args[i], '$') == NULL || args[i][dollar_position(args[i]) + 1] == '\0' 
+            || ( dollar_position(args[i]) == 0 || args[i][dollar_position(args[i]) - 1] == '\''))
         i++;
     }
     current_command->args = args;

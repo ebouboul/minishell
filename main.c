@@ -101,7 +101,7 @@ int main(int argc, char **argv, char **env)
             if (!tokens)
                 continue;
             node = prepare_execution(tokens, env_list);
-            print_node_list(node);
+            // print_node_list(node);
             execute_commands(node, &env_list);
         }
     }

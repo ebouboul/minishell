@@ -43,3 +43,16 @@ exit with max long long
 
 
 multiple pipes / heredoc / redirections / status / signals
+
+
+check _= > export / DONE
+export a /DONE
+export b without value check env /DONE
+export += /DONE
+
+
+exit check all error
+exit jkj kjkj
+exit 545 5454
+exit ds5454 
+exit -      

@@ -1,223 +1,130 @@
 #include "minishell.h"
 
-
-int is_space(char c) 
+int	is_space(char c)
 {
-    return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\v';
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f'
+		|| c == '\v');
 }
 
-int is_special_char(char c) 
+int	is_special_char(char c)
 {
-    return c == '|' || c == '<' || c == '>' || c == '&' || c == ';';
+	return (c == '|' || c == '<' || c == '>' || c == '&' || c == ';');
 }
 
-TokenType get_token_type(char *c) 
+TokenType	get_token_type(char *c)
 {
-    if (ft_strcmp(c, "|") == 0)
-        return TOKEN_PIPE;
-    else if (ft_strcmp(c, ">>") == 0)
-        return TOKEN_APPEND; 
-    else if (ft_strcmp(c, "<") == 0)
-        return TOKEN_REDIRECT_IN;
-    else if (ft_strcmp(c, ">") == 0)
-        return TOKEN_REDIRECT_OUT;
-    else if (ft_strcmp(c, "<<") == 0)
-        return TOKEN_HEREDOC;
-
-    else
-        return TOKEN_COMMAND;
+	if (ft_strcmp(c, "|") == 0)
+		return (TOKEN_PIPE);
+	else if (ft_strcmp(c, ">>") == 0)
+		return (TOKEN_APPEND);
+	else if (ft_strcmp(c, "<") == 0)
+		return (TOKEN_REDIRECT_IN);
+	else if (ft_strcmp(c, ">") == 0)
+		return (TOKEN_REDIRECT_OUT);
+	else if (ft_strcmp(c, "<<") == 0)
+		return (TOKEN_HEREDOC);
+	else
+		return (TOKEN_COMMAND);
 }
 
-// TokenInfo *tokenizer(char **inputs)
-// {
-//     int (i),(j);
-//     int token_count;
 
-//     i = 0; 
-//     j = 0;
-//     token_count = 0;
-//     TokenInfo *tokens = gc_malloc((100) * sizeof(TokenInfo)); 
-
-//     if (!tokens) 
-//     {
-//         perror("Memory allocation failed\n");
-//         return NULL;
-//     }
-    
-//     while (inputs[j])
-//     {
-//         i = 0;
-//         int k = 0;
-//         tokens[token_count].value = gc_malloc(ft_strlen(inputs[j]) + 1);
-//                 while (inputs[j][i] != '\0' && token_count < MAX_TOKENS )
-//                     {
-//                         while (is_space(inputs[j][i])) 
-//                             i++;
-//                         if (inputs[j][i] == '\0') 
-//                             break;
-//                         if (is_special_char(inputs[j][i])) 
-//                         {
-//                             tokens[token_count].type = get_token_type(inputs[j]);
-//                             while(inputs[j][k])
-//                             {
-//                             tokens[token_count].value[k++] = inputs[j][i++];
-//                             tokens[token_count].value[k] = '\0';
-//                             }
-//                             token_count++;
-//                         }
-//                         else if(token_count > 0 &&(tokens[token_count - 1].type == TOKEN_REDIRECT_IN || tokens[token_count - 1].type == TOKEN_REDIRECT_OUT || 
-//                         tokens[token_count - 1].type == TOKEN_APPEND || tokens[token_count - 1].type == TOKEN_HEREDOC))
-//                         {
-//                             tokens[token_count].type = TOKEN_FILE;
-//                             while(inputs[j][k])
-//                             {
-//                             tokens[token_count].value[k++] = inputs[j][i++];
-//                             tokens[token_count].value[k] = '\0';
-//                             }
-//                             token_count++;
-//                         }
-//                         else if(token_count > 0 &&(tokens[token_count - 1].type == TOKEN_FILE))
-//                         {
-//                             tokens[token_count].type = TOKEN_ARG;
-//                             while(inputs[j][k])
-//                             {
-//                             tokens[token_count].value[k++] = inputs[j][i++];
-//                             tokens[token_count].value[k] = '\0';
-//                             }
-//                             token_count++;
-//                         }
-//                         else if(token_count > 0 &&(tokens[token_count - 1].type == TOKEN_COMMAND))
-//                         {
-//                             tokens[token_count].type = TOKEN_ARG;
-//                             while(inputs[j][k])
-//                             {
-//                             tokens[token_count].value[k++] = inputs[j][i++];
-//                             tokens[token_count].value[k] = '\0';
-//                             }
-//                             token_count++;
-//                         }
-//                         else if(token_count > 0 &&(tokens[token_count - 1].type == TOKEN_ARG))
-//                         {
-//                             tokens[token_count].type = TOKEN_ARG;
-//                             while(inputs[j][k])
-//                             {
-//                             tokens[token_count].value[k++] = inputs[j][i++];
-//                             tokens[token_count].value[k] = '\0';
-//                             }
-//                             token_count++;
-//                         }
-//                         else
-//                         {
-//                             int o = 0;
-//                             tokens[token_count].type = TOKEN_COMMAND;
-//                             while (inputs[j][i] != '\0'  && o < MAX_TOKEN_LENGTH - 1) 
-//                                 tokens[token_count].value[o++] = inputs[j][i++];
-//                             tokens[token_count].value[o] = '\0';
-//                             token_count++;
-//                         }
-//                     }
-//         j++;
-//     }
-    
-//     tokens[token_count].value = gc_malloc(1);
-//     tokens[token_count].type = TOKEN_EOF;
-//     tokens[token_count].value[0] = '\0';
-
-//     return tokens;
-// }
-
-int skip_spaces(char *input, int index) {
-    while (is_space(input[index]))
-        index++;
-    return index;
-}
-
-int get_token_type_from_previous(TokenInfo *previous_token) {
-    if (previous_token->type == TOKEN_REDIRECT_IN || previous_token->type == TOKEN_REDIRECT_OUT ||
-        previous_token->type == TOKEN_APPEND || previous_token->type == TOKEN_HEREDOC)
-        return TOKEN_FILE;
-    if (previous_token->type == TOKEN_FILE || previous_token->type == TOKEN_COMMAND || 
-        previous_token->type == TOKEN_ARG)
-        return TOKEN_ARG;
-    return TOKEN_COMMAND;
-}
-
-int create_token(TokenInfo *tokens, char *input, int *i, int *token_count, int type) 
+int	skip_spaces(char *input, int index)
 {
-    int k = 0;
-    tokens[*token_count].value = gc_malloc(ft_strlen(input) + 1);
-    tokens[*token_count].type = type;
-    
-    while (input[*i] && k < MAX_TOKEN_LENGTH - 1) {
-        tokens[*token_count].value[k++] = input[(*i)++];
-    }
-    tokens[*token_count].value[k] = '\0';
-    return ++(*token_count);
+	while (is_space(input[index]))
+		index++;
+	return (index);
 }
 
-
-
-int handle_special_char(char *input, TokenInfo *tokens, int *token_count, int *i) 
+int	get_token_type_from_previous(TokenInfo *previous_token)
 {
-    int start = *i;
-
-
-    while (input[*i] && is_special_char(input[*i]))
-    {
-        (*i)++;
-    }
-
-    int length = *i - start;
-    if (length <= 0) return *token_count;
-
-    tokens[*token_count].value = gc_malloc(length + 1);
-    if (!tokens[*token_count].value)
-    {
-        perror("Memory allocation failed\n");
-        return *token_count; 
-    }
-
-    strncpy(tokens[*token_count].value, input + start, length);
-    tokens[*token_count].value[length] = '\0';
-
-    tokens[*token_count].type = get_token_type(tokens[*token_count].value);
-
-    return ++(*token_count); 
+	if (previous_token->type == TOKEN_REDIRECT_IN
+		|| previous_token->type == TOKEN_REDIRECT_OUT
+		|| previous_token->type == TOKEN_APPEND
+		|| previous_token->type == TOKEN_HEREDOC)
+		return (TOKEN_FILE);
+	if (previous_token->type == TOKEN_FILE
+		|| previous_token->type == TOKEN_COMMAND
+		|| previous_token->type == TOKEN_ARG)
+		return (TOKEN_ARG);
+	return (TOKEN_COMMAND);
 }
 
-
-TokenInfo *tokenizer(char **inputs) 
+int	create_token(TokenInfo *tokens, char *input, int *i, int *token_count,
+		int type)
 {
-    int i, j = 0, token_count = 0;
-    TokenInfo *tokens = gc_malloc((100) * sizeof(TokenInfo)); 
+	int	k;
 
-    if (!tokens)
-        return NULL;
+	k = 0;
+	tokens[*token_count].value = gc_malloc(ft_strlen(input) + 1);
+	tokens[*token_count].type = type;
+	while (input[*i] && k < MAX_TOKEN_LENGTH - 1)
+	{
+		tokens[*token_count].value[k++] = input[(*i)++];
+	}
+	tokens[*token_count].value[k] = '\0';
+	return (++(*token_count));
+}
 
-    while (inputs[j]) 
-    {
-        i = 0;
-        while (inputs[j][i] != '\0' && token_count < MAX_TOKENS)
-        {
-            i = skip_spaces(inputs[j], i);
-            if (inputs[j][i] == '\0') 
-                break;
+int	handle_special_char(char *input, TokenInfo *tokens, int *token_count,
+		int *i)
+{
+	int	start;
+	int	length;
 
-            if (is_special_char(inputs[j][i])) 
-                token_count = handle_special_char(inputs[j], tokens, &token_count, &i);
-            else 
-            {
-                if (token_count > 0)
-                   tokens[token_count].type = get_token_type_from_previous(&tokens[token_count - 1]);
-                else 
-                    tokens[token_count].type = TOKEN_COMMAND;
-                token_count = create_token(tokens, inputs[j], &i, &token_count, tokens[token_count].type);
-            }
-        }
-        j++;
-    }
-    tokens[token_count].value = gc_malloc(1);
-    tokens[token_count].type = TOKEN_EOF;
-    tokens[token_count].value[0] = '\0';
-    return tokens;
+	start = *i;
+	while (input[*i] && is_special_char(input[*i]))
+	{
+		(*i)++;
+	}
+	length = *i - start;
+	if (length <= 0)
+		return (*token_count);
+	tokens[*token_count].value = gc_malloc(length + 1);
+	if (!tokens[*token_count].value)
+	{
+		perror("Memory allocation failed\n");
+		return *token_count;
+	}
+	strncpy(tokens[*token_count].value, input + start, length);
+	tokens[*token_count].value[length] = '\0';
+	tokens[*token_count].type = get_token_type(tokens[*token_count].value);
+	return ++(*token_count);
+}
+
+TokenInfo	*tokenizer(char **inputs)
+{
+	TokenInfo	*tokens;
+
+	int i, j = 0, token_count = 0;
+	tokens = gc_malloc((100) * sizeof(TokenInfo));
+	if (!tokens)
+		return NULL;
+	while (inputs[j])
+	{
+		i = 0;
+		while (inputs[j][i] != '\0' && token_count < MAX_TOKENS)
+		{
+			i = skip_spaces(inputs[j], i);
+			if (inputs[j][i] == '\0')
+				break ;
+			if (is_special_char(inputs[j][i]))
+				token_count = handle_special_char(inputs[j], tokens,
+						&token_count, &i);
+			else
+			{
+				if (token_count > 0)
+					tokens[token_count].type = get_token_type_from_previous(&tokens[token_count
+							- 1]);
+				else
+					tokens[token_count].type = TOKEN_COMMAND;
+				token_count = create_token(tokens, inputs[j], &i, &token_count,
+						tokens[token_count].type);
+			}
+		}
+		j++;
+	}
+	tokens[token_count].value = gc_malloc(1);
+	tokens[token_count].type = TOKEN_EOF;
+	tokens[token_count].value[0] = '\0';
+	return tokens;
 }

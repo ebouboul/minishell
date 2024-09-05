@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/04 01:06:50 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/05 07:26:13 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,16 @@ int is_builtin(char *command)
 
 int process_echo_option(char *option)
 {
-    int i = 1;  // Start from 1 to skip the '-'
+    int i = 1; 
     while (option[i] != '\0')
     {
         if (option[i] != 'n')
         {
-            return 0;  // Not a valid -n option
+            return 0;
         }
         i++;
     }
-    return 1;  // Valid -n option
+    return 1;
 }
 
 int ft_echo(t_command *command)
@@ -99,6 +99,8 @@ char *get_env_value(t_env *env_list, char *key)
 void replace_env_value(t_env *env_list, char *key, char *value)
 {
     t_env *current = env_list;
+    if (value == NULL)
+        return;
     while (current != NULL)
     {
         if (ft_strcmp(current->env->key, key) == 0)
@@ -169,17 +171,36 @@ int ft_env(t_env *env_list)
     print_env_list(env_list);
     return 0;
 }
+int is_numeric(const char *str)
+{
+    int i = 0;
+    while (str &&str[i] != '\0')
+    {
+        if ((str[i] < '0' || str[i] > '9') && str[i] != '-' && str[i] != '+')
+            return 0;
+        i++;
+    }
+    return 1;
+}
 
 int ft_exit(t_command *command)
 {
     int status = 0;
+    if (ft_strlen1(command->args) > 2)
+    {
+        printf("exit: too many arguments\n");
+        return 1;
+    }
     if (command->args[1] != NULL)
     {
         status = ft_atoi(command->args[1]);
     }
-    gc_free_all();
+    if (!is_numeric(command->args[1]))
+    {
+        printf("exit: %s: numeric argument required\n", command->args[1]);
+        return 1;
+    }
     exit(status);
-    return 0;
 }
 int check_key_from_env(t_env *env_list, char *key)
 {
@@ -205,186 +226,6 @@ void add_env_node(t_env **current, char *key, char *value)
     *current = new_node;
 }
 
-char **get_key_value_for_plus(char *var)
-{
-    char **key_value = (char **)gc_malloc(3 * sizeof(char *));
-    if (key_value == NULL)
-    {
-        perror("Memory allocation failed\n");
-        exit(1);
-    }
-    key_value[0] = ft_strndup(var, ft_strchr(var, '+') - var);
-    key_value[1] = ft_strdup(ft_strchr(var, '+') + 2);
-    key_value[2] = NULL;
-    return key_value;
-}
-void ft_sort(char **keys, char **values)
-{
-    int i = 0;
-    int j = 0;
-    char *temp;
-    while (keys[i] != NULL)
-    {
-        j = i + 1;
-        while (keys[j] != NULL)
-        {
-            if (ft_strcmp(keys[i], keys[j]) > 0)
-            {
-                temp = keys[i];
-                keys[i] = keys[j];
-                keys[j] = temp;
-                temp = values[i];
-                values[i] = values[j];
-                values[j] = temp;
-            }
-            j++;
-        }
-        i++;
-    }
-}
-void print_export_sorted(t_env *env_list)
-{
-    t_env *current = env_list;
-    char **keys = (char **)gc_malloc(1000 * sizeof(char *));
-    char **values = (char **)gc_malloc(1000 * sizeof(char *));
-    int i = 0;
-    while (current != NULL)
-    {
-        keys[i] = ft_strdup(current->env->key);
-        values[i] = ft_strdup(current->env->value);
-        i++;
-        current = current->next;
-    }
-    keys[i] = NULL;
-    values[i] = NULL;
-    ft_sort(keys, values);
-    i = 0;
-    while (keys[i] != NULL)
-    {
-        printf("declare -x %s=\"%s\"\n", keys[i], values[i]);
-        i++;
-    }
-    gc_free(keys);
-    gc_free(values);
-}
-
-
-int check_export(char *args)
-{
-    int i = 0;
-    if(ft_isalpha(args[0]) == 0 )
-        {
-            printf("export: not a valid identifier\n");
-            return 1;
-        }
-    while (args[i] != '\0')
-    {
-        if (args[i] == '=' && (isalpha(args[i - 1]) == 0  && args[i - 1] != '_' && args[i - 1] != '+'))
-           {
-               printf("export: not a valid identifier\n");
-               return 1;
-           }
-        i++;
-    }
-    return 0;
-}
-
-int ft_export(t_command *command, t_env **env_list)
-{
-    t_command *current = command;
-    t_env *current_env = *env_list; // Reset current_env to start of the list
-    char *plus;
-    
-    while (current != NULL)
-    {
-
-        if (current->args[1] == NULL)
-        {
-            // Print all environment variables
-            print_export_sorted(*env_list);
-            return 0;
-        }
-        else if(!check_export(current->args[1]))
-        {
-            // Parse the key-value pair
-            char **key_value = get_key_value(current->args[1]);
-            
-            if (key_value[1] == NULL)
-            {
-                // Case: Only a key is provided, check if it exists in env_list
-                if (check_key_from_env(*env_list, key_value[0]))
-                {
-                    while (current_env != NULL)
-                    {
-                        if (ft_strcmp(current_env->env->key, key_value[0]) == 0)
-                        {
-                            printf("declare -x %s=\"%s\"\n", current_env->env->key, current_env->env->value);
-                            break;
-                        }
-                        current_env = current_env->next;
-                    }
-                }
-            }
-            else if((plus = ft_strchr(current->args[1], '+')) && plus[1] == '=')
-            {
-                char **key_value_plus = get_key_value_for_plus(current->args[1]);
-                if (check_key_from_env(*env_list, key_value_plus[0]))
-                {
-                    while (current_env != NULL)
-                    {
-                        if (ft_strcmp(current_env->env->key, key_value_plus[0]) == 0)
-                        {
-                            char *new_value = ft_strjoin(current_env->env->value, key_value_plus[1]);
-                            gc_free(current_env->env->value);
-                            current_env->env->value = new_value;
-                            break;
-                        }
-                        current_env = current_env->next;
-                    }
-                }
-            }
-            else
-            {
-                // Case: Key and value are provided
-                if (check_key_from_env(*env_list, key_value[0]))
-                {
-                    // Update the value if the key exists
-                    while (current_env != NULL)
-                    {
-                        if (ft_strcmp(current_env->env->key, key_value[0]) == 0)
-                        {
-                            gc_free(current_env->env->value);
-                            current_env->env->value = ft_strdup(key_value[1]);
-                            break;
-                        }
-                        current_env = current_env->next;
-                    }
-                }
-                else
-                {
-                    // Find the last node in the list
-                    while (current_env->next != NULL)
-                    {
-                        current_env = current_env->next;
-                    }
-                    current_env->next = (t_env *)gc_malloc(sizeof(t_env));
-                    current_env->next->env = (env *)gc_malloc(sizeof(env));
-                    current_env->next->env->key = ft_strdup(key_value[0]);
-                    current_env->next->env->value = ft_strdup(key_value[1]);
-                    current_env->next->next = NULL;
-                    
-                    //print_env_list(*env_list);
-                    
-                }
-            }
-            
-            gc_free(key_value);
-        }
-        current = current->next;
-    }
-
-    return 0;
-}
 
 
 int ft_unset(t_command *command, t_env **env_list)
@@ -392,6 +233,7 @@ int ft_unset(t_command *command, t_env **env_list)
     t_command *current = command;
     t_env *current_env = *env_list;
     t_env *prev = NULL;
+    int i = 1;
     while (current != NULL)
     {
         if (current->args[1] == NULL)
@@ -399,33 +241,32 @@ int ft_unset(t_command *command, t_env **env_list)
             printf("unset: not enough arguments\n");
             return 1;
         }
-        if (check_key_from_env(*env_list, current->args[1]))
+        while (current->args[i] != NULL)
         {
+            current_env = *env_list;
+            prev = NULL;
             while (current_env != NULL)
             {
-                if (ft_strcmp(current_env->env->key, current->args[1]) == 0)
+                if (ft_strcmp(current_env->env->key, current->args[i]) == 0)
                 {
                     if (prev == NULL)
                     {
                         *env_list = current_env->next;
-                        gc_free(current_env->env->key);
-                        gc_free(current_env->env->value);
-                        gc_free(current_env->env);
-                        gc_free(current_env);
-                        current_env = *env_list;
-                        break;
                     }
-                    prev->next = current_env->next;
+                    else
+                    {
+                        prev->next = current_env->next;
+                    }
                     gc_free(current_env->env->key);
                     gc_free(current_env->env->value);
                     gc_free(current_env->env);
                     gc_free(current_env);
-                    current_env = prev->next;
                     break;
                 }
                 prev = current_env;
                 current_env = current_env->next;
             }
+            i++;
         }
         current = current->next;
     }

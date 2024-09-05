@@ -118,9 +118,11 @@ int check_key_from_env(t_env *env_list, char *key);
 char **get_key_value(char *var);
 void expansion_process(t_node **head, t_env *key);
 void remove_all_quotes_and_join(char *input);
+int ft_strlen1(char **str);
 
 // builtins functions:
 int is_builtin(char *command);
+int ft_export(t_command *command, t_env **env_list);
 char *get_env_value(t_env *env_list, char *key);
 
 // execution functions v1:
