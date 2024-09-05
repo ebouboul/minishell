@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/05 07:26:13 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/05 23:28:19 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,10 +186,15 @@ int is_numeric(const char *str)
 int ft_exit(t_command *command)
 {
     int status = 0;
-    if (ft_strlen1(command->args) > 2)
+    if (ft_strlen1(command->args) > 2 && !is_numeric(command->args[1]))
     {
-        printf("exit: too many arguments\n");
-        return 1;
+        if (is_numeric(command->args[1]))
+            printf("exit: %s: numeric argument required\n", command->args[1]);
+        else
+        {
+            printf("exit: too many arguments\n");
+            return 1;
+        }
     }
     if (command->args[1] != NULL)
     {

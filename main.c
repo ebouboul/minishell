@@ -52,10 +52,11 @@ t_node *prepare_execution(TokenInfo *tokens, t_env *env_list)
 {
     TokenNode *list_head = ArrayIntoNodes(tokens);
     t_node *node = convert_to_node_list(list_head);
+    
 
     expansion_process(&node, env_list);
-    // print_node_list(node);
     
+    // print_node_list(node);
     remove_quotes_and_join(node);
     return node;
 }
@@ -91,7 +92,7 @@ int main(int argc, char **argv, char **env)
     while (1) 
     {
         input = read_user_input();
-        if (!input)
+        if (!input )
             break;
 
         if(validate_input(input, &node))
