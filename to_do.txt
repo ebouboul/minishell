@@ -12,20 +12,20 @@ struct of cmds
 
 ---------------
 | char **cmds;           //ls
-| env 
+| env
 | env_cp
 | redirection_struct *redirection;
 | Node *next;// NON_NULL
 ---------------
 
-
+ss
 ---------------
 | char *file_name;//file
 | int   type_of _redirection; // red_out
 | redirection_s *next;
 ---------------
 
-env 
+env
 ---------------
 | char *key;//file
 | char *value; // red_out
@@ -54,5 +54,5 @@ export += /DONE
 exit check all error
 exit jkj kjkj
 exit 545 5454
-exit ds5454 
-exit -      
+exit ds5454
+exit -
