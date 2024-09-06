@@ -61,7 +61,7 @@ char **create_env_array(t_env *env_list)
     int i = 0;
     while (current != NULL)
     {
-        env_array[i] = malloc(strlen(current->env->key) + strlen(current->env->value) + 2);
+        env_array[i] = malloc(strlen(current->env->key) + ft_strlen(current->env->value) + 2);
         sprintf(env_array[i], "%s=%s", current->env->key, current->env->value);
         i++;
         current = current->next;

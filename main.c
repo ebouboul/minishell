@@ -1,5 +1,16 @@
 #include "minishell.h"
 
+int is_space1(char *input)
+{
+    int i = 0;
+    while (input[i] != '\0')
+    {
+        if (input[i] > 32)
+            return 0;
+        i++;
+    }
+    return 1;
+}
 char *read_user_input(void) 
 {
     char *input = readline("minishell$ ");
@@ -87,14 +98,14 @@ int main(int argc, char **argv, char **env)
     t_node *node = (t_node*)gc_malloc(sizeof(t_node));
     char *input = NULL;
     fill_env_list(env, env_list);
+    // print_env_list(env_list);
     increment_shlvl(env_list);
 
     while (1) 
     {
         input = read_user_input();
-        if (!input )
-            break;
-
+        if (!input || is_space1(input) == 1)
+            continue;
         if(validate_input(input, &node))
         {
             TokenInfo *tokens = process_input(input, &node);
@@ -109,3 +120,6 @@ int main(int argc, char **argv, char **env)
     gc_free_all();
     return 0;
 }
+
+
+

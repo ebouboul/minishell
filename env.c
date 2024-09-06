@@ -34,12 +34,28 @@ char *ft_strndup(char *s, int n)
 //     current = NULL; 
 // }
 
-
+char **set_env()
+{
+    char *pwd;
+    char **envv;
+    pwd = getcwd(NULL, 0);
+    envv = (char**)gc_malloc(5 * sizeof(char*));
+    envv[0] = ft_strjoin("PWD=", pwd);
+    envv[1] = ft_strdup("SHLVL=0");
+    envv[2] = ft_strdup("_=/usr/bin/env");
+    envv[3] = ft_strdup("OLDPWD");
+    envv[4] = NULL;
+    free(pwd);
+    return envv;
+}
 void fill_env_list(char **envv, t_env *env_list) 
 {
-    t_env *current = env_list;
+    t_env *current;
+    current = env_list;
     int i = 0;
 
+    if(!envv[0])
+        envv = set_env();
     while (envv[i])
     {
         char **key_value = get_key_value(envv[i]);
@@ -85,7 +101,7 @@ void print_env_list(t_env *env_list)
     current = env_list;
     while(current != NULL)
     {
-        if (current->env->value != NULL && (current->env->value && current->env->value[0] != '\0'))
+        if (current->env->value != NULL || (current->env->value && current->env->value[0] == '\0'))
         printf("%s=%s\n", current->env->key, current->env->value);
         current = current->next;
        

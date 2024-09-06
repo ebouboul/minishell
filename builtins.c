@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/05 23:28:19 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/06 13:23:17 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ int ft_cd(t_command *command, t_env **env_list)
     else
     {
         printf("cd: %s: %s\n", path, strerror(1));
+        free(oldpwd);
         return 1;
     }
     return 0;

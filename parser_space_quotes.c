@@ -283,8 +283,27 @@ void remove_quotes_from_first_and_last(char *input)
         i++;
     }
     remove_quotes_after_equal(input);
-
-
+}
+void remove_quotes_from_first_and_last_only(char *input)
+{
+    int i = 0;
+    int flag = 0;
+    if(ft_strlen(input) == 0)
+        return;
+    if(input[0] == '"')
+        flag = 1;
+    else if(input[0] == '\'')
+        flag = 2;
+    if(flag == 1 && input[strlen(input) - 1] == '"')
+            input[strlen(input) - 1] = '\0';
+    else if(flag == 2 && input[strlen(input) - 1] == '\'')
+            input[strlen(input) - 1] = '\0';
+    while (input[i] != '\0' && flag != 0)
+    {
+        input[i] = input[i + 1];
+        i++;
+    }
+    remove_quotes_after_equal(input);
 }
 void remove_quotes(char *input, int closed)
 {
@@ -462,6 +481,45 @@ char *remove_all_quotes(const char *str)
 
     return result;
 }
+// check if qoutes in the first and last only
+int check_qoutes_in_first_and_last_only(char *input)
+{
+    if(input[0] == '"' && input[strlen(input) - 1] == '"')
+        return 1;
+    if(input[0] == '\'' && input[strlen(input) - 1] == '\'')
+        return 1;
+    return 0;
+}
+int is_quote2(char c) 
+{
+    return (c == '"' || c == '\'');
+}
+
+char *remove_closed_quotes(const char *input) {
+    int i = 0, j = 0;
+    char *result = (char *)malloc(strlen(input) + 1);
+    if (!result) {
+        return NULL;  // Handle memory allocation failure.
+    }
+
+    while (input[i] != '\0') {
+        if (is_quote2(input[i])) {
+            char quote = input[i];
+            i++;  // Skip the opening quote.
+            while (input[i] != '\0' && input[i] != quote) {
+                result[j++] = input[i++];
+            }
+            if (input[i] == quote) {
+                i++;  // Skip the closing quote.
+            }
+        } else {
+            result[j++] = input[i++];
+        }
+    }
+    
+    result[j] = '\0';
+    return result;
+}
 
 
 void remove_quotes_and_join(t_node *head)
@@ -476,10 +534,7 @@ void remove_quotes_and_join(t_node *head)
             int i = 0;
             while (args[i] != NULL) 
             {
-                args[i] = remove_all_quotes(args[i]);
-                // remove_quotes_from_first_and_last(args[i]);
-                args[i] = remove_all_quotes22(args[i]);
-                remove_quotes_after_equal(args[i]);
+               args[i] = remove_closed_quotes(args[i]);
                 i++;
             }
             current_command = current_command->next;

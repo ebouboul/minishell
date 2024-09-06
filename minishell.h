@@ -119,6 +119,8 @@ char **get_key_value(char *var);
 void expansion_process(t_node **head, t_env *key);
 void remove_all_quotes_and_join(char *input);
 int ft_strlen1(char **str);
+int is_numeric(const char *str);
+void remove_quotes_from_first_and_last_only(char *input);
 
 // builtins functions:
 int is_builtin(char *command);
