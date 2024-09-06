@@ -104,6 +104,15 @@ int main(int argc, char **argv, char **env)
             node = prepare_execution(tokens, env_list);
             // print_node_list(node);
             execute_commands(node, &env_list);
+            struct sigaction sa;
+            sa.sa_handler = handler;
+            sigemptyset(&sa.sa_mask);
+            sa.sa_flags = SA_RESTART;
+            if (sigaction(SIGINT, &sa, NULL) == -1)
+            {
+                perror("sigaction");
+                return 1;
+            }
         }
     }
     gc_free_all();

@@ -7,13 +7,14 @@ ctr + c
 exit status 130 not 0
 
 
-2=======
+2======= FIXED
 
 ila hydna l env b env -i ./minishell
 
 wraninaha
 
 wdrna
+
 MINIHELL $> /usr/bin/cat
 das
 das
@@ -22,6 +23,7 @@ ads
 ^CMINIHELL $>  MINIHELL $>
 
 ghadi i3tina double prompt
+
 
 3=======
 lkan 3ndna file ma3ndoch permision khas tktab permision denied
@@ -33,7 +35,7 @@ ila drna cp /usr/bin/ls ls
 whydna permision l ./ls
 b chmod 000 ./ls wkhdamnaha 3ndkom b ./ls tatkhdam
 
-5=======
+5======= FIXED
 ila 9adina follder b mkdir aa
 w drna
 ./aa
