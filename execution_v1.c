@@ -17,6 +17,7 @@ void execute_commands(t_node *head, t_env **env_list)
         }
     }
 }
+
 void execute_single_command(t_node *node, t_env **env_list)
 {
     if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
@@ -34,13 +35,14 @@ char *find_executable(const char *command, char **paths)
 
     while (paths[i] != NULL)
     {
-        full_path = malloc(strlen(paths[i]) + strlen(command) + 2);
+        full_path = gc_malloc(strlen(paths[i]) + strlen(command) + 2);
         
-        sprintf(full_path, "%s/%s", paths[i], command);
+        full_path = ft_strjoin(paths[i], "/");
+        full_path = ft_strjoin(full_path, command);
         if (access(full_path, X_OK) == 0)
             return full_path;
 
-        free(full_path);
+        gc_free(full_path);
         i++;
     }
     return NULL;
