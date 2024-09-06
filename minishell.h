@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <fcntl.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include "./libft/libft.h"
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -138,6 +139,11 @@ char *gett_env_value(const char *key, t_env *env_list);
 int execute_external(t_command *command, t_env *env_list);
 void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list);
 void handle_heredoc_token(t_node *head, t_env **env_list);
+int if_file_has_permission(char *file);
+char *find_executable_in_path(char *command, t_env *env_list);
+int check_file_permissions(char *file);
+int execute_command(char *executable_path, char **args, t_env *env_list);
+
 
 // free functions
 void *gc_malloc(size_t size);

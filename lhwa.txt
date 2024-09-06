@@ -57,6 +57,13 @@ export khas idoz fiha had test aa_d="waw"
 hadi saraha ntoma w libito howa anaho ladrna unset _
 makhasch itmsah l env  lsmyto _
 
-9=======
+9======
+./notVirgin
 
 
+10======= 
+
+Error 
+cat | ls 
+It doesnt run ls and waited for cat 
+Should run ls and wait for cat command 
