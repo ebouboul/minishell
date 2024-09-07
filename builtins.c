@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/06 13:23:17 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/07 16:45:53 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,25 @@ int ft_cd(t_command *command, t_env **env_list)
     else
     {
         path = current->args[1];
+        if (ft_strcmp(path, "-") == 0)
+        {
+            path = get_env_value(*env_list, "OLDPWD");
+            if (path == NULL)
+            {
+                printf("cd: OLDPWD not set\n");
+                return 1;
+            }
+        }
+        else if (path[0] == '~')
+        {
+            char *home = get_env_value(*env_list, "HOME");
+            if (home == NULL)
+            {
+                printf("cd: HOME not set\n");
+                return 1;
+            }
+            path = ft_strjoin(home, path + 1);
+        }
     }
     char *oldpwd = getcwd(NULL, 0);
     int status = chdir(path);
