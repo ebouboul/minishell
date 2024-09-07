@@ -416,8 +416,6 @@ void expansion_process(t_node **head, t_env *env_list)
         while (current_command != NULL)
         {
             process_arguments(current_command, env_list, current->exit_status);
-            // expansion_redirection(current_command, env_list);
-
             current_command = current_command->next;
         }
         current = current->next;

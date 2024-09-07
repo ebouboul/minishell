@@ -10,36 +10,6 @@ char *gett_env_value(const char *key, t_env *env_list)
     }
     return NULL;
 }
-
-int if_file_has_permission(char *file)
-{
-    struct stat file_stat;
-
-    if (stat(file, &file_stat) != 0)
-    {
-        perror("stat");
-        return 0;
-    }
-
-    if (S_ISDIR(file_stat.st_mode))
-    {
-        fprintf(stderr, "minishell: %s: This is a directory\n", file);
-        return 0;
-    }
-
-    if (access(file, F_OK) == 0)
-    {
-        if (access(file, R_OK) == 0)
-        {
-            if (access(file, W_OK) == 0)
-            {
-                if (access(file, X_OK) == 0)
-                    return 1;
-            }
-        }
-    }
-    return 0;
-}
 char *find_executable_in_path(char *command, t_env *env_list)
 {
     char *path_value = gett_env_value("PATH", env_list);
@@ -56,10 +26,8 @@ char *find_executable_in_path(char *command, t_env *env_list)
         i++;
     }
     free(paths);
-
     return executable_path;
 }
-
 int check_file_permissions(char *file)
 {
     struct stat file_stat;
@@ -130,29 +98,6 @@ int execute_external(t_command *command, t_env *env_list)
     free(executable_path);
     return result;
 }
-// void hadle_pipes(int fd[2], int out, t_node *current)
-// {
-//     if (out == -1)
-//     {
-//         dup2(fd[PIPE_INPUT], STDOUT_FILENO);
-//            close(fd[PIPE_OUTPUT]);
-//            close(fd[PIPE_INPUT]);
-//     }
-//     else if (out != -1 && current->next != NULL)
-//       {
-//             dup2(out, STDIN_FILENO);
-//             dup2(fd[PIPE_INPUT], STDOUT_FILENO);
-//             close(fd[PIPE_INPUT]);
-//             close(fd[PIPE_OUTPUT]);
-//             close(out);
-//      }
-//     else
-//      {
-//             dup2(out, STDIN_FILENO);
-//             close(out);
-//     }
-// }
-
 void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list)
 {
     t_node *current = head;
@@ -171,7 +116,6 @@ void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list)
         pid_t pid = fork();
         if (pid == 0)
         {
-            // Child process
             if (prev_pipe != STDIN_FILENO)
             {
                 dup2(prev_pipe, STDIN_FILENO);
@@ -179,9 +123,7 @@ void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list)
             }
 
             if (current->next != NULL)
-            {
                 dup2(fd[1], STDOUT_FILENO);
-            }
 
             close(fd[0]);
             close(fd[1]);
@@ -189,9 +131,9 @@ void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list)
             execute_single_command(current, env_list);
             exit(0);
         }
+
         else if (pid > 0)
         {
-            // Parent process
             if (prev_pipe != STDIN_FILENO)
                 close(prev_pipe);
 
@@ -199,7 +141,6 @@ void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list)
 
             if (current->next == NULL)
             {
-                // This is the last command in the pipeline
                 close(fd[0]);
                 last_pid = pid;
             }
@@ -217,13 +158,12 @@ void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list)
         }
     }
 
-    // Wait only for the last process in the pipeline
     if (last_pid > 0)
     {
         int status;
         waitpid(last_pid, &status, 0);
     }
 
-    // Clean up any remaining child processes
     while (wait(NULL) > 0);
 }
+

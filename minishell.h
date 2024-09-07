@@ -62,10 +62,14 @@ typedef struct t_redirect
     struct t_redirect *next;
 } t_redirect;
 
+
 typedef struct t_command
 {
     t_redirect *redirect;
     char **args;
+    char *input_redirection;
+    char *output_redirection;
+    char *append_redirection;
     struct t_command *next;
 } t_command;
 
@@ -148,6 +152,10 @@ int execute_command(char *executable_path, char **args, t_env *env_list);
 
 // signals functions
 void handler(int signum);
+
+// heredoc functions + redirections
+void handle_heredoc(char *delimiter);
+void handle_redirections(t_command *command);
 
 // free functions
 void *gc_malloc(size_t size);

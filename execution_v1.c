@@ -3,8 +3,20 @@
 void execute_commands(t_node *head, t_env **env_list)
 {
     t_node *current = head;
+    // char *t_command = NULL;
+
+    int is_heredoc(t_node *node)
+    {
+        if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
+            return 0;
+        return strcmp(node->command->args[0], "<<") == 0;
+    }
     while (current != NULL)
     {
+        if (is_heredoc(current))
+            handle_heredoc("<<");
+        // if (has_redirections(current)) 
+        //     handle_redirections(current);
         if(current->next != NULL)
         {
             handle_pipe_and_multiple_commands(current, env_list);
@@ -17,7 +29,16 @@ void execute_commands(t_node *head, t_env **env_list)
         }
     }
 }
+<<<<<<< HEAD
 
+=======
+int is_redirection(t_node *node)
+{
+    if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
+        return 0;
+    return strcmp(node->command->args[0], ">") == 0 || strcmp(node->command->args[0], ">>") == 0 || strcmp(node->command->args[0], "<") == 0;
+}
+>>>>>>> 65b6e41 (signals)
 void execute_single_command(t_node *node, t_env **env_list)
 {
     if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
@@ -101,4 +122,3 @@ char **split_path(const char *path)
     free(path_copy);
     return paths;
 }
-
