@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 06:57:26 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/05 07:23:30 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/07 15:29:38 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	check_export(char *args)
 	}
 	while (args[i] != '\0')
 	{
-		if (args[i] == '=' && (isalpha(args[i - 1]) == 0 && args[i - 1] != '_'
+		if (args[i] == '=' && (isalnum(args[i - 1]) == 0 && args[i - 1] != '_'
 				&& args[i - 1] != '+'))
 		{
 			printf("export: not a valid identifier\n");
