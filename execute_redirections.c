@@ -42,6 +42,7 @@ void handle_heredoc(char *delimiter) // heredoc is a redirection from a file des
 void handle_redirections(t_command *command)
 {
     t_redirect *redirect = command->redirect;
+	///
     int fd;
 
     while (redirect)
