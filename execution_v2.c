@@ -104,6 +104,7 @@ void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list)
     int fd[2];
     int prev_pipe = STDIN_FILENO;
     pid_t last_pid = -1;
+    
 
     while (current != NULL)
     {

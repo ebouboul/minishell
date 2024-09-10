@@ -22,12 +22,12 @@ char *read_user_input(void)
 int validate_input(char *input, t_node **head)
 {
     if (ft_strlen(input) == 0)
-        return 0;  // Empty input, skip processing
+        return 0;
 
     (*head)->exit_status = track_quots(input);
     if((*head)->exit_status == 2)
-        return 0;  // Invalid input 
-    return 1;  // Input is valid
+        return 0;
+    return 1;
 }
 int checking(TokenNode *list_head)
 {
@@ -98,12 +98,26 @@ int main(int argc, char **argv, char **env)
     t_node *node = (t_node*)gc_malloc(sizeof(t_node));
     char *input = NULL;
     fill_env_list(env, env_list);
-    // print_env_list(env_list);
     increment_shlvl(env_list);
+    struct sigaction sa;
+    sa.sa_handler = handler;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+    if (sigaction(SIGINT, &sa, NULL) == -1)
+    {
+        perror("sigaction");
+        return 1;
+    }
 
     while (1) 
     {
         input = read_user_input();
+        if (input == NULL) 
+        {
+            write(1, "exit\n", 5);
+            break;
+        }
+
         if (!input || is_space1(input) == 1)
             continue;
         if(validate_input(input, &node))
@@ -113,17 +127,7 @@ int main(int argc, char **argv, char **env)
             if (!tokens)
                 continue;
             node = prepare_execution(tokens, env_list);
-            // print_node_list(node);
-            execute_commands(node, &env_list);
-            struct sigaction sa;
-            sa.sa_handler = handler;
-            sigemptyset(&sa.sa_mask);
-            sa.sa_flags = SA_RESTART;
-            if (sigaction(SIGINT, &sa, NULL) == -1)
-            {
-                perror("sigaction");
-                return 1;
-            }
+            execute_cmds(node, &env_list);
         }
     }
     gc_free_all();

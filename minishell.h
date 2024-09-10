@@ -133,7 +133,7 @@ int ft_export(t_command *command, t_env **env_list);
 char *get_env_value(t_env *env_list, char *key);
 
 // execution functions v1:
-void execute_commands(t_node *head, t_env **env_list);
+void execute_cmds(t_node *head, t_env **env_list);
 void execute_single_command(t_node *node, t_env **env_list);
 char *find_executable(const char *command, char **paths);
 char **create_env_array(t_env *env_list);
@@ -154,8 +154,9 @@ int execute_command(char *executable_path, char **args, t_env *env_list);
 void handler(int signum);
 
 // heredoc functions + redirections
-void handle_heredoc(char *delimiter);
-void handle_redirections(t_command *command);
+void handle_heredoc(t_node *node, t_env **env_list);
+int is_heredoc(t_node *node);
+void handle_redirections(t_node *node);
 
 // free functions
 void *gc_malloc(size_t size);
