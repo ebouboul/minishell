@@ -146,8 +146,8 @@ char *get_env_value(t_env *env_list, char *key);
 int	ft_unset(t_command *command, t_env **env_list);
 
 // execution functions v1:
-void execute_cmds(t_node *head, t_env **env_list);
-void execute_single_command(t_node *node, t_env **env_list);
+void execute_cmds(t_node *head, t_env **env_list, int *exit_status);
+void execute_single_command(t_node *node, t_env **env_list, int *exit_status);
 char *find_executable(const char *command, char **paths);
 char **create_env_array(t_env *env_list);
 char **split_path(const char *path);

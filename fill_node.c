@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 17:23:01 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/10 12:55:48 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/10 18:05:45 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,21 +25,32 @@ t_command	*initialize_command(void)
 
 void	handle_redirection(t_command *cmd, TokenNode **current)
 {
-	t_redirect	*redir;
+    t_redirect	*redir;
+    t_redirect	*last_redir;
 
-	if ((*current)->info.type == TOKEN_REDIRECT_IN
-		|| (*current)->info.type == TOKEN_REDIRECT_OUT
-		|| (*current)->info.type == TOKEN_APPEND
-		|| (*current)->info.type == TOKEN_HEREDOC)
-	{
-		redir = gc_malloc(sizeof(t_redirect));
-		redir->str = ft_strdup((*current)->next->info.value);
-		redir->flag = (*current)->info.type;
-		redir->next = cmd->redirect;
-		cmd->redirect = redir;
-		*current = (*current)->next;
-	}
+    if ((*current)->info.type == TOKEN_REDIRECT_IN
+        || (*current)->info.type == TOKEN_REDIRECT_OUT
+        || (*current)->info.type == TOKEN_APPEND
+        || (*current)->info.type == TOKEN_HEREDOC)
+    {
+        redir = gc_malloc(sizeof(t_redirect));
+        redir->str = ft_strdup((*current)->next->info.value);
+        redir->flag = (*current)->info.type;
+        redir->next = NULL;
+        
+        if (cmd->redirect == NULL)
+            cmd->redirect = redir;
+        else
+        {
+            last_redir = cmd->redirect;
+            while (last_redir->next != NULL)
+                last_redir = last_redir->next;
+            last_redir->next = redir;
+        }
+        *current = (*current)->next;
+    }
 }
+
 
 t_command	*convert_to_command(TokenNode **current)
 {

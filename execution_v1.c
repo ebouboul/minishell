@@ -18,7 +18,7 @@ int is_heredoc(t_node *node)
     }
     return 0;
 }
-void execute_cmds(t_node *head, t_env **env_list)
+void execute_cmds(t_node *head, t_env **env_list, int *exit_status)
 {
     t_node *current = head;
     while (current)
@@ -53,7 +53,7 @@ void execute_cmds(t_node *head, t_env **env_list)
             }
             else
             {
-                execute_single_command(current, env_list);
+                execute_single_command(current, env_list, exit_status);
             }
         }
         current = current->next;
@@ -67,16 +67,16 @@ int is_redirection(t_node *node)
     return strcmp(node->command->args[0], ">") == 0 || strcmp(node->command->args[0], ">>") == 0 || strcmp(node->command->args[0], "<") == 0;
 }
 
-void execute_single_command(t_node *node, t_env **env_list)
+void execute_single_command(t_node *node, t_env **env_list, int *exit_status)
 {
     if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
         return;
     char *cmd = node->command->args[0];
     // printf("Debug: Executing command: %s\n", node->command->args[0]);
     if (is_builtin(cmd))
-        node->exit_status = execute_builtin(node, env_list);
+        *exit_status = execute_builtin(node, env_list);
     else
-        node->exit_status = execute_external(node->command, *env_list);
+        *exit_status = execute_external(node->command, *env_list);
 }
 char *find_executable(const char *command, char **paths)
 {

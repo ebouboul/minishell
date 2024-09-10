@@ -141,7 +141,7 @@ int main(int argc, char **argv, char **env)
 
 
             node = prepare_execution(tokens, env_list, exit_status);
-            execute_cmds(node, &env_list);
+            execute_cmds(node, &env_list, &exit_status);
         }
     }
     gc_free_all();

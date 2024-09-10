@@ -22,10 +22,10 @@ char *find_executable_in_path(char *command, t_env *env_list)
     int i = 0;
     while (paths && paths[i] != NULL)
     {
-        free(paths[i]);
+        gc_free(paths[i]);
         i++;
     }
-    free(paths);
+    gc_free(paths);
     return executable_path;
 }
 int check_file_permissions(char *file)
@@ -95,7 +95,7 @@ int execute_external(t_command *command, t_env *env_list)
     }
 
     int result = execute_command(executable_path, command->args, env_list);
-    free(executable_path);
+    gc_free(executable_path);
     return result;
 }
 void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list)
