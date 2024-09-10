@@ -1,25 +1,6 @@
 #include "minishell.h"
 
-<<<<<<< HEAD
-    int is_heredoc(t_node *node)
-    {
-        if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
-            return 0;
-        return strcmp(node->command->args[0], "<<") == 0;
-    }
-void execute_commands(t_node *head, t_env **env_list)
-{
-    t_node *current = head;
-    // char *t_command = NULL;
 
-    while (current != NULL)
-    {
-        if (is_heredoc(current))
-            handle_heredoc("<<");
-        // if (has_redirections(current)) 
-        //     handle_redirections(current);
-        if(current->next != NULL)
-=======
 int is_heredoc(t_node *node)
 {
     if (!node || !node->command || !node->command->redirect)
@@ -43,7 +24,6 @@ void execute_cmds(t_node *head, t_env **env_list)
     while (current)
     {
         if (current->command && current->command->args && current->command->args[0])
->>>>>>> 0c77c6aa5691dbed7ce44869cf825c0e1b6cac3f
         {
             if (is_heredoc(current))
             {
@@ -79,20 +59,14 @@ void execute_cmds(t_node *head, t_env **env_list)
         current = current->next;
     }
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 0c77c6aa5691dbed7ce44869cf825c0e1b6cac3f
 int is_redirection(t_node *node)
 {
     if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
         return 0;
     return strcmp(node->command->args[0], ">") == 0 || strcmp(node->command->args[0], ">>") == 0 || strcmp(node->command->args[0], "<") == 0;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 0c77c6aa5691dbed7ce44869cf825c0e1b6cac3f
 void execute_single_command(t_node *node, t_env **env_list)
 {
     if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)

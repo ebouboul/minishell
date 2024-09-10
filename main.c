@@ -24,19 +24,13 @@ int validate_input(char *input, int *exit_status)
     if (ft_strlen(input) == 0)
         return 0;
 
-<<<<<<< HEAD
     if (track_quots(input) == 2)
     {
         (*exit_status) = 2;
         return 0;
     }
     return 1;  // Input is valid
-=======
-    (*head)->exit_status = track_quots(input);
-    if((*head)->exit_status == 2)
-        return 0;
-    return 1;
->>>>>>> 0c77c6aa5691dbed7ce44869cf825c0e1b6cac3f
+
 }
 
 int checking(TokenNode *list_head)
@@ -144,23 +138,10 @@ int main(int argc, char **argv, char **env)
             free(input);
             if (!tokens)
                 continue;
-<<<<<<< HEAD
+
+
             node = prepare_execution(tokens, env_list, exit_status);
-            // print_node_list(node);
-            execute_commands(node, &env_list);
-            // struct sigaction sa;
-            // sa.sa_handler = handler;
-            // sigemptyset(&sa.sa_mask);
-            // sa.sa_flags = SA_RESTART;
-            // if (sigaction(SIGINT, &sa, NULL) == -1)
-            // {
-            //     perror("sigaction");
-            //     return 1;
-            // }
-=======
-            node = prepare_execution(tokens, env_list);
             execute_cmds(node, &env_list);
->>>>>>> 0c77c6aa5691dbed7ce44869cf825c0e1b6cac3f
         }
     }
     gc_free_all();
