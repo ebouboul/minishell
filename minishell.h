@@ -159,7 +159,7 @@ void	shift_args(char **args, int i, int original_size, int num_splits);
 // execution functions v2:
 char *gett_env_value(const char *key, t_env *env_list);
 int execute_external(t_command *command, t_env *env_list);
-void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list);
+void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list, int *exit_status);
 void handle_heredoc_token(t_node *head, t_env **env_list);
 int if_file_has_permission(char *file);
 char *find_executable_in_path(char *command, t_env *env_list);
@@ -168,9 +168,10 @@ int execute_command(char *executable_path, char **args, t_env *env_list);
 
 // signals functions
 void handler(int signum);
+void handler_c(int signum);
 
 // heredoc functions + redirections
-void handle_heredoc(t_node *node, t_env **env_list);
+void handle_heredoc(t_node *node, t_env **env_list, int *exit_status);
 int is_heredoc(t_node *node);
 void handle_redirections(t_node *node);
 

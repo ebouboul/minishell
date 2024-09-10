@@ -11,7 +11,6 @@ int is_heredoc(t_node *node)
     {
         if (redirect->flag == 8)
         {
-            printf("Debug: Heredoc found with delimiter: %s\n", redirect->str);
             return 1;
         }
         redirect = redirect->next;
@@ -23,8 +22,8 @@ void execute_cmds(t_node *head, t_env **env_list, int *exit_status)
     t_node *current = head;
     while (current)
     {
-        if (current->command && current->command->args && current->command->args[0])
-        {
+        // if (current->command && current->command->args && current->command->args[0])
+        // {
             if (is_heredoc(current))
             {
                 pid_t pid = fork();
@@ -35,8 +34,9 @@ void execute_cmds(t_node *head, t_env **env_list, int *exit_status)
                 }
                 else if (pid == 0)
                 {
+                    
                     // Child process
-                    handle_heredoc(current, env_list);
+                    handle_heredoc(current, env_list, exit_status);
                     exit(EXIT_SUCCESS);
                 }
                 else
@@ -48,14 +48,13 @@ void execute_cmds(t_node *head, t_env **env_list, int *exit_status)
             }
             else if (current->next)
             {
-                handle_pipe_and_multiple_commands(current, env_list);
+                handle_pipe_and_multiple_commands(current, env_list, exit_status);
                 break;
             }
-            else
+            else if (current->command && current->command->args && current->command->args[0])
             {
                 execute_single_command(current, env_list, exit_status);
             }
-        }
         current = current->next;
     }
 }

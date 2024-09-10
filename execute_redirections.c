@@ -1,78 +1,97 @@
 #include "minishell.h"
 
-void handle_heredoc(t_node *node, t_env **env_list)
+void handle_heredoc(t_node *node, t_env **env_list, int *exit_status)
 {
     char *line;
     int fd;
-    char *temp_file = "/tmp/minishell_heredoc";
+    char *tty = ttyname(STDIN_FILENO);
+    char *temp_file = "/tmp/minishell_heredoc_";
+    temp_file = ft_strjoin(temp_file, tty+9);
     t_redirect *redirect = node->command->redirect;
     (void)env_list;
+    t_node *temp = node;
 
-    while (redirect)
-    {
-        if (redirect->flag == 8) // Assuming 8 is the flag for heredoc
-        {
-            fd = open(temp_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            if (fd == -1)
+
+
+while (temp)
+{
+        while (redirect)
             {
-                perror("open");
-                return;
-            }
-            printf("Enter heredoc content. End with a line containing only \"%s\".\n", redirect->str);
-            while (1)
-            {
-                line = readline("> ");
-                if (!line || strcmp(line, redirect->str) == 0)
+                if (redirect->flag == 8) // Assuming 8 is the flag for heredoc
                 {
-                    free(line);
-                    break;
+
+                    fd = open(temp_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                    if (fd == -1)
+                    {
+                        perror("open");
+                        return;
+                    }
+                    signal(SIGINT, handler_c);
+
+                    while (1)
+                    {
+                        line = readline("> ");
+                        if (!line || strcmp(line, redirect->str) == 0)
+                        {
+                            free(line);
+                            break;
+                        }
+                        write(fd, line, strlen(line));
+                        write(fd, "\n", 1);
+                        free(line);
+                    }
+                    close(fd);
                 }
-                dprintf(fd, "%s\n", line);
-                free(line);
+                redirect = redirect->next;
             }
-            close(fd);
 
-            // Fork and execute the command
-            pid_t pid = fork();
-            if (pid == -1)
-            {
-                perror("fork");
-                return;
-            }
-            else if (pid == 0)
-            {
-                // Child process
-                fd = open(temp_file, O_RDONLY);
-                if (fd == -1)
+                // Fork and execute the command
+               if (temp->next == NULL)
+               {
+                pid_t pid = fork();
+                if (pid == -1)
                 {
-                    perror("open");
+                    perror("fork");
+                    return;
+                }
+                else if (pid == 0)
+                {
+                    // Child process
+                    fd = open(temp_file, O_RDONLY);
+                    if (fd == -1)
+                    {
+                        perror("open");
+                        exit(EXIT_FAILURE);
+                    }
+                    dup2(fd, STDIN_FILENO);
+                    close(fd);
+
+                    if (temp->command && temp->command->args && temp->command->args[0])
+                    execute_single_command(temp, env_list, exit_status);
+                    // perror("execvp");
                     exit(EXIT_FAILURE);
                 }
-                dup2(fd, STDIN_FILENO);
-                close(fd);
+                else
+                {
+                    // Parent process
+                    int status;
+                    waitpid(pid, &status, 0);
+                }
 
-                // Execute the command
-                execvp(node->command->args[0], node->command->args);
-                perror("execvp");
-                exit(EXIT_FAILURE);
-            }
-            else
-            {
-                // Parent process
-                int status;
-                waitpid(pid, &status, 0);
-                unlink(temp_file);  // Remove the temporary file
-            }
 
-            // We don't need to change the redirect flag or store the temp file name
-            // because we've already executed the command
-            break;  // Exit the loop after handling the heredoc
+                // We don't need to change the redirect flag or store the temp file name
+                // because we've already executed the command
+                // Exit the loop after handling the heredoc
+               }
+                break; 
+
         }
-        redirect = redirect->next;
-    }
+            unlink(temp_file); 
+             // Remove the temporary file
+
+        temp = temp->next;
+
 }
-
-
 
 void handle_redirections(t_node *node)
 {

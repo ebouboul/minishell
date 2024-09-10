@@ -98,7 +98,7 @@ int execute_external(t_command *command, t_env *env_list)
     gc_free(executable_path);
     return result;
 }
-void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list)
+void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list, int *exit_status)
 {
     t_node *current = head;
     int fd[2];
@@ -128,7 +128,7 @@ void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list)
 
             close(fd[0]);
             close(fd[1]);
-            execute_single_command(current, env_list);
+            execute_single_command(current, env_list, exit_status);
             exit(0);
         }
 
