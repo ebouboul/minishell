@@ -158,7 +158,7 @@ int check_syntax_double_commands(TokenNode *head)
 int check_special_chars(TokenNode *head)
 {
     TokenNode *current = head;
-    if (current->info.type == TOKEN_PIPE || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT || current->info.type == TOKEN_APPEND ) 
+    if (current->info.type == TOKEN_PIPE ) 
             return(print_error("Error: Special character at the beginning of the command\n"));
     while (current != NULL) {
         if (current->info.type == TOKEN_PIPE || current->info.type == TOKEN_REDIRECT_IN || current->info.type == TOKEN_REDIRECT_OUT || current->info.type == TOKEN_APPEND || current->info.type == TOKEN_HEREDOC) 
@@ -383,43 +383,7 @@ void replace_quotes_by_spaces(char *input)
 //     }
 // }
 
-void remove_tween_quotes(char *input)
-{
-    int i = 0;
-    int j = 0;
-    while(input[i] != '\0')
-    {
-        if(input[i] == '"')
-        {
-            i++;
-            while(input[i] != '\0' && input[i] != '"')
-            {
-                input[j] = input[i];
-                i++;
-                j++;
-            }
-            if(input[i] == '\0')
-                return;
-        }
-        if(input[i] == '\'')
-        {
-            i++;
-            while(input[i] != '\0' && input[i] != '\'')
-            {
-                input[j] = input[i];
-                i++;
-                j++;
-            }
-            if(input[i] == '\0')
-                return;
-        }
-        input[j] = input[i];
-        i++;
-        j++;
-    }
-    input[j] = '\0';
-    printf("input = %s\n", input);
-}
+
 
 int is_quote(char c)
 {
@@ -497,7 +461,7 @@ int is_quote2(char c)
 
 char *remove_closed_quotes(const char *input) {
     int i = 0, j = 0;
-    char *result = (char *)malloc(strlen(input) + 1);
+    char *result = (char *)gc_malloc(ft_strlen(input) + 1);
     if (!result) {
         return NULL;  // Handle memory allocation failure.
     }

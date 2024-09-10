@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 06:57:26 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/07 15:29:38 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/08 16:09:25 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,21 @@ void	ft_sort(char **keys, char **values)
 	}
 }
 
+void	print_export_values(char **keys, char **values)
+{
+	int	i;
+
+	i = 0;
+	while (keys[i] != NULL)
+	{
+		if (values[i] == NULL)
+			printf("declare -x %s\n", keys[i]);
+		else if (ft_strcmp(keys[i], "_") != 0)
+			printf("declare -x %s=\"%s\"\n", keys[i], values[i]);
+		i++;
+	}
+}
+
 void	print_export_sorted(t_env *env_list)
 {
 	t_env	*current;
@@ -77,15 +92,7 @@ void	print_export_sorted(t_env *env_list)
 	keys[i] = NULL;
 	values[i] = NULL;
 	ft_sort(keys, values);
-	i = 0;
-	while (keys[i] != NULL)
-	{
-		if (values[i] == NULL)
-			printf("declare -x %s\n", keys[i]);
-		else if (ft_strcmp(keys[i], "_") != 0)
-			printf("declare -x %s=\"%s\"\n", keys[i], values[i]);
-		i++;
-	}
+	print_export_values(keys, values);
 	gc_free(keys);
 	gc_free(values);
 }
@@ -99,6 +106,7 @@ int	is_plus_equal_case(char *arg)
 		return (1);
 	return (0);
 }
+
 int	check_export(char *args)
 {
 	int	i;
@@ -121,7 +129,6 @@ int	check_export(char *args)
 	}
 	return (0);
 }
-
 
 void	add_new_env_entry(char *key, char *value, t_env **env_list)
 {
@@ -221,17 +228,11 @@ void	handle_export_arg(char *arg, t_env **env_list)
 	{
 		key_value = get_key_value(arg);
 		if (key_value[1] == NULL)
-		{
 			handle_export_key_only(key_value[0], env_list);
-		}
 		else if (is_plus_equal_case(arg))
-		{
 			handle_plus_equal_case(arg, env_list);
-		}
 		else
-		{
 			handle_export_key_value(key_value[0], key_value[1], env_list);
-		}
 		gc_free(key_value);
 	}
 }

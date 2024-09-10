@@ -19,16 +19,19 @@ char *read_user_input(void)
     return input;
 }
 
-int validate_input(char *input, t_node **head)
+int validate_input(char *input, int *exit_status) 
 {
     if (ft_strlen(input) == 0)
         return 0;  // Empty input, skip processing
 
-    (*head)->exit_status = track_quots(input);
-    if((*head)->exit_status == 2)
-        return 0;  // Invalid input 
+    if (track_quots(input) == 2)
+    {
+        (*exit_status) = 2;
+        return 0;
+    }
     return 1;  // Input is valid
 }
+
 int checking(TokenNode *list_head)
 {
     if(check_special_chars(list_head) == 2)
@@ -41,7 +44,7 @@ int checking(TokenNode *list_head)
         return 2;
     return 0;
 }
-TokenInfo *process_input(char *input, t_node **head) 
+TokenInfo *process_input(char *input, int *exit_status) 
 {
     char **inp;
     TokenInfo *tokens;
@@ -52,36 +55,42 @@ TokenInfo *process_input(char *input, t_node **head)
     if (!tokens) 
         return NULL;
     TokenNode *list_head = ArrayIntoNodes(tokens);
-    (*head)->exit_status = checking(list_head);
-    if((*head)->exit_status == 2)
+    if (checking(list_head) == 2)
+    {
+        *exit_status = 2;
         return NULL;
+    }
     
     return tokens;
 }
 
-t_node *prepare_execution(TokenInfo *tokens, t_env *env_list) 
+t_node *prepare_execution(TokenInfo *tokens, t_env *env_list, int exit_status) 
 {
     TokenNode *list_head = ArrayIntoNodes(tokens);
     t_node *node = convert_to_node_list(list_head);
     
 
-    expansion_process(&node, env_list);
+    expansion_process(&node, env_list, exit_status);
     
     // print_node_list(node);
     remove_quotes_and_join(node);
+    replace_wildcard_in_args(node);
     return node;
 }
 
 void increment_shlvl(t_env *env_list)
 {
-    t_env *current = env_list;
+    t_env *current;
+    int value;
+    char *new_value;
+    current = env_list;
     while (current != NULL) 
     {
         if (ft_strcmp(current->env->key, "SHLVL") == 0) 
         {
-            int value = ft_atoi(current->env->value);
+            value = ft_atoi(current->env->value);
             value++;
-            char *new_value = ft_itoa(value);
+            new_value = ft_itoa(value);
             gc_free(current->env->value);
             current->env->value = new_value;
             break;
@@ -96,6 +105,7 @@ int main(int argc, char **argv, char **env)
     
     t_env *env_list = (t_env*)gc_malloc(sizeof(t_env));
     t_node *node = (t_node*)gc_malloc(sizeof(t_node));
+    int exit_status = 0;
     char *input = NULL;
     fill_env_list(env, env_list);
     // print_env_list(env_list);
@@ -103,27 +113,28 @@ int main(int argc, char **argv, char **env)
 
     while (1) 
     {
+        // printf("exit status: %d\n", node->exit_status);
         input = read_user_input();
         if (!input || is_space1(input) == 1)
             continue;
-        if(validate_input(input, &node))
+        if(validate_input(input, &exit_status))
         {
-            TokenInfo *tokens = process_input(input, &node);
+            TokenInfo *tokens = process_input(input, &exit_status);
             free(input);
             if (!tokens)
                 continue;
-            node = prepare_execution(tokens, env_list);
+            node = prepare_execution(tokens, env_list, exit_status);
             // print_node_list(node);
             execute_commands(node, &env_list);
-            struct sigaction sa;
-            sa.sa_handler = handler;
-            sigemptyset(&sa.sa_mask);
-            sa.sa_flags = SA_RESTART;
-            if (sigaction(SIGINT, &sa, NULL) == -1)
-            {
-                perror("sigaction");
-                return 1;
-            }
+            // struct sigaction sa;
+            // sa.sa_handler = handler;
+            // sigemptyset(&sa.sa_mask);
+            // sa.sa_flags = SA_RESTART;
+            // if (sigaction(SIGINT, &sa, NULL) == -1)
+            // {
+            //     perror("sigaction");
+            //     return 1;
+            // }
         }
     }
     gc_free_all();

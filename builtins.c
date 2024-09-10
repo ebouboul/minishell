@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/07 16:45:53 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/08 16:52:14 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,6 +225,7 @@ int ft_exit(t_command *command)
         printf("exit: %s: numeric argument required\n", command->args[1]);
         return 1;
     }
+    gc_free_all();
     exit(status);
 }
 int check_key_from_env(t_env *env_list, char *key)
@@ -253,50 +254,7 @@ void add_env_node(t_env **current, char *key, char *value)
 
 
 
-int ft_unset(t_command *command, t_env **env_list)
-{
-    t_command *current = command;
-    t_env *current_env = *env_list;
-    t_env *prev = NULL;
-    int i = 1;
-    while (current != NULL)
-    {
-        if (current->args[1] == NULL)
-        {
-            printf("unset: not enough arguments\n");
-            return 1;
-        }
-        while (current->args[i] != NULL)
-        {
-            current_env = *env_list;
-            prev = NULL;
-            while (current_env != NULL)
-            {
-                if (ft_strcmp(current_env->env->key, current->args[i]) == 0)
-                {
-                    if (prev == NULL)
-                    {
-                        *env_list = current_env->next;
-                    }
-                    else
-                    {
-                        prev->next = current_env->next;
-                    }
-                    gc_free(current_env->env->key);
-                    gc_free(current_env->env->value);
-                    gc_free(current_env->env);
-                    gc_free(current_env);
-                    break;
-                }
-                prev = current_env;
-                current_env = current_env->next;
-            }
-            i++;
-        }
-        current = current->next;
-    }
-    return 0;
-}
+
 
 
 int execute_builtin(t_node *head, t_env **env_list)

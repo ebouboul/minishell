@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 02:37:14 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/29 03:21:06 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:20:20 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Structure to represent each allocated memory block
-typedef struct MemoryNode{
-    void *ptr; // Pointer to the allocated memory
-    struct MemoryNode *next; // Pointer to the next node in the list
-} MemoryNode;
+void  *ft_realloc(void *ptr, size_t size)
+{
+    void *new_ptr = gc_malloc(size);
+    if (new_ptr == NULL)
+    {
+        perror("Memory allocation failed\n");
+        exit(1);
+    }
+    if (ptr != NULL)
+    {
+        memcpy(new_ptr, ptr, size);
+        gc_malloc(ptr);
+    }
+    return new_ptr;
+}
+
 
 // Head pointer for the linked list of memory blocks
 MemoryNode *head = NULL;

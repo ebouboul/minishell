@@ -17,6 +17,17 @@
 #define MAX_TOKEN_LENGTH 100
 #define MAX_TOKENS 100
 
+typedef struct MemoryNode
+{
+	void				*ptr;
+	struct MemoryNode	*next;
+}						MemoryNode;
+
+typedef struct s_memory_context 
+{
+    MemoryNode *head;
+} MemoryContext;
+
 typedef enum 
 {
     TOKEN_COMMAND,
@@ -80,6 +91,7 @@ typedef struct t_node
     struct t_node *next;
 } t_node;
 
+
 TokenInfo *tokenizer(char **inputs);
 TokenType get_token_type(char *c);
 int is_special_char(char c);
@@ -121,7 +133,7 @@ void remove_quotes_and_join(t_node *head);
 char **get_key_value(char *var);
 int check_key_from_env(t_env *env_list, char *key);
 char **get_key_value(char *var);
-void expansion_process(t_node **head, t_env *key);
+void expansion_process(t_node **head, t_env *key, int exit_status);
 void remove_all_quotes_and_join(char *input);
 int ft_strlen1(char **str);
 int is_numeric(const char *str);
@@ -131,6 +143,7 @@ void remove_quotes_from_first_and_last_only(char *input);
 int is_builtin(char *command);
 int ft_export(t_command *command, t_env **env_list);
 char *get_env_value(t_env *env_list, char *key);
+int	ft_unset(t_command *command, t_env **env_list);
 
 // execution functions v1:
 void execute_commands(t_node *head, t_env **env_list);
@@ -138,6 +151,9 @@ void execute_single_command(t_node *node, t_env **env_list);
 char *find_executable(const char *command, char **paths);
 char **create_env_array(t_env *env_list);
 char **split_path(const char *path);
+void replace_wildcard_in_args(t_node *head);
+char	**resize_args(char **args, int new_size);
+void	shift_args(char **args, int i, int original_size, int num_splits);
 
 
 // execution functions v2:

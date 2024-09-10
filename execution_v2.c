@@ -127,7 +127,6 @@ void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list)
 
             close(fd[0]);
             close(fd[1]);
-
             execute_single_command(current, env_list);
             exit(0);
         }
