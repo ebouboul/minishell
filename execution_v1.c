@@ -66,16 +66,118 @@ int is_redirection(t_node *node)
     return strcmp(node->command->args[0], ">") == 0 || strcmp(node->command->args[0], ">>") == 0 || strcmp(node->command->args[0], "<") == 0;
 }
 
+// void execute_single_command(t_node *node, t_env **env_list, int *exit_status)
+// {
+//     if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
+//         return;
+
+//     char *cmd = node->command->args[0];
+//     fprintf(stderr, "Debug: Executing command: %s\n", cmd);
+
+//     if (is_builtin(cmd))
+//     {
+//         // For built-ins, we need to handle redirections in the current process
+//         int stdout_copy = dup(STDOUT_FILENO);
+//         int stdin_copy = dup(STDIN_FILENO);
+
+//         handle_redirections(node);
+//         *exit_status = execute_builtin(node, env_list);
+
+//         // Restore standard input and output
+//         dup2(stdout_copy, STDOUT_FILENO);
+//         dup2(stdin_copy, STDIN_FILENO);
+//         close(stdout_copy);
+//         close(stdin_copy);
+//     }
+//     else
+//     {
+//         pid_t pid = fork();
+//         if (pid == -1)
+//         {
+//             perror("fork");
+//             exit(EXIT_FAILURE);
+//         }
+//         else if (pid == 0)
+//         {
+//             // Child process
+//             handle_redirections(node);
+            
+//             char **envp = create_env_array(*env_list);
+//             execve(cmd, node->command->args, envp);
+//             perror("execve");
+            
+//             // Free the environment array if execve fails
+//             for (int i = 0; envp[i] != NULL; i++) {
+//                 free(envp[i]);
+//             }
+//             free(envp);
+            
+//             exit(EXIT_FAILURE);
+//         }
+//         else
+//         {
+//             // Parent process
+//             int status;
+//             waitpid(pid, &status, 0);
+//             if (WIFEXITED(status))
+//                 *exit_status = WEXITSTATUS(status);
+//             else
+//                 *exit_status = 1;
+//         }
+//     }
+// }
+
 void execute_single_command(t_node *node, t_env **env_list, int *exit_status)
 {
     if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
         return;
+
     char *cmd = node->command->args[0];
-    // printf("Debug: Executing command: %s\n", node->command->args[0]);
+    fprintf(stderr, "Debug: Executing command: %s\n", cmd);
+
     if (is_builtin(cmd))
-        *exit_status = execute_builtin(node, env_list);
+    {
+        // For built-ins, we need to handle redirections in the current process
+        int stdout_copy = dup(STDOUT_FILENO);
+        int stdin_copy = dup(STDIN_FILENO);
+
+        handle_redirections(node);
+        *exit_status = execute_builtin(node, env_list);  // Call this only once
+
+        // Restore standard input and output
+        dup2(stdout_copy, STDOUT_FILENO);
+        dup2(stdin_copy, STDIN_FILENO);
+        close(stdout_copy);
+        close(stdin_copy);
+    }
     else
-        *exit_status = execute_external(node->command, *env_list);
+    {
+        pid_t pid = fork();
+        if (pid == -1)
+        {
+            perror("fork");
+            exit(EXIT_FAILURE);
+        }
+        else if (pid == 0)
+        {
+            // Child process
+            handle_redirections(node);
+            
+            execvp(cmd, node->command->args);
+            perror("execvp");
+            exit(EXIT_FAILURE);
+        }
+        else
+        {
+            // Parent process
+            int status;
+            waitpid(pid, &status, 0);
+            if (WIFEXITED(status))
+                *exit_status = WEXITSTATUS(status);
+            else
+                *exit_status = 1;
+        }
+    }
 }
 char *find_executable(const char *command, char **paths)
 {

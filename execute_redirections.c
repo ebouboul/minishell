@@ -98,6 +98,8 @@ void handle_redirections(t_node *node)
     t_redirect *redirect = node->command->redirect;
     while (redirect)
     {
+        fprintf(stderr, "Debug: Handling redirection with flag %d and string %s\n", redirect->flag, redirect->str);
+        
         int fd;
         if (redirect->flag == 4) // Output redirection '>'
         {
@@ -107,11 +109,13 @@ void handle_redirections(t_node *node)
                 perror("open");
                 exit(EXIT_FAILURE);
             }
+            fprintf(stderr, "Debug: Redirecting stdout to file %s (fd: %d)\n", redirect->str, fd);
             if (dup2(fd, STDOUT_FILENO) == -1)
             {
                 perror("dup2");
                 exit(EXIT_FAILURE);
             }
+            fprintf(stderr, "Debug: dup2 successful\n");
             close(fd);
         }
         else if (redirect->flag == 5) // Append output redirection '>>'
@@ -168,4 +172,5 @@ void handle_redirections(t_node *node)
         }
         redirect = redirect->next;
     }
+        fprintf(stderr, "Debug: Finished handling redirections\n");
 }
