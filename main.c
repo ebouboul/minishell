@@ -22,14 +22,21 @@ char *read_user_input(void)
 int validate_input(char *input, int *exit_status) 
 {
     if (ft_strlen(input) == 0)
-        return 0;  // Empty input, skip processing
+        return 0;
 
+<<<<<<< HEAD
     if (track_quots(input) == 2)
     {
         (*exit_status) = 2;
         return 0;
     }
     return 1;  // Input is valid
+=======
+    (*head)->exit_status = track_quots(input);
+    if((*head)->exit_status == 2)
+        return 0;
+    return 1;
+>>>>>>> 0c77c6aa5691dbed7ce44869cf825c0e1b6cac3f
 }
 
 int checking(TokenNode *list_head)
@@ -108,13 +115,27 @@ int main(int argc, char **argv, char **env)
     int exit_status = 0;
     char *input = NULL;
     fill_env_list(env, env_list);
-    // print_env_list(env_list);
     increment_shlvl(env_list);
+    struct sigaction sa;
+    sa.sa_handler = handler;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+    if (sigaction(SIGINT, &sa, NULL) == -1)
+    {
+        perror("sigaction");
+        return 1;
+    }
 
     while (1) 
     {
         // printf("exit status: %d\n", node->exit_status);
         input = read_user_input();
+        if (input == NULL) 
+        {
+            write(1, "exit\n", 5);
+            break;
+        }
+
         if (!input || is_space1(input) == 1)
             continue;
         if(validate_input(input, &exit_status))
@@ -123,6 +144,7 @@ int main(int argc, char **argv, char **env)
             free(input);
             if (!tokens)
                 continue;
+<<<<<<< HEAD
             node = prepare_execution(tokens, env_list, exit_status);
             // print_node_list(node);
             execute_commands(node, &env_list);
@@ -135,6 +157,10 @@ int main(int argc, char **argv, char **env)
             //     perror("sigaction");
             //     return 1;
             // }
+=======
+            node = prepare_execution(tokens, env_list);
+            execute_cmds(node, &env_list);
+>>>>>>> 0c77c6aa5691dbed7ce44869cf825c0e1b6cac3f
         }
     }
     gc_free_all();

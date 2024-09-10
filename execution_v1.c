@@ -1,5 +1,6 @@
 #include "minishell.h"
 
+<<<<<<< HEAD
     int is_heredoc(t_node *node)
     {
         if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
@@ -18,30 +19,86 @@ void execute_commands(t_node *head, t_env **env_list)
         // if (has_redirections(current)) 
         //     handle_redirections(current);
         if(current->next != NULL)
+=======
+int is_heredoc(t_node *node)
+{
+    if (!node || !node->command || !node->command->redirect)
+        return 0;
+
+    t_redirect *redirect = node->command->redirect;
+    while (redirect)
+    {
+        if (redirect->flag == 8)
         {
-            handle_pipe_and_multiple_commands(current, env_list);
-            return;
+            printf("Debug: Heredoc found with delimiter: %s\n", redirect->str);
+            return 1;
         }
-        else
+        redirect = redirect->next;
+    }
+    return 0;
+}
+void execute_cmds(t_node *head, t_env **env_list)
+{
+    t_node *current = head;
+    while (current)
+    {
+        if (current->command && current->command->args && current->command->args[0])
+>>>>>>> 0c77c6aa5691dbed7ce44869cf825c0e1b6cac3f
         {
-            execute_single_command(current, env_list);
-            current = current->next;
+            if (is_heredoc(current))
+            {
+                pid_t pid = fork();
+                if (pid == -1)
+                {
+                    perror("fork");
+                    exit(EXIT_FAILURE);
+                }
+                else if (pid == 0)
+                {
+                    // Child process
+                    handle_heredoc(current, env_list);
+                    exit(EXIT_SUCCESS);
+                }
+                else
+                {
+                    // Parent process
+                    int status;
+                    waitpid(pid, &status, 0);
+                }
+            }
+            else if (current->next)
+            {
+                handle_pipe_and_multiple_commands(current, env_list);
+                break;
+            }
+            else
+            {
+                execute_single_command(current, env_list);
+            }
         }
+        current = current->next;
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0c77c6aa5691dbed7ce44869cf825c0e1b6cac3f
 int is_redirection(t_node *node)
 {
     if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
         return 0;
     return strcmp(node->command->args[0], ">") == 0 || strcmp(node->command->args[0], ">>") == 0 || strcmp(node->command->args[0], "<") == 0;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0c77c6aa5691dbed7ce44869cf825c0e1b6cac3f
 void execute_single_command(t_node *node, t_env **env_list)
 {
     if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
         return;
     char *cmd = node->command->args[0];
+    // printf("Debug: Executing command: %s\n", node->command->args[0]);
     if (is_builtin(cmd))
         node->exit_status = execute_builtin(node, env_list);
     else
@@ -66,7 +123,6 @@ char *find_executable(const char *command, char **paths)
     }
     return NULL;
 }
-
 char **create_env_array(t_env *env_list)
 {
     int count = 0;
@@ -90,7 +146,6 @@ char **create_env_array(t_env *env_list)
     env_array[i] = NULL;
     return env_array;
 }
-
 char **split_path(const char *path)
 {
     char *path_copy = strdup(path);
