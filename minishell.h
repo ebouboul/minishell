@@ -173,8 +173,7 @@ void handler_c(int signum);
 // heredoc functions + redirections
 void handle_heredoc(t_node *node, t_env **env_list, int *exit_status);
 int is_heredoc(t_node *node);
-void handle_redirections(t_node *node);
-
+void handle_redirections(t_node *node, t_env **env_list, int *exit_status);
 // free functions
 void *gc_malloc(size_t size);
 void gc_free_all();

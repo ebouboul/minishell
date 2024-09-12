@@ -32,7 +32,7 @@ void execute_cmds(t_node *head, t_env **env_list, int *exit_status)
                     perror("fork");
                     exit(EXIT_FAILURE);
                 }
-                else if (pid == 0)
+                else if (pid == 0 && is_heredoc(current))
                 {
                     
                     // Child process
@@ -136,15 +136,15 @@ void execute_single_command(t_node *node, t_env **env_list, int *exit_status)
     fprintf(stderr, "Debug: Executing command: %s\n", cmd);
     
     // Handle heredocs before forking
-    handle_heredoc(node, env_list, exit_status);
+    // handle_heredoc(node, env_list, exit_status);
     
-    if (is_builtin(cmd))
+    if (cmd && is_builtin(cmd))
     {
         // For built-ins, we need to handle redirections in the current process
         int stdout_copy = dup(STDOUT_FILENO);
         int stdin_copy = dup(STDIN_FILENO);
         
-        handle_redirections(node);
+        handle_redirections(node, env_list, exit_status);
         *exit_status = execute_builtin(node, env_list);
         
         // Restore standard input and output
@@ -164,7 +164,8 @@ void execute_single_command(t_node *node, t_env **env_list, int *exit_status)
         else if (pid == 0)
         {
             // Child process
-            handle_redirections(node);
+            handle_redirections(node, env_list, exit_status);
+            if (cmd)
             execvp(cmd, node->command->args);
             perror("execvp");
             exit(EXIT_FAILURE);

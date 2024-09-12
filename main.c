@@ -110,6 +110,7 @@ int main(int argc, char **argv, char **env)
     char *input = NULL;
     fill_env_list(env, env_list);
     increment_shlvl(env_list);
+    signal(SIGQUIT, SIG_IGN);
     struct sigaction sa;
     sa.sa_handler = handler;
     sigemptyset(&sa.sa_mask);
