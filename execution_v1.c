@@ -1,32 +1,42 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution_v1.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/12 19:37:18 by ansoulai          #+#    #+#             */
+/*   Updated: 2024/09/12 19:37:20 by ansoulai         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "minishell.h"
 
 int is_heredoc(t_node *node)
 {
     if (!node || !node->command || !node->command->redirect)
         return 0;
 
-    t_redirect *redirect = node->command->redirect;
+    t_redirect *redirect; 
+    redirect = node->command->redirect;
     while (redirect)
     {
         if (redirect->flag == 8)
-        {
             return 1;
-        }
         redirect = redirect->next;
     }
     return 0;
 }
 void execute_cmds(t_node *head, t_env **env_list, int *exit_status)
 {
-    t_node *current = head;
+    t_node *current;
+    current = head;
     while (current)
     {
-        // if (current->command && current->command->args && current->command->args[0])
-        // {
             if (is_heredoc(current))
             {
-                pid_t pid = fork();
+                pid_t pid;
+                pid = fork();
                 if (pid == -1)
                 {
                     perror("fork");
@@ -34,14 +44,11 @@ void execute_cmds(t_node *head, t_env **env_list, int *exit_status)
                 }
                 else if (pid == 0 && is_heredoc(current))
                 {
-                    
-                    // Child process
                     handle_heredoc(current, env_list, exit_status);
                     exit(EXIT_SUCCESS);
                 }
                 else
                 {
-                    // Parent process
                     int status;
                     waitpid(pid, &status, 0);
                 }
@@ -69,12 +76,16 @@ void execute_single_command(t_node *node, t_env **env_list, int *exit_status)
     if (node == NULL)
         return;
     
-    char *cmd = node->command->args[0];    
+    char *cmd;
+    char *executable_path;
+    cmd = node->command->args[0];    
     if (cmd && is_builtin(cmd))
     {
-        int stdout_copy = dup(STDOUT_FILENO);
-        int stdin_copy = dup(STDIN_FILENO);
-        
+        int stdout_copy;
+        int stdin_copy;
+
+        stdout_copy = dup(STDOUT_FILENO);
+        stdin_copy = dup(STDIN_FILENO);
         handle_redirections(node, env_list, exit_status);
         *exit_status = execute_builtin(node, env_list);
         
@@ -85,7 +96,8 @@ void execute_single_command(t_node *node, t_env **env_list, int *exit_status)
     }
     else
     {
-        pid_t pid = fork();
+        pid_t pid;
+        pid = fork();
         if (pid == -1)
         {
             perror("fork");
@@ -95,8 +107,10 @@ void execute_single_command(t_node *node, t_env **env_list, int *exit_status)
         {
             handle_redirections(node, env_list, exit_status);
             if (cmd)
-                // execvp(cmd, node->command->args);
-                execve(cmd, node->command->args, create_env_array(*env_list));
+            {
+                executable_path = find_executable_in_path(cmd, *env_list);
+                execve(executable_path, node->command->args, create_env_array(*env_list));
+            }
             perror("execve");
             exit(EXIT_FAILURE);
         }
@@ -133,14 +147,16 @@ char *find_executable(const char *command, char **paths)
 char **create_env_array(t_env *env_list)
 {
     int count = 0;
-    t_env *current = env_list;
+    t_env *current;
+    current = env_list;
     while (current != NULL)
     {
         count++;
         current = current->next;
     }
 
-    char **env_array = malloc(sizeof(char *) * (count + 1));
+    char **env_array;
+    env_array = malloc(sizeof(char *) * (count + 1));
     current = env_list;
     int i = 0;
     while (current != NULL)
@@ -155,11 +171,15 @@ char **create_env_array(t_env *env_list)
 }
 char **split_path(const char *path)
 {
-    char *path_copy = strdup(path);
+    char *path_copy;
     char **paths = NULL;
-    int count = 0;
-    char *start = path_copy;
-    char *end = path_copy;
+    int count;
+    char *start;
+    char *end;
+    path_copy = strdup(path);
+    count = 0;
+    start = path_copy;
+    end = path_copy;
 
     while (*end != '\0')
     {
