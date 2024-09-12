@@ -48,7 +48,6 @@ int check_file_permissions(char *file)
 
     return 0;
 }
-
 int execute_command(char *executable_path, char **args, t_env *env_list)
 {
     pid_t pid = fork();

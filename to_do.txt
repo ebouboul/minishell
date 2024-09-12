@@ -42,9 +42,6 @@ exit with max long long
 << fix it // done
 
 
-multiple pipes / heredoc / redirections / status / signals
-
-
 check _= > export / DONE
 export a /DONE
 export b without value check env /DONE
@@ -60,4 +57,7 @@ exit -
 << synatx   
 
 
-16 << ?
+hereedoc 16 << ?
+
+realloc = to ft_
+ctrl + c = double minishell$

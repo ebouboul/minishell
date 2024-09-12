@@ -58,96 +58,26 @@ void execute_cmds(t_node *head, t_env **env_list, int *exit_status)
         current = current->next;
     }
 }
-
 int is_redirection(t_node *node)
 {
     if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
         return 0;
     return strcmp(node->command->args[0], ">") == 0 || strcmp(node->command->args[0], ">>") == 0 || strcmp(node->command->args[0], "<") == 0;
 }
-
-// void execute_single_command(t_node *node, t_env **env_list, int *exit_status)
-// {
-//     if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
-//         return;
-
-//     char *cmd = node->command->args[0];
-//     fprintf(stderr, "Debug: Executing command: %s\n", cmd);
-
-//     if (is_builtin(cmd))
-//     {
-//         // For built-ins, we need to handle redirections in the current process
-//         int stdout_copy = dup(STDOUT_FILENO);
-//         int stdin_copy = dup(STDIN_FILENO);
-
-//         handle_redirections(node);
-//         *exit_status = execute_builtin(node, env_list);
-
-//         // Restore standard input and output
-//         dup2(stdout_copy, STDOUT_FILENO);
-//         dup2(stdin_copy, STDIN_FILENO);
-//         close(stdout_copy);
-//         close(stdin_copy);
-//     }
-//     else
-//     {
-//         pid_t pid = fork();
-//         if (pid == -1)
-//         {
-//             perror("fork");
-//             exit(EXIT_FAILURE);
-//         }
-//         else if (pid == 0)
-//         {
-//             // Child process
-//             handle_redirections(node);
-            
-//             char **envp = create_env_array(*env_list);
-//             execve(cmd, node->command->args, envp);
-//             perror("execve");
-            
-//             // Free the environment array if execve fails
-//             for (int i = 0; envp[i] != NULL; i++) {
-//                 free(envp[i]);
-//             }
-//             free(envp);
-            
-//             exit(EXIT_FAILURE);
-//         }
-//         else
-//         {
-//             // Parent process
-//             int status;
-//             waitpid(pid, &status, 0);
-//             if (WIFEXITED(status))
-//                 *exit_status = WEXITSTATUS(status);
-//             else
-//                 *exit_status = 1;
-//         }
-//     }
-// }
-
 void execute_single_command(t_node *node, t_env **env_list, int *exit_status)
 {
     if (node == NULL)
         return;
     
-    char *cmd = node->command->args[0];
-    fprintf(stderr, "Debug: Executing command: %s\n", cmd);
-    
-    // Handle heredocs before forking
-    // handle_heredoc(node, env_list, exit_status);
-    
+    char *cmd = node->command->args[0];    
     if (cmd && is_builtin(cmd))
     {
-        // For built-ins, we need to handle redirections in the current process
         int stdout_copy = dup(STDOUT_FILENO);
         int stdin_copy = dup(STDIN_FILENO);
         
         handle_redirections(node, env_list, exit_status);
         *exit_status = execute_builtin(node, env_list);
         
-        // Restore standard input and output
         dup2(stdout_copy, STDOUT_FILENO);
         dup2(stdin_copy, STDIN_FILENO);
         close(stdout_copy);
@@ -163,16 +93,15 @@ void execute_single_command(t_node *node, t_env **env_list, int *exit_status)
         }
         else if (pid == 0)
         {
-            // Child process
             handle_redirections(node, env_list, exit_status);
             if (cmd)
-            execvp(cmd, node->command->args);
-            perror("execvp");
+                // execvp(cmd, node->command->args);
+                execve(cmd, node->command->args, create_env_array(*env_list));
+            perror("execve");
             exit(EXIT_FAILURE);
         }
         else
         {
-            // Parent process
             int status;
             waitpid(pid, &status, 0);
             if (WIFEXITED(status))
@@ -181,9 +110,6 @@ void execute_single_command(t_node *node, t_env **env_list, int *exit_status)
                 *exit_status = 1;
         }
     }
-    
-    // Clean up any remaining heredoc temporary files
-    // cleanup_heredocs(node);
 }
 char *find_executable(const char *command, char **paths)
 {

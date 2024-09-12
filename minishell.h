@@ -165,15 +165,38 @@ int if_file_has_permission(char *file);
 char *find_executable_in_path(char *command, t_env *env_list);
 int check_file_permissions(char *file);
 int execute_command(char *executable_path, char **args, t_env *env_list);
+int is_heredoc(t_node *node);
 
 // signals functions
 void handler(int signum);
 void handler_c(int signum);
 
-// heredoc functions + redirections
+// heredocP1 functions
+char* create_temp_filename(void);
+int open_temp_file(const char *filename, int flags);
+void write_to_file(int fd, const char *str);
+void process_heredoc_input(int fd, const char *delimiter);
+void handle_single_heredoc(t_redirect *redirect, const char *temp_file);
+
+// heredocP2 functions
+void execute_command_with_heredoc(t_node *temp, t_env **env_list, int *exit_status, const char *temp_file);
 void handle_heredoc(t_node *node, t_env **env_list, int *exit_status);
-int is_heredoc(t_node *node);
+
+// redirectionsP1 functions
+void handle_open_error(void);
+void handle_dup2_error(void);
+int open_file(const char *str, int flags);
+void redirect_output(const char *str, int flags);
+void redirect_input(const char *str);
+
+// redirectionsP2 functions
+void handle_single_redirection(t_redirect *redirect);
 void handle_redirections(t_node *node, t_env **env_list, int *exit_status);
+
+
+
+
+
 // free functions
 void *gc_malloc(size_t size);
 void gc_free_all();

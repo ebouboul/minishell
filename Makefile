@@ -1,6 +1,7 @@
 # Define variables
 NAME = minishell
-SRC_NAME = tokenizer.c main.c parser.c parser_space_quotes.c env.c expander.c builtins.c fill_node.c execution_v1.c free.c execution_v2.c export.c signals.c execute_redirections.c unset.c Wildcards.c
+SRC_NAME = tokenizer.c main.c parser.c parser_space_quotes.c env.c expander.c builtins.c fill_node.c execute_heredocP1.c \
+execute_heredocP2.c free.c execution_v2.c export.c signals.c execute_redirectionsP1.c execute_redirectionsP2.c unset.c Wildcards.c execution_v1.c
 OBJ_NAME = $(SRC_NAME:.c=.o)
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address -g3
