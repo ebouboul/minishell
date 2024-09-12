@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 16:13:42 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/10 12:39:39 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/12 21:28:39 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,10 @@ void	handle_single_quote(char *arg, char **new_arg, int *in_single_quotes,
 void	handle_double_quote(char *arg, char **new_arg, int *in_double_quotes,
 		int *j)
 {
+	if (new_arg == NULL)
+	{
+		*new_arg = ft_strdup("");
+	}
 	*in_double_quotes = !(*in_double_quotes);
 	append_char(arg[(*j)++], new_arg);
 }
@@ -268,7 +272,8 @@ void	expand_variable(char *arg, char **new_arg, int *j, t_env *env_list)
 {
 	char	*var_name;
 	char	*value;
-	*new_arg = ft_strdup("");
+	// if (*new_arg == NULL)
+	// 	*new_arg = ft_strdup("");
 
 	if (arg == NULL || *j >= (int)ft_strlen(arg))
 		return ;
@@ -344,13 +349,36 @@ void	handle_splitting(char ***args, int i)
 	split_and_remove_quotes(args, split_args, i, num_splits);
 	gc_free(split_args);
 }
+int is_single_qupte_after_dollar(char *str)
+{
+	int	i;
+	int	flag;
+	flag = 0;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '$' )
+		break;
+		i++;
+	}
+	while (str[i] != '\0')
+	{
+		if (str[i] == '\'' )
+		flag = 1;
+		i++;
+	}
+	if (flag == 1 && ft_strchr(str, '"') == NULL)
+		return (1);
+	return (0);
+}
 
 int	no_expansion_needed(char *arg)
 {
 	int	k;
 
-	return (ft_strchr(arg, '$') == NULL || arg[dollar_position(arg) + 1] == '\0'
-		|| dollar_position(arg) == 0 || !dstrchr(arg, '$', &k));
+	return (ft_strchr(arg, '$') == NULL || dollar_position(arg) == 0 
+	|| is_single_qupte_after_dollar(arg) || !dstrchr(arg, '$', &k));
 }
 void	handle_exit_status(char **new_arg, int *j, int exit_status)
 {
@@ -369,6 +397,7 @@ void	handle_expansion(char **args, int i, t_env *env_list, int exit_status)
 	j = 0;
 	in_single_quotes = 0;
 	in_double_quotes = 0;
+	new_arg = ft_strdup("");
 	while (args[i][j] != '\0')
 	{
 		if (args[i][j] == '\'' && !in_double_quotes)
@@ -384,14 +413,18 @@ void	handle_expansion(char **args, int i, t_env *env_list, int exit_status)
 		}
 		else if (j < (int)ft_strlen(args[i]))
 			append_char(args[i][j++], &new_arg);
-		if (j >= (int)ft_strlen(args[i]))
-			break ;
 	}
 	update_args(args, new_arg, i);
 }
 int	is_dollar_only(char *str)
 {
 	if (str[0] == '$' && str[1] == '\0')
+		return (1);
+	return (0);
+}
+int is_qouted(char *str)
+{
+	if(str[ft_strlen(str) - 1] == '\"' || str[ft_strlen(str) - 1] == '\'')
 		return (1);
 	return (0);
 }
@@ -407,17 +440,14 @@ void	process_arguments(t_command *current_command, t_env *env_list,
 	i = 0;
 	while (args[i] != NULL)
 	{
-		j = 0;
 		if (dstrchr(args[i], '$', &j) && is_dollar_only(args[i]) == 0)
 		{
 			handle_expansion(args, i, env_list, exit_status);
 			if (args[i] && ft_strchr(args[i], ' ') != NULL
 				&& ft_strncmp(args[0], "export", 6) != 0
-				&& is_last_dollar(args[i], '$') == 0)
-			{
+				&& is_last_dollar(args[i], '$') == 0
+				&& is_qouted(args[i]) == 0)
 				handle_splitting(&args, i);
-				break ;
-			}
 		}
 		if (no_expansion_needed(args[i]))
 			i++;

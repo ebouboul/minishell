@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 19:03:28 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/10 11:32:20 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/12 17:14:13 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int is_wildcard(char *str)
     int i = 0;
     while (str[i] != '\0')
     {
-        if (str[i] == '*')
+        if (str[i] == '*' && !ft_strchr(str, '\'') && !ft_strchr(str, '\"'))
             return 1;
         i++;
     }
