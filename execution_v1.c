@@ -51,7 +51,7 @@ void execute_cmds(t_node *head, t_env **env_list, int *exit_status)
                 handle_pipe_and_multiple_commands(current, env_list, exit_status);
                 break;
             }
-            else if (current->command && current->command->args && current->command->args[0])
+            else
             {
                 execute_single_command(current, env_list, exit_status);
             }
@@ -129,21 +129,24 @@ int is_redirection(t_node *node)
 
 void execute_single_command(t_node *node, t_env **env_list, int *exit_status)
 {
-    if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args[0] == NULL)
+    if (node == NULL)
         return;
-
+    
     char *cmd = node->command->args[0];
     fprintf(stderr, "Debug: Executing command: %s\n", cmd);
-
+    
+    // Handle heredocs before forking
+    handle_heredoc(node, env_list, exit_status);
+    
     if (is_builtin(cmd))
     {
         // For built-ins, we need to handle redirections in the current process
         int stdout_copy = dup(STDOUT_FILENO);
         int stdin_copy = dup(STDIN_FILENO);
-
+        
         handle_redirections(node);
-        *exit_status = execute_builtin(node, env_list);  // Call this only once
-
+        *exit_status = execute_builtin(node, env_list);
+        
         // Restore standard input and output
         dup2(stdout_copy, STDOUT_FILENO);
         dup2(stdin_copy, STDIN_FILENO);
@@ -162,7 +165,6 @@ void execute_single_command(t_node *node, t_env **env_list, int *exit_status)
         {
             // Child process
             handle_redirections(node);
-            
             execvp(cmd, node->command->args);
             perror("execvp");
             exit(EXIT_FAILURE);
@@ -178,6 +180,9 @@ void execute_single_command(t_node *node, t_env **env_list, int *exit_status)
                 *exit_status = 1;
         }
     }
+    
+    // Clean up any remaining heredoc temporary files
+    // cleanup_heredocs(node);
 }
 char *find_executable(const char *command, char **paths)
 {
