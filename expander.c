@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 16:13:42 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/12 21:28:39 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/13 19:43:30 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,10 +165,10 @@ void	append_char(char c, char **new_arg)
 void	handle_single_quote(char *arg, char **new_arg, int *in_single_quotes,
 		int *j)
 {
-    if (new_arg == NULL)
-    {
-        *new_arg = ft_strdup("");
-    }
+	if (new_arg == NULL)
+	{
+		*new_arg = ft_strdup("");
+	}
 	*in_single_quotes = !(*in_single_quotes);
 	append_char(arg[(*j)++], new_arg);
 }
@@ -224,6 +224,7 @@ char	*extract_var_name(char *arg, int *j)
 			+ 1] == '_'))
 		k++;
 	if (ft_strchr(ft_substr(arg, *j, k), '\'') != NULL
+			&& ft_strchr(ft_substr(arg, *j, k), '"') == NULL
 			&& ft_strchr(ft_substr(arg, *j, k + 1), '\'')[1] != '"')
 		return (NULL);
 	var_name = ft_substr(arg, *j + 1, k - *j);
@@ -268,12 +269,11 @@ int	is_last_dollar(char *str, char c)
 		return (1);
 	return (0);
 }
-void	expand_variable(char *arg, char **new_arg, int *j, t_env *env_list)
+void	expand_variable(char *arg, char **new_arg, int *j, t_env *env_list,
+		int *k)
 {
 	char	*var_name;
 	char	*value;
-	// if (*new_arg == NULL)
-	// 	*new_arg = ft_strdup("");
 
 	if (arg == NULL || *j >= (int)ft_strlen(arg))
 		return ;
@@ -285,10 +285,10 @@ void	expand_variable(char *arg, char **new_arg, int *j, t_env *env_list)
 		value = get_variable_value(env_list, var_name);
 		if (value)
 			append_expanded_value(new_arg, value);
+		if (value[0] != '\0')
+		*k = *j;
 	}
-	if (arg[*j] == '$' && arg[*j + 1] != '\0' && var_name)
-		expand_variable(arg, new_arg, j, env_list);
-	else if (*j < (int)ft_strlen(arg))
+	if (*j < (int)ft_strlen(arg))
 		append_char(arg[(*j)++], new_arg);
 }
 
@@ -349,23 +349,23 @@ void	handle_splitting(char ***args, int i)
 	split_and_remove_quotes(args, split_args, i, num_splits);
 	gc_free(split_args);
 }
-int is_single_qupte_after_dollar(char *str)
+int	is_single_qupte_after_dollar(char *str)
 {
 	int	i;
 	int	flag;
-	flag = 0;
 
+	flag = 0;
 	i = 0;
 	while (str[i] != '\0')
 	{
-		if (str[i] == '$' )
-		break;
+		if (str[i] == '$')
+			break ;
 		i++;
 	}
 	while (str[i] != '\0')
 	{
-		if (str[i] == '\'' )
-		flag = 1;
+		if (str[i] == '\'')
+			flag = 1;
 		i++;
 	}
 	if (flag == 1 && ft_strchr(str, '"') == NULL)
@@ -377,23 +377,24 @@ int	no_expansion_needed(char *arg)
 {
 	int	k;
 
-	return (ft_strchr(arg, '$') == NULL || dollar_position(arg) == 0 
-	|| is_single_qupte_after_dollar(arg) || !dstrchr(arg, '$', &k));
+	return (ft_strchr(arg, '$') == NULL || dollar_position(arg) == 0
+		|| is_single_qupte_after_dollar(arg) || !dstrchr(arg, '$', &k));
 }
 void	handle_exit_status(char **new_arg, int *j, int exit_status)
 {
 	char	*value;
-	*new_arg = ft_strdup("");
 
+	*new_arg = ft_strdup("");
 	value = ft_itoa(exit_status);
 	append_expanded_value(new_arg, value);
 	*j += 2;
 }
-void	handle_expansion(char **args, int i, t_env *env_list, int exit_status)
+void	handle_expansion(char **args, int i, t_env *env_list, int exit_status,
+		int *k)
 {
 	char	*new_arg;
 
-	int (j), (in_single_quotes), (in_double_quotes);
+	int(j), (in_single_quotes), (in_double_quotes);
 	j = 0;
 	in_single_quotes = 0;
 	in_double_quotes = 0;
@@ -404,27 +405,31 @@ void	handle_expansion(char **args, int i, t_env *env_list, int exit_status)
 			handle_single_quote(args[i], &new_arg, &in_single_quotes, &j);
 		else if (args[i][j] == '"' && !in_single_quotes)
 			handle_double_quote(args[i], &new_arg, &in_double_quotes, &j);
-		else if (!in_single_quotes && args[i][j] == '$')
+		else if (!in_single_quotes && args[i][j] == '$' && args[i][j + 1] != '\0')
 		{
 			if (args[i][j + 1] == '?')
 				handle_exit_status(&new_arg, &j, exit_status);
 			else
-				expand_variable(args[i], &new_arg, &j, env_list);
+				expand_variable(args[i], &new_arg, &j, env_list, k);
 		}
 		else if (j < (int)ft_strlen(args[i]))
+		{
 			append_char(args[i][j++], &new_arg);
+			*k = j;
+			
+		}
 	}
 	update_args(args, new_arg, i);
 }
 int	is_dollar_only(char *str)
 {
-	if (str[0] == '$' && str[1] == '\0')
+	if ((str[0] == '$' && str[1] == '\0' ))
 		return (1);
 	return (0);
 }
-int is_qouted(char *str)
+int	is_qouted(char *str)
 {
-	if(str[ft_strlen(str) - 1] == '\"' || str[ft_strlen(str) - 1] == '\'')
+	if (str[ft_strlen(str) - 1] == '\"' || str[ft_strlen(str) - 1] == '\'')
 		return (1);
 	return (0);
 }
@@ -432,33 +437,37 @@ int is_qouted(char *str)
 void	process_arguments(t_command *current_command, t_env *env_list,
 		int exit_status)
 {
-	char	**args;
-	int		i;
-	int		j;
-
+	char(**args), (*last);
+	int(i), (j), (k);
 	args = current_command->args;
 	i = 0;
 	while (args[i] != NULL)
 	{
-		if (dstrchr(args[i], '$', &j) && is_dollar_only(args[i]) == 0)
+		last = args[i];
+		k = 0;
+		while (last && dstrchr(last, '$', &j) && !is_dollar_only(last))
 		{
-			handle_expansion(args, i, env_list, exit_status);
+			handle_expansion(args, i, env_list, exit_status, &k);
 			if (args[i] && ft_strchr(args[i], ' ') != NULL
 				&& ft_strncmp(args[0], "export", 6) != 0
-				&& is_last_dollar(args[i], '$') == 0
-				&& is_qouted(args[i]) == 0)
+				&& is_last_dollar(args[i], '$') == 0)
+			{
 				handle_splitting(&args, i);
+				break ;
+			}
+			if (k >= (int)ft_strlen(args[i]))
+				break ;
+			last = args[i] + k - 1;
 		}
-		if (no_expansion_needed(args[i]))
-			i++;
+		i++;
 	}
 	current_command->args = args;
 }
 
 void	expansion_process(t_node **head, t_env *env_list, int exit_status)
 {
-	t_node		*current;
-	t_command	*current_command;
+	t_node *current;
+	t_command *current_command;
 
 	current = *head;
 	while (current != NULL)
