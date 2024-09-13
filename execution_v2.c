@@ -6,7 +6,7 @@
 /*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/13 16:51:35 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/13 18:21:17 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,12 @@ char	*find_executable_in_path(char *command, t_env *env_list)
 	char	*path_value;
 	char	*executable_path;
 	int		i;
+	char **paths;
 
 	path_value = gett_env_value("PATH", env_list);
 	if (path_value == NULL)
 		return (NULL);
-	char **paths = split_path(path_value);
+    paths = split_path(path_value);
 	executable_path = find_executable(command, paths);
 	i = 0;
 	while (paths && paths[i] != NULL)

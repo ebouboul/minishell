@@ -146,26 +146,48 @@ char *get_env_value(t_env *env_list, char *key);
 int	ft_unset(t_command *command, t_env **env_list);
 
 // execution functions v1:
-void execute_cmds(t_node *head, t_env **env_list, int *exit_status);
-void execute_single_command(t_node *node, t_env **env_list, int *exit_status);
-char *find_executable(const char *command, char **paths);
-char **create_env_array(t_env *env_list);
-char **split_path(const char *path);
+// void execute_cmds(t_node *head, t_env **env_list, int *exit_status);
+// void execute_single_command(t_node *node, t_env **env_list, int *exit_status);
+// char *find_executable(const char *command, char **paths);
+// char **create_env_array(t_env *env_list);
+// char **split_path(const char *path);
 void replace_wildcard_in_args(t_node *head);
 char	**resize_args(char **args, int new_size);
 void	shift_args(char **args, int i, int original_size, int num_splits);
-
+int	is_heredoc(t_node *node);
+void	execute_heredoc(t_node *current, t_env **env_list, int *exit_status);
+void	execute_piped_commands(t_node *current, t_env **env_list, int *exit_status);
+void	execute_cmds(t_node *head, t_env **env_list, int *exit_status);
+int	is_redirection(t_node *node);
 
 // execution functions v2:
-char *gett_env_value(const char *key, t_env *env_list);
-int execute_external(t_command *command, t_env *env_list);
-void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list, int *exit_status);
-void handle_heredoc_token(t_node *head, t_env **env_list);
-int if_file_has_permission(char *file);
-char *find_executable_in_path(char *command, t_env *env_list);
-int check_file_permissions(char *file);
-int execute_command(char *executable_path, char **args, t_env *env_list);
-int is_heredoc(t_node *node);
+// char *gett_env_value(const char *key, t_env *env_list);
+// int execute_external(t_command *command, t_env *env_list);
+// void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list, int *exit_status);
+// void handle_heredoc_token(t_node *head, t_env **env_list);
+// int if_file_has_permission(char *file);
+// char *find_executable_in_path(char *command, t_env *env_list);
+// int check_file_permissions(char *file);
+// int execute_command(char *executable_path, char **args, t_env *env_list);
+// int is_heredoc(t_node *node);
+char	*gett_env_value(const char *key, t_env *env_list);
+char	*find_executable_in_path(char *command, t_env *env_list);
+int	check_file_permissions(char *file);
+int	execute_command(char *executable_path, char **args, t_env *env_list);
+int	execute_external(t_command *command, t_env *env_list);
+
+// execution_v_1_1 functions
+void	handle_builtin_command(t_node *node, t_env **env_list, int *exit_status);
+void	execute_external_command(t_node *node, t_env **env_list, int *exit_status);
+void	execute_single_command(t_node *node, t_env **env_list, int *exit_status);
+char	*find_executable(const char *command, char **paths);
+int	count_env_variables(t_env *env_list);
+
+// execution_v1_2 functions
+char	*create_env_string(t_env *env);
+char	**create_env_array(t_env *env_list);
+int	count_path_components(const char *path);
+char	**split_path(const char *path);
 
 // signals functions
 void handler(int signum);
@@ -193,6 +215,8 @@ void redirect_input(const char *str);
 void handle_single_redirection(t_redirect *redirect);
 void handle_redirections(t_node *node, t_env **env_list, int *exit_status);
 
+//execute_pipe_and_cmds functions
+void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list, int *exit_status);
 
 
 

@@ -6,12 +6,12 @@
 /*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:03:37 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/13 17:49:15 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/13 18:20:08 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-// norm=OK! //strtok + **functions
+// norm=OK! //strtok
 char	*create_env_string(t_env *env)
 {
 	char	*env_string;
@@ -24,11 +24,12 @@ char	*create_env_string(t_env *env)
 char	**create_env_array(t_env *env_list)
 {
 	int		count;
-	char	**env_array = malloc(sizeof(char *) * (count + 1));
+	char	**env_array;
 	t_env	*current;
 	int		i;
 
 	count = count_env_variables(env_list);
+	env_array = malloc(sizeof(char *) * (count + 1));
 	current = env_list;
 	i = 0;
 	while (current != NULL)
@@ -61,14 +62,15 @@ char	**split_path(const char *path)
 {
 	char	*path_copy;
 	int		count;
-	char	**paths = malloc(sizeof(char *) * (count + 1));
+	char	**paths;
 	int		i;
 	char	*token;
 
-	token = strtok(path_copy, ":");
 	path_copy = strdup(path);
 	count = count_path_components(path);
+	paths = malloc(sizeof(char *) * (count + 1));
 	i = 0;
+	token = strtok(path_copy, ":");
 	while (token != NULL)
 	{
 		paths[i++] = strdup(token);

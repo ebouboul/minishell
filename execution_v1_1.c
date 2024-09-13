@@ -6,7 +6,7 @@
 /*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:02:51 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/13 17:35:16 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/13 18:24:08 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ char	*find_executable(const char *command, char **paths)
 	i = 0;
 	while (paths[i] != NULL)
 	{
-		ull_path = gc_malloc(strlen(paths[i]) + strlen(command) + 2);
+		full_path = gc_malloc(strlen(paths[i]) + strlen(command) + 2);
 		full_path = ft_strjoin(paths[i], "/");
 		full_path = ft_strjoin(full_path, command);
 		if (access(full_path, X_OK) == 0)
