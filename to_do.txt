@@ -65,3 +65,7 @@ ctrl + c = double minishell$
 
 QSTS :
 int fd[2]; line 108 exec_v2
+
+NORM:
+fprintf... 
+
