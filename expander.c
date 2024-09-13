@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 16:13:42 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/13 19:43:30 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/13 20:16:46 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -457,7 +457,7 @@ void	process_arguments(t_command *current_command, t_env *env_list,
 			}
 			if (k >= (int)ft_strlen(args[i]))
 				break ;
-			last = args[i] + k - 1;
+			last = args[i] + k ;
 		}
 		i++;
 	}
