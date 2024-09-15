@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_heredocP2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:53 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/13 15:53:22 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/15 23:31:38 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	handle_heredoc(t_node *node, t_env **env_list, int *exit_status)
 		while (redirect)
 		{
 			if (redirect->flag == 8)
-				handle_single_heredoc(redirect, temp_file);
+				handle_single_heredoc(redirect, temp_file, env_list, exit_status);
 			redirect = redirect->next;
 		}
 		if (temp->next == NULL)

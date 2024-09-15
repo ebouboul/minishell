@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 16:13:42 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/15 22:07:40 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/15 23:41:58 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,12 @@ void	remove_args(char **args, int i)
 	j = i;
 	while (args[j] != NULL)
 	{
+		if (j + 1 == ft_strlen1(args))
+		{
+			args[j] = NULL;
+			break ;
+		}
+		else
 		args[j] = args[j + 1];
 		j++;
 	}
@@ -405,7 +411,7 @@ void	handle_expansion(char **args, int i, t_env *env_list, int exit_status,
 			handle_single_quote(args[i], &new_arg, &in_single_quotes, &j);
 		else if (args[i][j] == '"' && !in_single_quotes)
 			handle_double_quote(args[i], &new_arg, &in_double_quotes, &j);
-		else if (!in_single_quotes && args[i][j] == '$' && args[i][j + 1] != '\0')
+		else if ( args[i][j] == '$' && args[i][j + 1] != '\0')
 		{
 			if (args[i][j + 1] == '?')
 				handle_exit_status(&new_arg, &j, exit_status);
@@ -493,6 +499,79 @@ void	process_arguments(t_command *current_command, t_env *env_list,
 	}
 	current_command->args = args;
 }
+void exp_Reddd(char ** args, t_env *env_list, int exit_status)
+{
+	char *last;
+	int(i), (j), (k);
+	i = 0;
+	while (args[i] != NULL)
+	{
+		last = args[i];
+		k = 0;
+		while (last && dstrchr(last, '$', &j) && !is_dollar_only(last))
+		{
+			handle_expansion(args, i, env_list, exit_status, &k);
+			change_qoutes(args[i]);
+			if (k >= (int)ft_strlen(args[i]))
+				break ;
+			last = args[i] + k ;
+		}
+		i++;
+	}
+}
+
+void expand_redirect(t_redirect **redirect, t_env *env_list, int exit_status)
+{
+	t_redirect *current;
+	current = *redirect;
+
+	while (current)
+	{
+		if (current->flag != 8)
+		{
+			char **args;
+			args = (char **)gc_malloc(sizeof(char *) * 2);
+			args[0] = current->str;
+			args[1] = NULL;
+			exp_Reddd(args, env_list, exit_status);
+			current->str = args[0];
+		}
+		current = current->next;
+	}
+}
+int need_expansion(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '$')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+void expan_herdoc(char **args, t_env *env_list, int exit_status)
+{
+	char *last;
+	int(i), (k);
+	i = 0;
+	while (args[i] != NULL)
+	{
+		last = args[i];
+		k = 0;
+		while (last && need_expansion(last) && !is_dollar_only(last))
+		{
+			handle_expansion(args, i, env_list, exit_status, &k);
+			change_qoutes(args[i]);
+			if (k >= (int)ft_strlen(args[i]))
+				break ;
+			last = args[i] + k ;
+		}
+		i++;
+	}
+}
 
 void	expansion_process(t_node **head, t_env *env_list, int exit_status)
 {
@@ -506,6 +585,8 @@ void	expansion_process(t_node **head, t_env *env_list, int exit_status)
 		while (current_command != NULL)
 		{
 			process_arguments(current_command, env_list, exit_status);
+			if (current_command->redirect)
+			expand_redirect(&current_command->redirect, env_list, exit_status);
 			current_command = current_command->next;
 		}
 		current = current->next;

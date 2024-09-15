@@ -73,7 +73,7 @@ t_node *prepare_execution(TokenInfo *tokens, t_env *env_list, int exit_status)
 
     expansion_process(&node, env_list, exit_status);
     
-    // print_node_list(node);
+    print_node_list(node);
     replace_wildcard_in_args(node);
     remove_quotes_and_join(node);
     return node;

@@ -500,6 +500,24 @@ void get_quote_back(char *input)
         i++;
     }
 }
+char *remove_all_quotes2(const char *input) 
+{
+    int i = 0, j = 0;
+    char *result = (char *)gc_malloc(ft_strlen(input) + 1);
+    if (!result) {
+        return NULL;
+    }
+
+    while (input[i] != '\0') {
+        if (input[i] != '"' && input[i] != '\'') {
+            result[j++] = input[i];
+        }
+        i++;
+    }
+
+    result[j] = '\0';
+    return result;
+}
 
 void remove_quotes_and_join(t_node *head)
 {

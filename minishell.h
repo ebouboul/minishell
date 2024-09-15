@@ -78,9 +78,6 @@ typedef struct t_command
 {
     t_redirect *redirect;
     char **args;
-    char *input_redirection;
-    char *output_redirection;
-    char *append_redirection;
     struct t_command *next;
 } t_command;
 
@@ -137,6 +134,7 @@ void expansion_process(t_node **head, t_env *key, int exit_status);
 void remove_all_quotes_and_join(char *input);
 int ft_strlen1(char **str);
 int is_numeric(const char *str);
+char *remove_all_quotes2(const char *str);
 void remove_quotes_from_first_and_last_only(char *input);
 
 // builtins functions:
@@ -159,7 +157,7 @@ void	execute_heredoc(t_node *current, t_env **env_list, int *exit_status);
 void	execute_piped_commands(t_node *current, t_env **env_list, int *exit_status);
 void	execute_cmds(t_node *head, t_env **env_list, int *exit_status);
 int	is_redirection(t_node *node);
-
+void expand_redirect(t_redirect **redirect, t_env *env_list, int exit_status);
 // execution functions v2:
 // char *gett_env_value(const char *key, t_env *env_list);
 // int execute_external(t_command *command, t_env *env_list);
@@ -175,6 +173,7 @@ char	*find_executable_in_path(char *command, t_env *env_list);
 int	check_file_permissions(char *file);
 int	execute_command(char *executable_path, char **args, t_env *env_list);
 int	execute_external(t_command *command, t_env *env_list);
+void expan_herdoc(char **args, t_env *env_list, int exit_status);
 
 // execution_v_1_1 functions
 void	handle_builtin_command(t_node *node, t_env **env_list, int *exit_status);
@@ -197,8 +196,8 @@ void handler_c(int signum);
 char* create_temp_filename(void);
 int open_temp_file(const char *filename, int flags);
 void write_to_file(int fd, const char *str);
-void process_heredoc_input(int fd, const char *delimiter);
-void handle_single_heredoc(t_redirect *redirect, const char *temp_file);
+char **process_heredoc_input(const char *delimiter);
+void	handle_single_heredoc(t_redirect *redirect, const char *temp_file, t_env **env_list, int *exit_status);
 
 // heredocP2 functions
 void execute_command_with_heredoc(t_node *temp, t_env **env_list, int *exit_status, const char *temp_file);

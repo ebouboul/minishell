@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 17:23:01 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/10 18:05:45 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/15 22:26:10 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,7 @@ void	handle_redirection(t_command *cmd, TokenNode **current)
         redir = gc_malloc(sizeof(t_redirect));
         redir->str = ft_strdup((*current)->next->info.value);
         redir->flag = (*current)->info.type;
-        redir->next = NULL;
-        
+        redir->next = NULL;        
         if (cmd->redirect == NULL)
             cmd->redirect = redir;
         else
