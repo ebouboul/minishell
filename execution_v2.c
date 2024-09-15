@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_v2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/13 18:21:17 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/15 21:44:46 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,13 @@ char	*find_executable_in_path(char *command, t_env *env_list)
 	char	*executable_path;
 	int		i;
 	char **paths;
-
+	if(command[0] == '.' || command[0] == '/')
+	{
+		if (access(command, X_OK) == 0)
+			return (strdup(command));
+		else
+			return (NULL);
+	}
 	path_value = gett_env_value("PATH", env_list);
 	if (path_value == NULL)
 		return (NULL);

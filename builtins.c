@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/08 16:52:14 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/15 22:11:48 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int ft_echo(t_command *command)
     int i = 1;
     int first_arg = 1;
 
-    while (command->args[i] != NULL && command->args[i][0] == '-')
+    while (command->args[i] != NULL && command->args[i][0] == '-' && command->args[i][1] == 'n')
     {
         if (process_echo_option(command->args[i]))
         {

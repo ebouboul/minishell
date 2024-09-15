@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 16:13:42 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/13 20:16:46 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/15 22:07:40 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -341,7 +341,7 @@ void	handle_splitting(char ***args, int i)
 	int		num_splits;
 	int		original_size;
 
-	split_args = ft_split((*args)[i]);
+	split_args = ft_split3((*args)[i], ' ');
 	original_size = get_arg_size(*args);
 	num_splits = get_arg_size(split_args);
 	*args = resize_args(*args, original_size + num_splits - 1);
@@ -433,6 +433,35 @@ int	is_qouted(char *str)
 		return (1);
 	return (0);
 }
+void change_qoutes1(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '\"' )
+			str[i] = 15;
+		if (str[i] == '\'')
+			str[i] = 16;
+		i++;
+	}
+}
+
+void change_qoutes(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '\"' && i != 0 && i != (int)ft_strlen(str) - 1)
+			str[i] = 15;
+		if (str[i] == '\''&& i != 0 && i != (int)ft_strlen(str) - 1)
+			str[i] = 16;
+		i++;
+	}
+}
 
 void	process_arguments(t_command *current_command, t_env *env_list,
 		int exit_status)
@@ -448,13 +477,14 @@ void	process_arguments(t_command *current_command, t_env *env_list,
 		while (last && dstrchr(last, '$', &j) && !is_dollar_only(last))
 		{
 			handle_expansion(args, i, env_list, exit_status, &k);
-			if (args[i] && ft_strchr(args[i], ' ') != NULL
+			if (args[i] && ft_strchr(args[i], ' ') != NULL 
 				&& ft_strncmp(args[0], "export", 6) != 0
-				&& is_last_dollar(args[i], '$') == 0)
-			{
-				handle_splitting(&args, i);
-				break ;
-			}
+				&& is_last_dollar(args[i], '$') == 0&& !is_qouted(args[i]))
+				{
+					(handle_splitting(&args, i)), (change_qoutes1(args[i])); 
+					break;
+				}
+			change_qoutes(args[i]);
 			if (k >= (int)ft_strlen(args[i]))
 				break ;
 			last = args[i] + k ;

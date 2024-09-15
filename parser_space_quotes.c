@@ -484,7 +484,22 @@ char *remove_closed_quotes(const char *input) {
     result[j] = '\0';
     return result;
 }
-
+void get_quote_back(char *input)
+{
+    int i = 0;
+    while (input[i] != '\0') 
+    {
+        if (input[i] == 15) 
+        {
+            input[i] = '"';
+        }
+        if (input[i] == 16) 
+        {
+            input[i] = '\'';
+        }
+        i++;
+    }
+}
 
 void remove_quotes_and_join(t_node *head)
 {
@@ -499,6 +514,7 @@ void remove_quotes_and_join(t_node *head)
             while (args[i] != NULL) 
             {
                args[i] = remove_closed_quotes(args[i]);
+               get_quote_back(args[i]);
                 i++;
             }
             current_command = current_command->next;
