@@ -6,11 +6,11 @@
 /*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:13 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/16 18:17:08 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/16 23:27:18 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	setup_pipe(int fd[2])
 {

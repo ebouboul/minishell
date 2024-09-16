@@ -6,11 +6,11 @@
 /*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:10 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/16 18:27:36 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/16 23:27:26 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 // NORM=OK!
 void	handle_single_redirection(t_redirect *redirect)
 {

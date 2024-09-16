@@ -6,11 +6,11 @@
 /*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:02:51 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/16 17:54:32 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/16 23:27:30 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 // NORM=OK! //one func with more 25 lines
 void	handle_builtin_command(t_node *node, t_env **env_list, int *exit_status)
 {

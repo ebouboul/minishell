@@ -6,11 +6,11 @@
 /*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/16 18:48:09 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/16 23:27:46 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 // NORM=OK!
 char	*gett_env_value(const char *key, t_env *env_list)
 {

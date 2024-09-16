@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execution_v1_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:03:37 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/15 22:18:04 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/16 23:27:36 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 // norm=OK! //strtok
 char	*create_env_string(t_env *env)
 {

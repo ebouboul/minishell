@@ -6,11 +6,11 @@
 /*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:18 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/13 17:18:45 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/16 23:27:39 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 // NORM=OK!
 int	is_heredoc(t_node *node)
 {

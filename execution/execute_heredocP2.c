@@ -6,11 +6,11 @@
 /*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:53 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/16 17:59:42 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/16 23:27:12 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 // NORM=OK!
 void	execute_command_with_heredoc(t_node *temp, t_env **env_list,
 	int *exit_status, const char *temp_file)

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execute_heredocP1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/16 00:01:41 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/16 23:26:38 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 // NORM = OK
 char	*create_temp_filename(void)

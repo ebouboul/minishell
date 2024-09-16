@@ -6,11 +6,11 @@
 /*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:03 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/13 15:57:42 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/16 23:27:22 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 // NORM=OK!
 void	handle_open_error(void)
 {
