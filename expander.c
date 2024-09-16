@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 16:13:42 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/15 23:41:58 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/16 20:26:43 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -337,6 +337,7 @@ void	split_and_remove_quotes(char ***args, char **split_args, int i,
 	while (k < num_splits)
 	{
 		(*args)[i + k] = split_args[k];
+		// remove_quotes_from_first_and_last_only((*args)[i + k]);
 		k++;
 	}
 }
@@ -346,8 +347,11 @@ void	handle_splitting(char ***args, int i)
 	char	**split_args;
 	int		num_splits;
 	int		original_size;
-
-	split_args = ft_split3((*args)[i], ' ');
+	
+	if (ft_strchr((*args)[i], '"') != NULL && ft_strchr((*args)[i], '\'') != NULL)
+		split_args = ft_split((*args)[i]);
+	else
+		split_args = ft_split3((*args)[i], ' ');
 	original_size = get_arg_size(*args);
 	num_splits = get_arg_size(split_args);
 	*args = resize_args(*args, original_size + num_splits - 1);
@@ -395,38 +399,79 @@ void	handle_exit_status(char **new_arg, int *j, int exit_status)
 	append_expanded_value(new_arg, value);
 	*j += 2;
 }
-void	handle_expansion(char **args, int i, t_env *env_list, int exit_status,
-		int *k)
+void handle_expansion(char **args, int i, t_env *env_list, int exit_status, int *k)
 {
-	char	*new_arg;
+    char *new_arg;
+    int j, in_single_quotes, in_double_quotes;
+    
+    j = 0;
+    in_single_quotes = 0;
+    in_double_quotes = 0;
+	int flag = 0;
+    new_arg = ft_strdup("");
 
-	int(j), (in_single_quotes), (in_double_quotes);
-	j = 0;
-	in_single_quotes = 0;
-	in_double_quotes = 0;
-	new_arg = ft_strdup("");
-	while (args[i][j] != '\0')
-	{
-		if (args[i][j] == '\'' && !in_double_quotes)
-			handle_single_quote(args[i], &new_arg, &in_single_quotes, &j);
-		else if (args[i][j] == '"' && !in_single_quotes)
-			handle_double_quote(args[i], &new_arg, &in_double_quotes, &j);
-		else if ( args[i][j] == '$' && args[i][j + 1] != '\0')
-		{
-			if (args[i][j + 1] == '?')
-				handle_exit_status(&new_arg, &j, exit_status);
-			else
-				expand_variable(args[i], &new_arg, &j, env_list, k);
-		}
-		else if (j < (int)ft_strlen(args[i]))
-		{
-			append_char(args[i][j++], &new_arg);
-			*k = j;
-			
-		}
-	}
-	update_args(args, new_arg, i);
+    while (args[i][j] != '\0' )
+    {
+        if (args[i][j] == '\'' && !in_double_quotes)
+            handle_single_quote(args[i], &new_arg, &in_single_quotes, &j);
+        else if (args[i][j] == '"' && !in_single_quotes)
+            handle_double_quote(args[i], &new_arg, &in_double_quotes, &j);
+        else if (args[i][j] == '$' && args[i][j + 1] != '\0')
+        {
+            // Expansion when outside single quotes
+            if (args[i][j + 1] == '?')
+                handle_exit_status(&new_arg, &j, exit_status);
+            else if (!in_single_quotes && flag == 0)
+			{
+                expand_variable(args[i], &new_arg, &j, env_list, k);
+				flag = 1;
+			}
+            else
+                append_char(args[i][j++], &new_arg);
+				*k = j;
+        }
+        else
+        {
+            append_char(args[i][j++], &new_arg);
+            *k = j;
+        }
+    }
+
+    update_args(args, new_arg, i);
 }
+
+// void	handle_expansion(char **args, int i, t_env *env_list, int exit_status,
+// 		int *k)
+// {
+// 	char	*new_arg;
+
+// 	int(j), (in_single_quotes), (in_double_quotes);
+// 	j = 0;
+// 	in_single_quotes = 0;
+// 	in_double_quotes = 0;
+// 	new_arg = ft_strdup("");
+// 	while (args[i][j] != '\0')
+// 	{
+// 		if (args[i][j] == '\'' && !in_double_quotes)
+// 			handle_single_quote(args[i], &new_arg, &in_single_quotes, &j);
+// 		else if (args[i][j] == '"' && !in_single_quotes)
+// 			handle_double_quote(args[i], &new_arg, &in_double_quotes, &j);
+// 		else if ( args[i][j] == '$' && args[i][j + 1] != '\0')
+// 		{
+// 			if (args[i][j + 1] == '?')
+// 				handle_exit_status(&new_arg, &j, exit_status);
+// 			else
+// 				expand_variable(args[i], &new_arg, &j, env_list, k);
+// 		}
+// 		else if (j < (int)ft_strlen(args[i]))
+// 		{
+// 			append_char(args[i][j++], &new_arg);
+// 			*k = j;
+			
+// 		}
+// 	}
+// 	update_args(args, new_arg, i);
+// }
 int	is_dollar_only(char *str)
 {
 	if ((str[0] == '$' && str[1] == '\0' ))
@@ -442,15 +487,30 @@ int	is_qouted(char *str)
 void change_qoutes1(char *str)
 {
 	int	i;
+	int j;
 
 	i = 0;
+	j = ft_strlen(str);
 	while (str[i] != '\0')
 	{
-		if (str[i] == '\"' )
-			str[i] = 15;
-		if (str[i] == '\'')
-			str[i] = 16;
-		i++;
+		if (str[i++] == '\"' )
+			break;
+	}
+	while (str[j] != '\0')
+	{
+		if (str[j--] == '\"' )
+			break;
+	}
+	if (i < j)
+	{
+		while (i < j)
+		{
+			if (str[i] == '\"' )
+				str[i] = 15;
+			if (str[i] == '\'' )
+				str[i] = 16;
+			i++;
+		}
 	}
 }
 
@@ -459,7 +519,7 @@ void change_qoutes(char *str)
 	int	i;
 
 	i = 0;
-	while (str[i] != '\0')
+	while (str && str[i] != '\0')
 	{
 		if (str[i] == '\"' && i != 0 && i != (int)ft_strlen(str) - 1)
 			str[i] = 15;
@@ -469,6 +529,34 @@ void change_qoutes(char *str)
 	}
 }
 
+
+int double_quotes(const char *str)
+{
+    int (in_double_quotes), (i);
+	
+    i = 0;
+	in_double_quotes = 0;
+	while(str[i] != '\0' && str[i] != '"')
+	{
+		if(str[i++] == '$')
+		return (0);
+	}
+    while (str[i] != '\0' )
+    {
+        if (str[i] == '"')
+            in_double_quotes = 1;
+        else if (str[i++] == '$' && in_double_quotes == 1)
+		{
+        	in_double_quotes = 2;
+			break;
+		}
+    }
+	while (str[i] != '\0')
+		if (str[i++] == '\"' && in_double_quotes == 2)
+			return (1);
+    
+    return 0; 
+}
 void	process_arguments(t_command *current_command, t_env *env_list,
 		int exit_status)
 {
@@ -485,12 +573,11 @@ void	process_arguments(t_command *current_command, t_env *env_list,
 			handle_expansion(args, i, env_list, exit_status, &k);
 			if (args[i] && ft_strchr(args[i], ' ') != NULL 
 				&& ft_strncmp(args[0], "export", 6) != 0
-				&& is_last_dollar(args[i], '$') == 0&& !is_qouted(args[i]))
+				&& is_last_dollar(args[i], '$') == 0&& double_quotes(last) == 0)
 				{
-					(handle_splitting(&args, i)), (change_qoutes1(args[i])); 
+					handle_splitting(&args, i); 
 					break;
 				}
-			change_qoutes(args[i]);
 			if (k >= (int)ft_strlen(args[i]))
 				break ;
 			last = args[i] + k ;
@@ -499,6 +586,40 @@ void	process_arguments(t_command *current_command, t_env *env_list,
 	}
 	current_command->args = args;
 }
+
+// void process_arguments(t_command *current_command, t_env *env_list, int exit_status)
+// {
+//     char **args, *last;
+//     int i, j, k, in_double_quotes;
+
+//     args = current_command->args;
+//     i = 0;
+//     while (args[i] != NULL)
+//     {
+//         last = args[i];
+//         k = 0;
+
+//         while (last && dstrchr(last, '$', &j) && !is_dollar_only(last))
+//         {
+//             if (args[i] && ft_strchr(args[i], ' ') != NULL 
+//                 && ft_strncmp(args[0], "export", 6) != 0
+//                 && is_last_dollar(args[i], '$') == 0
+//                 && is_dollar_in_double_quotes(last) == 0)
+//             {
+//                 handle_splitting(&args, i);
+//                 break;
+//             }
+//             if (k >= (int)ft_strlen(args[i]))
+//                 break;
+//             last = args[i] + k;
+//         }
+//         i++;
+//     }
+//     current_command->args = args;
+// }
+
+
+
 void exp_Reddd(char ** args, t_env *env_list, int exit_status)
 {
 	char *last;

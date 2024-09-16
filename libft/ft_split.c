@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:20:41 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/29 02:54:21 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/16 20:04:36 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_word_len2(char *str, int *i, int *wordlen)
 	(*wordlen)++;
 	if (str[*i - 1] == '\'')
 	{
-		while (str[*i] != '\'')
+		while (str && str[*i] != '\'')
 		{
 			(*wordlen)++;
 			(*i)++;
@@ -38,7 +38,7 @@ void	ft_word_len2(char *str, int *i, int *wordlen)
 	}
 	else
 	{
-		while (str[*i] != '\"')
+		while (str &&  str[*i] != '\"')
 		{
 			(*wordlen)++;
 			(*i)++;
