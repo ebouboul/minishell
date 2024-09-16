@@ -6,7 +6,7 @@
 /*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:10 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/13 16:06:33 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/16 17:43:59 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,13 @@ void	handle_redirections(t_node *node, t_env **env_list, int *exit_status)
 			handle_single_redirection(redirect);
 		redirect = redirect->next;
 	}
+}
+void wait_for_children(pid_t last_pid)
+{
+    if (last_pid > 0)
+    {
+        int status;
+        waitpid(last_pid, &status, 0);
+    }
+    while (wait(NULL) > 0);
 }

@@ -213,8 +213,14 @@ void redirect_input(const char *str);
 // redirectionsP2 functions
 void handle_single_redirection(t_redirect *redirect);
 void handle_redirections(t_node *node, t_env **env_list, int *exit_status);
+void wait_for_children(pid_t last_pid);
 
 //execute_pipe_and_cmds functions
+
+void setup_pipe(int fd[2]);
+void handle_child_io(int prev_pipe, int fd[2], t_node *current);
+void handle_child_process(int prev_pipe, int fd[2], t_node *current, t_env **env_list, int *exit_status);
+void handle_parent_io(int *prev_pipe, int fd[2], t_node *current, pid_t *last_pid, pid_t pid);
 void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list, int *exit_status);
 
 
