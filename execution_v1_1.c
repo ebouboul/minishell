@@ -6,7 +6,7 @@
 /*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:02:51 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/13 18:24:08 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/16 17:54:32 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,13 @@ void	execute_external_command(t_node *node,
 		{
 			executable_path = find_executable_in_path
 				(node->command->args[0], *env_list);
-			execve(executable_path,
-				node->command->args, create_env_array(*env_list));
+			if (execve(executable_path,
+					node->command->args, create_env_array(*env_list)) == -1)
+			{
+				perror("execve");
+				exit(EXIT_FAILURE);
+			}
 		}
-		perror("execve");
-		exit(EXIT_FAILURE);
 	}
 	else
 	{

@@ -10,6 +10,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <signal.h>
+#include <errno.h>
 
 #ifndef MINISHELL_H
 #define MINISHELL_H
@@ -138,17 +139,14 @@ char *remove_all_quotes2(const char *str);
 void remove_quotes_from_first_and_last_only(char *input);
 
 // builtins functions:
+
 int is_builtin(char *command);
 int ft_export(t_command *command, t_env **env_list);
 char *get_env_value(t_env *env_list, char *key);
 int	ft_unset(t_command *command, t_env **env_list);
 
 // execution functions v1:
-// void execute_cmds(t_node *head, t_env **env_list, int *exit_status);
-// void execute_single_command(t_node *node, t_env **env_list, int *exit_status);
-// char *find_executable(const char *command, char **paths);
-// char **create_env_array(t_env *env_list);
-// char **split_path(const char *path);
+
 void replace_wildcard_in_args(t_node *head);
 char	**resize_args(char **args, int new_size);
 void	shift_args(char **args, int i, int original_size, int num_splits);
@@ -158,16 +156,9 @@ void	execute_piped_commands(t_node *current, t_env **env_list, int *exit_status)
 void	execute_cmds(t_node *head, t_env **env_list, int *exit_status);
 int	is_redirection(t_node *node);
 void expand_redirect(t_redirect **redirect, t_env *env_list, int exit_status);
+
 // execution functions v2:
-// char *gett_env_value(const char *key, t_env *env_list);
-// int execute_external(t_command *command, t_env *env_list);
-// void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list, int *exit_status);
-// void handle_heredoc_token(t_node *head, t_env **env_list);
-// int if_file_has_permission(char *file);
-// char *find_executable_in_path(char *command, t_env *env_list);
-// int check_file_permissions(char *file);
-// int execute_command(char *executable_path, char **args, t_env *env_list);
-// int is_heredoc(t_node *node);
+
 char	*gett_env_value(const char *key, t_env *env_list);
 char	*find_executable_in_path(char *command, t_env *env_list);
 int	check_file_permissions(char *file);
@@ -176,6 +167,7 @@ int	execute_external(t_command *command, t_env *env_list);
 void expan_herdoc(char **args, t_env *env_list, int exit_status);
 
 // execution_v_1_1 functions
+
 void	handle_builtin_command(t_node *node, t_env **env_list, int *exit_status);
 void	execute_external_command(t_node *node, t_env **env_list, int *exit_status);
 void	execute_single_command(t_node *node, t_env **env_list, int *exit_status);
@@ -183,16 +175,19 @@ char	*find_executable(const char *command, char **paths);
 int	count_env_variables(t_env *env_list);
 
 // execution_v1_2 functions
+
 char	*create_env_string(t_env *env);
 char	**create_env_array(t_env *env_list);
 int	count_path_components(const char *path);
 char	**split_path(const char *path);
 
 // signals functions
+
 void handler(int signum);
 void handler_c(int signum);
 
 // heredocP1 functions
+
 char* create_temp_filename(void);
 int open_temp_file(const char *filename, int flags);
 void write_to_file(int fd, const char *str);
@@ -200,10 +195,12 @@ char **process_heredoc_input(const char *delimiter);
 void	handle_single_heredoc(t_redirect *redirect, const char *temp_file, t_env **env_list, int *exit_status);
 
 // heredocP2 functions
+
 void execute_command_with_heredoc(t_node *temp, t_env **env_list, int *exit_status, const char *temp_file);
 void handle_heredoc(t_node *node, t_env **env_list, int *exit_status);
 
 // redirectionsP1 functions
+
 void handle_open_error(void);
 void handle_dup2_error(void);
 int open_file(const char *str, int flags);
@@ -211,6 +208,7 @@ void redirect_output(const char *str, int flags);
 void redirect_input(const char *str);
 
 // redirectionsP2 functions
+
 void handle_single_redirection(t_redirect *redirect);
 void handle_redirections(t_node *node, t_env **env_list, int *exit_status);
 void wait_for_children(pid_t last_pid);
@@ -224,9 +222,8 @@ void handle_parent_io(int *prev_pipe, int fd[2], t_node *current, pid_t *last_pi
 void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list, int *exit_status);
 
 
-
-
 // free functions
+
 void *gc_malloc(size_t size);
 void gc_free_all();
 void gc_free(void *ptr);

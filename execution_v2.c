@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   execution_v2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/15 21:44:46 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/16 18:48:09 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-// NORM=OK! **variables...
+// NORM=OK!
 char	*gett_env_value(const char *key, t_env *env_list)
 {
 	while (env_list != NULL)
@@ -28,8 +28,9 @@ char	*find_executable_in_path(char *command, t_env *env_list)
 	char	*path_value;
 	char	*executable_path;
 	int		i;
-	char **paths;
-	if(command[0] == '.' || command[0] == '/')
+	char	**paths;
+
+	if (command[0] == '.' || command[0] == '/')
 	{
 		if (access(command, X_OK) == 0)
 			return (strdup(command));
@@ -39,7 +40,7 @@ char	*find_executable_in_path(char *command, t_env *env_list)
 	path_value = gett_env_value("PATH", env_list);
 	if (path_value == NULL)
 		return (NULL);
-    paths = split_path(path_value);
+	paths = split_path(path_value);
 	executable_path = find_executable(command, paths);
 	i = 0;
 	while (paths && paths[i] != NULL)
@@ -74,11 +75,12 @@ int	execute_command(char *executable_path, char **args, t_env *env_list)
 {
 	pid_t		pid;
 	int			status;
+	char		**env_array;
 
 	pid = fork();
 	if (pid == 0)
 	{
-		char **env_array = create_env_array(env_list);
+		env_array = create_env_array(env_list);
 		execve(executable_path, args, env_array);
 		perror("execve");
 		exit(1);

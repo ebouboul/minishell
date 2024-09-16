@@ -60,7 +60,6 @@ int	count_path_components(const char *path)
 	return (count + 1);
 }
 
-
 char	**split_path(const char *path)
 {
 	char	*path_copy;
