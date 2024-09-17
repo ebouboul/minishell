@@ -6,11 +6,11 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 17:23:01 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 02:17:40 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/17 20:14:17 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 t_command	*initialize_command(MemoryManager *manager)
 {

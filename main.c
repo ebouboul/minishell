@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/17 20:17:11 by ebouboul          #+#    #+#             */
+/*   Updated: 2024/09/17 20:17:12 by ebouboul         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int is_space1(char *input)
@@ -32,7 +44,20 @@ int validate_input(char *input, int *exit_status)
     return 1;  // Input is valid
 
 }
-
+int count_heredoc(TokenNode *list_head)
+{
+    int count = 0;
+    TokenNode *temp = list_head;
+    while (temp)
+    {
+        if (temp->info.type == TOKEN_HEREDOC)
+            count++;
+        temp = temp->next;
+    }
+    if (count > 16)
+        return 2;
+    return 0;
+}
 int checking(TokenNode *list_head)
 {
     if(check_special_chars(list_head) == 2)
@@ -43,6 +68,11 @@ int checking(TokenNode *list_head)
         return 2;
     else if(check_special_validity(list_head) == 2)
         return 2;
+    else if(count_heredoc(list_head) == 2)
+    {
+        write(2, "minishell: too many heredocuments\n", 34);
+        exit(2);
+    }
     return 0;
 }
 TokenInfo *process_input(char *input, int *exit_status, MemoryManager *manager)

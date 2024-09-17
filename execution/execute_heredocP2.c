@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:53 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/17 02:34:50 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:23:45 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	execute_command_with_heredoc(t_node *temp, t_env **env_list,
 		waitpid(pid, &status, 0);
 }
 
+
 void	handle_heredoc(t_node *node, t_env **env_list, int *exit_status, MemoryManager *gc)
 
 {
@@ -48,8 +49,6 @@ void	handle_heredoc(t_node *node, t_env **env_list, int *exit_status, MemoryMana
 	t_node		*temp;
 	t_redirect	*redirect;
 
-	(void)env_list;
-	(void)exit_status;
 	temp_file = create_temp_filename(gc);
 	temp = node;
 	while (temp)

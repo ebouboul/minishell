@@ -1,7 +1,8 @@
 NAME = minishell
-SRC_NAME = tokenizer.c main.c parser.c parser_space_quotes.c env.c expander.c builtins.c fill_node.c \
-free.c export.c signals.c unset.c Wildcards.c ./execution/execute_heredocP1.c ./execution/execute_heredocP2.c ./execution/execution_v1.c ./execution/execution_v2.c execution/execute_pipe_and_cmds.c execution/execute_redirectionsP1.c \
-./execution/execute_redirectionsP2.c ./execution/execution_v1_1.c ./execution/execution_v1_2.c
+SRC_NAME = main.c  free.c  signals.c ./execution/execute_heredocP1.c ./execution/execute_heredocP2.c ./execution/execution_v1.c ./execution/execution_v2.c execution/execute_pipe_and_cmds.c execution/execute_redirectionsP1.c \
+./execution/execute_redirectionsP2.c ./execution/execution_v1_1.c ./execution/execution_v1_2.c \
+./bultins/echo.c ./bultins/cd.c ./bultins/export.c ./bultins/unset.c ./bultins/ft_env.c ./bultins/ft_exit.c ./bultins/builtins.c \
+./pars/env.c ./pars/expander.c ./pars/fill_node.c  ./pars/parser.c ./pars/parser_space_quotes.c ./pars/tokenizer.c ./pars/Wildcards.c 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address -g3

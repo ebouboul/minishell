@@ -140,9 +140,18 @@ void remove_quotes_from_first_and_last_only(char *input);
 // builtins functions:
 
 int is_builtin(char *command);
+char	*get_oldpwd_path(t_env **env_list);
+char	*handle_home_shortcut(char *path, t_env **env_list,
+		MemoryManager *manager);
 int ft_export(t_command *command, t_env **env_list, MemoryManager *manager);
 char *get_env_value(t_env *env_list, char *key);
+int ft_echo(t_command *command);
+int ft_pwd();
+int ft_env(t_env *env_list);
+int ft_exit(t_command *command, MemoryManager *manager);
 int	ft_unset(t_command *command, t_env **env_list, MemoryManager *manager);
+int ft_cd(t_command *command, t_env **env_list, MemoryManager *manager);
+void replace_env_value(t_env *env_list, char *key, char *value, MemoryManager *manager);
 
 // execution functions v1:
 
@@ -225,8 +234,7 @@ void handle_pipe_and_multiple_commands(t_node *head, t_env **env_list, int *exit
 void *gc_malloc(MemoryManager *manager, size_t size);
 void gc_free_all(MemoryManager *manager);
 void gc_free(MemoryManager *manager, void *ptr);
-void *gc_realloc(MemoryManager *manager, void *ptr, size_t size);
-
+void *gc_realloc(MemoryManager *manager, void *ptr, size_t new_size);
 
 #endif
 

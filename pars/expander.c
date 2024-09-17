@@ -6,11 +6,11 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 16:13:42 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 02:33:56 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/17 20:14:20 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 char	*get_env_value3(t_env *env_list, char *key)
 {
@@ -31,7 +31,7 @@ int	ft_strlen1(char **str)
 	int	i;
 
 	i = 0;
-	while (str[i] != NULL)
+	while (str && str[i] != NULL)
 	{
 		i++;
 	}

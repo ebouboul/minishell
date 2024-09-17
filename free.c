@@ -107,3 +107,22 @@ void gc_free(MemoryManager *manager, void *ptr)
 //     }
 //     return new_ptr;
 // }
+
+void *gc_realloc(MemoryManager *manager, void *ptr, size_t new_size)
+{
+    if (!ptr)
+        return gc_malloc(manager, new_size);  // Equivalent to malloc if ptr is NULL
+
+    // Allocate new memory block
+    void *new_ptr = gc_malloc(manager, new_size);
+    if (!new_ptr)
+        return NULL;  // Allocation failed
+
+    ft_memcpy(new_ptr, ptr, new_size);  // Copy the data
+
+    // Free the old memory block
+    gc_free(manager, ptr);
+
+    return new_ptr;
+}
+

@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/17 02:03:08 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/17 17:55:43 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	**process_heredoc_input(const char *delimiter, MemoryManager *gc)
 		i++;
 	}
 	args[i] = NULL;
-	args = realloc(args, sizeof(char *) * (i + 1));
+	args = gc_realloc(gc, args, sizeof(char *) * (i + 1));
 	return (args);
 }
 

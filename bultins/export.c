@@ -6,11 +6,11 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 06:57:26 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 01:54:26 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/17 20:11:09 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 char	**get_key_value_for_plus(MemoryManager *manager, char *var)
 {
