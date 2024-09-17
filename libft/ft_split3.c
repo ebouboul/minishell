@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 23:44:02 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/16 20:00:13 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/17 02:32:06 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,17 @@ static size_t	ft_countword(char const *s, char c)
 	return (count);
 }
 
-static char	**free_tab(char **tab, size_t j)
+static char	**free_tab(char **tab, size_t j, MemoryManager *gc)
 {
 	size_t	i;
 
 	i = 0;
 	while (i < j)
 	{
-		free(tab[i]);
+		gc_free(gc, tab[i]);
 		i++;
 	}
-	free(tab);
+	gc_free(gc, tab);
 	return (NULL);
 }
 
@@ -60,7 +60,7 @@ char find_dilm(char *str)
 	return (0);
 }
 
-char	**ft_split3(char const *s, char c)
+char	**ft_split3(char const *s, char c, MemoryManager *gc)
 {
 	char	**tab;
 	size_t	i;
@@ -69,7 +69,7 @@ char	**ft_split3(char const *s, char c)
 	if (find_dilm((char *)s) != 0)
 		c = find_dilm((char *)s);
 
-	tab = (char **)gc_malloc(sizeof(char *) * (ft_countword(s, c) + 1));
+	tab = (char **)gc_malloc(gc ,sizeof(char *) * (ft_countword(s, c) + 1));
 	if (!s || !tab)
 		return (NULL);
 	i = 0;
@@ -81,9 +81,9 @@ char	**ft_split3(char const *s, char c)
 		k = i;
 		while (s[i] != c && s[i])
 			i++;
-		tab[j] = ft_substr(s, k, i - k);
+		tab[j] = ft_substr(s, k, i - k, gc);
 		if (i > k && !(tab[j]))
-			return (free_tab(tab, j));
+			return (free_tab(tab, j, gc));
 		j++;
 	}
 	tab[j] = NULL;

@@ -1,9 +1,10 @@
 #include "minishell.h"
 
-TokenNode *create_node(TokenInfo token)
+TokenNode *create_node(TokenInfo token, MemoryManager *manager)
 {
-    TokenNode *new_node = (TokenNode*)gc_malloc(sizeof(TokenNode));
-    if (new_node == NULL) {
+    TokenNode *new_node = (TokenNode *)gc_malloc(manager, sizeof(TokenNode));
+    if (new_node == NULL)
+    {
         perror("Memory allocation failed\n");
         exit(1);
     }
@@ -12,17 +13,17 @@ TokenNode *create_node(TokenInfo token)
     return new_node;
 }
 
-TokenNode *ArrayIntoNodes(TokenInfo *tokens)
+TokenNode *ArrayIntoNodes(TokenInfo *tokens, MemoryManager *manager)
 {
     if (tokens == NULL || tokens[0].type == TOKEN_EOF) 
         return NULL;
-    TokenNode *head = create_node(tokens[0]);
+    TokenNode *head = create_node(tokens[0], manager);
     TokenNode *current = head;
     int i = 1;
 
     while (tokens[i].type != TOKEN_EOF) 
     {
-        current->next = create_node(tokens[i]);
+        current->next = create_node(tokens[i], manager);
         current = current->next;
         i++;
     }
@@ -54,9 +55,9 @@ int is_special_redc(char c)
     return  c == '<' || c == '>';
 }
 
-char *ft_strjoin1(char c, char *s)
+char *ft_strjoin1(char c, char *s, MemoryManager *manager)
 {
-    char *result = (char*)gc_malloc(strlen(s) + 2);
+    char *result = (char*)gc_malloc(manager, strlen(s) + 2);
     if (result == NULL) {
         perror("Memory allocation failed\n");
         exit(1);
@@ -65,6 +66,7 @@ char *ft_strjoin1(char c, char *s)
     strcpy(result + 1, s);
     return result;
 }
+
 int print_error(char *str)
 {
     write(2, str, ft_strlen(str));

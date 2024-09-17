@@ -3,25 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   execute_heredocP1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/16 23:26:38 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/17 02:03:08 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 // NORM = OK
-char	*create_temp_filename(void)
+char	*create_temp_filename(MemoryManager *manager)
 {
 	char	*tty;
 	char	*base;
 
 	tty = ttyname(STDIN_FILENO);
 	base = "/tmp/minishell_heredoc_";
-	return (ft_strjoin(base, tty + 9));
+	return (ft_strjoin(base, tty + 9, manager));
 }
+
 
 int	open_temp_file(const char *filename, int flags)
 {
@@ -39,14 +40,14 @@ void	write_to_file(int fd, const char *str)
 	write(fd, "\n", 1);
 }
 
-char	**process_heredoc_input(const char *delimiter)
+char	**process_heredoc_input(const char *delimiter, MemoryManager *gc)
 {
 	char	*line;
 	char	**args;
 	int		i;
 
 	i = 0;
-	args = (char **)gc_malloc(sizeof(char *) * 100);
+	args = (char **)gc_malloc(gc, sizeof(char *) * 100);
 	signal(SIGINT, handler_c);
 	while (1)
 	{
@@ -56,7 +57,7 @@ char	**process_heredoc_input(const char *delimiter)
 			free(line);
 			break ;
 		}
-		args[i] = ft_strdup(line);
+		args[i] = ft_strdup(gc, line);
 		free(line);
 		i++;
 	}
@@ -65,20 +66,21 @@ char	**process_heredoc_input(const char *delimiter)
 	return (args);
 }
 
+
 void	handle_single_heredoc(t_redirect *redirect, const char *temp_file,
-		t_env **env_list, int *exit_status)
+		t_env **env_list, int *exit_status, MemoryManager *gc)
 {
 	int		fd;
 	char	**args;
 	char	*str;
 
-	str = remove_all_quotes2(redirect->str);
+	str = remove_all_quotes2(redirect->str, gc);
 	fd = open_temp_file(temp_file, O_WRONLY | O_CREAT | O_TRUNC);
 	if (fd != -1)
 	{
-		args = process_heredoc_input(str);
+		args = process_heredoc_input(str, gc);
 		if (!ft_strchr(redirect->str, '"') && !ft_strchr(redirect->str, '\''))
-			expan_herdoc(args, *env_list, *exit_status);
+			expan_herdoc(args, *env_list, *exit_status, gc);
 		while (args && *args)
 		{
 			write_to_file(fd, *args);

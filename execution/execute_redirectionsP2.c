@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_redirectionsP2.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:10 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/16 23:27:26 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/17 00:04:20 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,30 +42,45 @@ void	handle_redirections(t_node *node, t_env **env_list, int *exit_status)
 	}
 }
 
-void	wait_for_children(pid_t last_pid)
-{
-	pid_t	wpid;
-	int		status;
+// void	wait_for_children(pid_t last_pid)
+// {
+// 	pid_t	wpid;
+// 	int		status;
 
-	wpid = waitpid(-1, &status, WUNTRACED);
-	while (wpid > 0)
-	{
-		if (WIFEXITED(status))
-		{
-			printf("Child process %d exited with status %d\n",
-				wpid, WEXITSTATUS(status));
-		}
-		else if (WIFSIGNALED(status))
-		{
-			printf("Child process %d killed by signal %d\n",
-				wpid, WTERMSIG(status));
-		}
-	}
-	if (wpid == -1 && errno != ECHILD)
-	{
-		perror("waitpid");
-		exit(EXIT_FAILURE);
-	}
-	if (last_pid > 0)
-		waitpid(last_pid, &status, 0);
+// 	wpid = waitpid(-1, &status, WUNTRACED);
+// 	while (wpid > 0)
+// 	{
+// 		if (WIFEXITED(status))
+// 		{
+// 			printf("Child process %d exited with status %d\n",
+// 				wpid, WEXITSTATUS(status));
+// 		}
+// 		else if (WIFSIGNALED(status))
+// 		{
+// 			printf("Child process %d killed by signal %d\n",
+// 				wpid, WTERMSIG(status));
+// 		}
+// 	}
+// 	if (wpid == -1 && errno != ECHILD)
+// 	{
+// 		perror("waitpid");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	if (last_pid > 0)
+// 		waitpid(last_pid, &status, 0);
+// }
+
+void wait_for_children(pid_t last_pid)
+{
+	int i;
+	int k = 212;
+    if (last_pid > 0)
+    {
+        int status;
+        waitpid(last_pid, &status, 0);
+		k = WIFEXITED(status);
+    }
+	i = wait(NULL);
+    while (i > 0)
+		i = wait(NULL);	
 }

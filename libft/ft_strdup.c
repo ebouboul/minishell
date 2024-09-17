@@ -6,24 +6,29 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 17:47:16 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/05 06:27:25 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/17 02:25:20 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strdup(const char *src)
+char	*ft_strdup(MemoryManager *manger, const char *src)
 {
-	size_t	size;
 	char	*dest;
-	if(src == NULL)
-		return (NULL);
+	int		i;
 
-	size = ft_strlen(src);
-	dest = (char *)gc_malloc(size * sizeof(char) + 1);
-	if (dest == NULL)
-		return (0);
-	ft_memcpy(dest, src, size);
-	dest[size] = '\0';
+	i = 0;
+	dest = (char *)gc_malloc(manger, (ft_strlen(src) + 1));
+	if (!dest)
+	{
+		perror("Memory allocation failed\n");
+		exit(1);
+	}
+	while (src[i] != '\0')
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
 	return (dest);
 }

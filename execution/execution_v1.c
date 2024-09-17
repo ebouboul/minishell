@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_v1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:18 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/16 23:27:39 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/17 02:41:06 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	is_heredoc(t_node *node)
 	return (0);
 }
 
-void	execute_heredoc(t_node *current, t_env **env_list, int *exit_status)
+void	execute_heredoc(t_node *current, t_env **env_list, int *exit_status, MemoryManager *gc)
 {
 	pid_t	pid;
 	int		status;
@@ -41,20 +41,21 @@ void	execute_heredoc(t_node *current, t_env **env_list, int *exit_status)
 	}
 	else if (pid == 0)
 	{
-		handle_heredoc(current, env_list, exit_status);
+		handle_heredoc(current, env_list, exit_status, gc);
 		exit(EXIT_SUCCESS);
 	}
 	else
 		waitpid(pid, &status, 0);
 }
 
-void	execute_piped_commands(t_node *current,
-		t_env **env_list, int *exit_status)
-{
-	handle_pipe_and_multiple_commands(current, env_list, exit_status);
-}
 
-void	execute_cmds(t_node *head, t_env **env_list, int *exit_status)
+// void	execute_piped_commands(t_node *current,
+// 		t_env **env_list, int *exit_status)
+// {
+// 	handle_pipe_and_multiple_commands(current, env_list, exit_status);
+// }
+
+void	execute_cmds(t_node *head, t_env **env_list, int *exit_status, MemoryManager *gc)
 {
 	t_node	*current;
 
@@ -62,19 +63,20 @@ void	execute_cmds(t_node *head, t_env **env_list, int *exit_status)
 	while (current)
 	{
 		if (is_heredoc(current))
-			execute_heredoc(current, env_list, exit_status);
+			execute_heredoc(current, env_list, exit_status, gc);
 		else if (current->next)
 		{
-			execute_piped_commands(current, env_list, exit_status);
+			handle_pipe_and_multiple_commands(current, env_list, exit_status, gc);
 			break ;
 		}
 		else
 		{
-			execute_single_command(current, env_list, exit_status);
+			execute_single_command(current, env_list, exit_status, gc);
 		}
 		current = current->next;
 	}
 }
+
 
 int	is_redirection(t_node *node)
 {

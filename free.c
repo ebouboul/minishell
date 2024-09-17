@@ -1,63 +1,39 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 02:37:14 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/10 16:27:52 by ebouboul         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include"minishell.h"
+#include "minishell.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// void  *ft_realloc(void *ptr, size_t size)
-// {
-//     void *new_ptr = gc_malloc(size);
-//     if (new_ptr == NULL)
-//     {
-//         perror("Memory allocation failed\n");
-//         exit(1);
-//     }
-//     if (ptr != NULL)
-//     {
-//         memcpy(new_ptr, ptr, size);
-//         gc_malloc(ptr);
-//     }
-//     return new_ptr;
-// }
-
-
-// Head pointer for the linked list of memory blocks
-MemoryNode *head = NULL;
 
 // Function to add a memory block to the tracking list
-void add_memory(void *ptr) {
+void add_memory(MemoryManager *manager, void *ptr)
+{
     MemoryNode *new_node = (MemoryNode *)malloc(sizeof(MemoryNode));
-    if (!new_node) {
+    if (!new_node)
+    {
         perror("Failed to allocate memory for tracking node");
         exit(EXIT_FAILURE);
     }
     new_node->ptr = ptr;
-    new_node->next = head;
-    head = new_node;
+    new_node->next = manager->head;
+    manager->head = new_node;
 }
 
 // Function to remove a memory block from the tracking list
-void remove_memory(void *ptr)
+void remove_memory(MemoryManager *manager, void *ptr)
 {
-    MemoryNode *current = head;
+    MemoryNode *current = manager->head;
     MemoryNode *previous = NULL;
 
-    while (current != NULL) {
-        if (current->ptr == ptr) {
-            if (previous == NULL) {
-                head = current->next;
-            } else {
+    while (current != NULL)
+    {
+        if (current->ptr == ptr)
+        {
+            if (previous == NULL)
+            {
+                manager->head = current->next;
+            }
+            else
+            {
                 previous->next = current->next;
             }
             free(current); // Free the tracking node
@@ -69,37 +45,65 @@ void remove_memory(void *ptr)
 }
 
 // Function to allocate memory and add it to the tracking list
-void *gc_malloc(size_t size) 
+void *gc_malloc(MemoryManager *manager, size_t size)
 {
     void *ptr = malloc(size);
-    if (!ptr) {
+    if (!ptr)
+    {
         perror("Failed to allocate memory");
         exit(EXIT_FAILURE);
     }
-    add_memory(ptr);
+    add_memory(manager, ptr);
     return ptr;
 }
 
 // Function to free all allocated memory blocks
-void gc_free_all() 
+void gc_free_all(MemoryManager *manager)
 {
-    MemoryNode *current = head;
-    while (current != NULL) {
+    MemoryNode *current = manager->head;
+    while (current != NULL)
+    {
         MemoryNode *next_node = current->next;
-        if(current->ptr != NULL)
-        free(current->ptr); // Free the allocated memory
-        if(current != NULL)
-        free(current); // Free the tracking node
+        if (current->ptr != NULL)
+            free(current->ptr); // Free the allocated memory
+        free(current);          // Free the tracking node
         current = next_node;
     }
-    head = NULL; // Reset the head pointer
+    manager->head = NULL; // Reset the head pointer
 }
 
 // Function to free a specific memory block
-void gc_free(void *ptr)
+// void gc_free(MemoryManager *manager, void *ptr)
+// {
+//     if (ptr != NULL)
+//         free(ptr); // Free the allocated memory
+//     remove_memory(manager, ptr); // Remove it from the tracking list
+// }
+void gc_free(MemoryManager *manager, void *ptr)
 {
-    if(ptr != NULL)
-    free(ptr); // Free the allocated memory
-    remove_memory(ptr); // Remove it from the tracking list
+    remove_memory(manager, ptr); // Remove it from the tracking list first
+    if (ptr != NULL)
+        free(ptr); // Free the allocated memory
 }
 
+
+// gc_realloc using gc_malloc and gc_free
+// void *gc_realloc(MemoryManager *manager, void *ptr, size_t old_size, size_t new_size)
+// {
+//     void *new_ptr;
+
+//     if (new_size == 0)
+//     {
+//         gc_free(manager, ptr);
+//         return NULL;
+//     }
+
+//     new_ptr = gc_malloc(manager, new_size);
+//     if (ptr != NULL)
+//     {
+//         // Copy only the minimum of the old and new sizes
+//         memcpy(new_ptr, ptr, old_size < new_size ? old_size : new_size);
+//         gc_free(manager, ptr);
+//     }
+//     return new_ptr;
+// }

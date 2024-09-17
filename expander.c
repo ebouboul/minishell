@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 16:13:42 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/16 20:26:43 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/17 02:33:56 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,22 +38,24 @@ int	ft_strlen1(char **str)
 	return (i);
 }
 
-char	**resize_args(char **args, int new_size)
+char	**resize_args(char **args, int new_size, MemoryManager *gc)
 {
 	char	**new_args;
 	int		i;
 
-	new_args = (char **)gc_malloc(sizeof(char *) * (new_size + 1));
+	new_args = (char **)gc_malloc(gc, (new_size + 1) * sizeof(char *));
+	if (!new_args)
+	{
+		perror("Memory allocation failed\n");
+		exit(1);
+	}
 	i = 0;
-	if (new_args == NULL)
-		return (NULL);
-	while (args[i] != NULL)
+	while (i < new_size)
 	{
 		new_args[i] = args[i];
 		i++;
 	}
 	new_args[i] = NULL;
-	gc_free(args);
 	return (new_args);
 }
 int	dollar_position(char *str)
@@ -158,46 +160,47 @@ char	*dstrchr(char *s, char c, int *flag)
 	return (NULL);
 }
 
-void	append_char(char c, char **new_arg)
+void	append_char(char c, char **new_arg, MemoryManager *gc)
 {
 	char	temp[2] = {c, '\0'};
 	char	*old_arg;
 
 	old_arg = *new_arg;
-	*new_arg = ft_strjoin(old_arg, temp);
-	gc_free(old_arg);
+	*new_arg = ft_strjoin(old_arg, temp, gc);
+	gc_free(gc, old_arg);
 }
 
-void	handle_single_quote(char *arg, char **new_arg, int *in_single_quotes,
-		int *j)
-{
-	if (new_arg == NULL)
-	{
-		*new_arg = ft_strdup("");
-	}
-	*in_single_quotes = !(*in_single_quotes);
-	append_char(arg[(*j)++], new_arg);
-}
 
-void	handle_double_quote(char *arg, char **new_arg, int *in_double_quotes,
-		int *j)
-{
-	if (new_arg == NULL)
-	{
-		*new_arg = ft_strdup("");
-	}
-	*in_double_quotes = !(*in_double_quotes);
-	append_char(arg[(*j)++], new_arg);
-}
+// void	handle_single_quote(char *arg, char **new_arg, int *in_single_quotes,
+// 		int *j)
+// {
+// 	if (new_arg == NULL)
+// 	{
+// 		*new_arg = ft_strdup("");
+// 	}
+// 	*in_single_quotes = !(*in_single_quotes);
+// 	append_char(arg[(*j)++], new_arg);
+// }
 
-char	*ft_charjoin(char *s, char c)
+// void	handle_double_quote(char *arg, char **new_arg, int *in_double_quotes,
+// 		int *j)
+// {
+// 	if (new_arg == NULL)
+// 	{
+// 		*new_arg = ft_strdup("");
+// 	}
+// 	*in_double_quotes = !(*in_double_quotes);
+// 	append_char(arg[(*j)++], new_arg);
+// }
+
+char	*ft_charjoin(char *s, char c, MemoryManager *gc)
 {
 	char	*result;
 	int		i;
 	int		len;
 
 	len = ft_strlen(s);
-	result = (char *)gc_malloc(len + 2);
+	result = (char *)gc_malloc(gc, len + 2);
 	if (result == NULL)
 		return (NULL);
 	i = 0;
@@ -215,7 +218,7 @@ int	is_quot1e(char c)
 	return (c == '\'' || c == '"');
 }
 
-char	*extract_var_name(char *arg, int *j)
+char	*extract_var_name(char *arg, int *j, MemoryManager *gc)
 {
 	int		k;
 	char	*var_name;
@@ -224,28 +227,28 @@ char	*extract_var_name(char *arg, int *j)
 	if (arg[k] == '$' && arg[k + 1] == '$')
 	{
 		*j = k + 2;
-		return (ft_strdup("$"));
+		return (ft_strdup(gc, "$"));
 	}
 	while (arg[k] && (isalpha(arg[k + 1]) || isdigit(arg[k + 1]) || arg[k
 			+ 1] == '_'))
 		k++;
-	if (ft_strchr(ft_substr(arg, *j, k), '\'') != NULL
-			&& ft_strchr(ft_substr(arg, *j, k), '"') == NULL
-			&& ft_strchr(ft_substr(arg, *j, k + 1), '\'')[1] != '"')
+	if (ft_strchr(ft_substr(arg, *j, k, gc), '\'') != NULL
+			&& ft_strchr(ft_substr(arg, *j, k, gc), '"') == NULL
+			&& ft_strchr(ft_substr(arg, *j, k + 1, gc), '\'')[1] != '"')
 		return (NULL);
-	var_name = ft_substr(arg, *j + 1, k - *j);
+	var_name = ft_substr(arg, *j + 1, k - *j, gc);
 	if (!var_name)
 		return (NULL);
 	*j = k + 1;
 	return (var_name);
 }
 
-char	*get_variable_value(t_env *env_list, char *var_name)
+char	*get_variable_value(t_env *env_list, char *var_name, MemoryManager *gc)
 {
 	char	*value;
 
 	if (isdigit(var_name[0]))
-		value = ft_strdup(var_name + 1);
+		value = ft_strdup(gc, var_name + 1);
 	else
 		value = get_env_value3(env_list, var_name);
 	if (!value)
@@ -253,16 +256,15 @@ char	*get_variable_value(t_env *env_list, char *var_name)
 	return (value);
 }
 
-void	append_expanded_value(char **new_arg, char *value)
+void	append_expanded_value(char **new_arg, char *value, MemoryManager *gc)
 {
 	char	*temp;
 
 	temp = *new_arg;
-	*new_arg = ft_strjoin(temp, value);
-	if (!*new_arg)
-		return ;
-	gc_free(temp);
+	*new_arg = ft_strjoin(temp, value, gc);
+	gc_free(gc, temp);
 }
+
 
 int	is_last_dollar(char *str, char c)
 {
@@ -276,7 +278,7 @@ int	is_last_dollar(char *str, char c)
 	return (0);
 }
 void	expand_variable(char *arg, char **new_arg, int *j, t_env *env_list,
-		int *k)
+		int *k, MemoryManager *gc)
 {
 	char	*var_name;
 	char	*value;
@@ -285,17 +287,17 @@ void	expand_variable(char *arg, char **new_arg, int *j, t_env *env_list,
 		return ;
 	var_name = NULL;
 	value = NULL;
-	var_name = extract_var_name(arg, j);
+	var_name = extract_var_name(arg, j, gc);
 	if (var_name)
 	{
-		value = get_variable_value(env_list, var_name);
+		value = get_variable_value(env_list, var_name, gc);
 		if (value)
-			append_expanded_value(new_arg, value);
+			append_expanded_value(new_arg, value, gc);
 		if (value[0] != '\0')
 		*k = *j;
 	}
 	if (*j < (int)ft_strlen(arg))
-		append_char(arg[(*j)++], new_arg);
+		append_char(arg[(*j)++], new_arg, gc);
 }
 
 void	update_args(char **args, char *new_arg, int i)
@@ -342,22 +344,22 @@ void	split_and_remove_quotes(char ***args, char **split_args, int i,
 	}
 }
 
-void	handle_splitting(char ***args, int i)
+void	handle_splitting(char ***args, int i, MemoryManager *gc)
 {
 	char	**split_args;
 	int		num_splits;
 	int		original_size;
 	
 	if (ft_strchr((*args)[i], '"') != NULL && ft_strchr((*args)[i], '\'') != NULL)
-		split_args = ft_split((*args)[i]);
+		split_args = ft_split((*args)[i], gc);
 	else
-		split_args = ft_split3((*args)[i], ' ');
+		split_args = ft_split3((*args)[i], ' ', gc);
 	original_size = get_arg_size(*args);
 	num_splits = get_arg_size(split_args);
-	*args = resize_args(*args, original_size + num_splits - 1);
+	*args = resize_args(*args, original_size + num_splits - 1, gc);
 	shift_args(*args, i, original_size, num_splits);
 	split_and_remove_quotes(args, split_args, i, num_splits);
-	gc_free(split_args);
+	gc_free(gc, split_args);
 }
 int	is_single_qupte_after_dollar(char *str)
 {
@@ -390,16 +392,17 @@ int	no_expansion_needed(char *arg)
 	return (ft_strchr(arg, '$') == NULL || dollar_position(arg) == 0
 		|| is_single_qupte_after_dollar(arg) || !dstrchr(arg, '$', &k));
 }
-void	handle_exit_status(char **new_arg, int *j, int exit_status)
+void	handle_exit_status(char **new_arg, int *j, int exit_status, MemoryManager *gc)
 {
 	char	*value;
 
-	*new_arg = ft_strdup("");
-	value = ft_itoa(exit_status);
-	append_expanded_value(new_arg, value);
+	*new_arg = ft_strdup(gc, "");
+	value = ft_itoa(exit_status, gc);
+	append_expanded_value(new_arg, value, gc);
 	*j += 2;
 }
-void handle_expansion(char **args, int i, t_env *env_list, int exit_status, int *k)
+
+void handle_expansion(char **args, int i, t_env *env_list, int exit_status, int *k, MemoryManager *gc)
 {
     char *new_arg;
     int j, in_single_quotes, in_double_quotes;
@@ -408,31 +411,31 @@ void handle_expansion(char **args, int i, t_env *env_list, int exit_status, int 
     in_single_quotes = 0;
     in_double_quotes = 0;
 	int flag = 0;
-    new_arg = ft_strdup("");
+    new_arg = ft_strdup(gc, "");
 
     while (args[i][j] != '\0' )
     {
-        if (args[i][j] == '\'' && !in_double_quotes)
-            handle_single_quote(args[i], &new_arg, &in_single_quotes, &j);
-        else if (args[i][j] == '"' && !in_single_quotes)
-            handle_double_quote(args[i], &new_arg, &in_double_quotes, &j);
-        else if (args[i][j] == '$' && args[i][j + 1] != '\0')
+        // if (args[i][j] == '\'' && !in_double_quotes)
+        //     handle_single_quote(args[i], &new_arg, &in_single_quotes, &j);
+        // else if (args[i][j] == '"' && !in_single_quotes)
+        //     handle_double_quote(args[i], &new_arg, &in_double_quotes, &j);
+        if (args[i][j] == '$' && args[i][j + 1] != '\0')
         {
             // Expansion when outside single quotes
             if (args[i][j + 1] == '?')
-                handle_exit_status(&new_arg, &j, exit_status);
+                handle_exit_status(&new_arg, &j, exit_status, gc);
             else if (!in_single_quotes && flag == 0)
 			{
-                expand_variable(args[i], &new_arg, &j, env_list, k);
+                expand_variable(args[i], &new_arg, &j, env_list, k, gc);
 				flag = 1;
 			}
             else
-                append_char(args[i][j++], &new_arg);
+                append_char(args[i][j++], &new_arg, gc);
 				*k = j;
         }
         else
         {
-            append_char(args[i][j++], &new_arg);
+            append_char(args[i][j++], &new_arg, gc);
             *k = j;
         }
     }
@@ -558,7 +561,7 @@ int double_quotes(const char *str)
     return 0; 
 }
 void	process_arguments(t_command *current_command, t_env *env_list,
-		int exit_status)
+		int exit_status, MemoryManager *gc)
 {
 	char(**args), (*last);
 	int(i), (j), (k);
@@ -570,12 +573,12 @@ void	process_arguments(t_command *current_command, t_env *env_list,
 		k = 0;
 		while (last && dstrchr(last, '$', &j) && !is_dollar_only(last))
 		{
-			handle_expansion(args, i, env_list, exit_status, &k);
+			handle_expansion(args, i, env_list, exit_status, &k, gc);
 			if (args[i] && ft_strchr(args[i], ' ') != NULL 
 				&& ft_strncmp(args[0], "export", 6) != 0
 				&& is_last_dollar(args[i], '$') == 0&& double_quotes(last) == 0)
 				{
-					handle_splitting(&args, i); 
+					handle_splitting(&args, i, gc);
 					break;
 				}
 			if (k >= (int)ft_strlen(args[i]))
@@ -620,7 +623,7 @@ void	process_arguments(t_command *current_command, t_env *env_list,
 
 
 
-void exp_Reddd(char ** args, t_env *env_list, int exit_status)
+void exp_Reddd(char ** args, t_env *env_list, int exit_status, MemoryManager *gc)
 {
 	char *last;
 	int(i), (j), (k);
@@ -631,7 +634,7 @@ void exp_Reddd(char ** args, t_env *env_list, int exit_status)
 		k = 0;
 		while (last && dstrchr(last, '$', &j) && !is_dollar_only(last))
 		{
-			handle_expansion(args, i, env_list, exit_status, &k);
+			handle_expansion(args, i, env_list, exit_status, &k, gc);
 			change_qoutes(args[i]);
 			if (k >= (int)ft_strlen(args[i]))
 				break ;
@@ -641,7 +644,7 @@ void exp_Reddd(char ** args, t_env *env_list, int exit_status)
 	}
 }
 
-void expand_redirect(t_redirect **redirect, t_env *env_list, int exit_status)
+void expand_redirect(t_redirect **redirect, t_env *env_list, int exit_status, MemoryManager *gc)
 {
 	t_redirect *current;
 	current = *redirect;
@@ -651,15 +654,16 @@ void expand_redirect(t_redirect **redirect, t_env *env_list, int exit_status)
 		if (current->flag != 8)
 		{
 			char **args;
-			args = (char **)gc_malloc(sizeof(char *) * 2);
+			args = (char **)gc_malloc(gc, sizeof(char *) * 2);
 			args[0] = current->str;
 			args[1] = NULL;
-			exp_Reddd(args, env_list, exit_status);
+			exp_Reddd(args, env_list, exit_status, gc);
 			current->str = args[0];
 		}
 		current = current->next;
 	}
 }
+
 int need_expansion(char *str)
 {
 	int	i;
@@ -673,7 +677,7 @@ int need_expansion(char *str)
 	}
 	return (0);
 }
-void expan_herdoc(char **args, t_env *env_list, int exit_status)
+void expan_herdoc(char **args, t_env *env_list, int exit_status, MemoryManager *gc)
 {
 	char *last;
 	int(i), (k);
@@ -684,7 +688,7 @@ void expan_herdoc(char **args, t_env *env_list, int exit_status)
 		k = 0;
 		while (last && need_expansion(last) && !is_dollar_only(last))
 		{
-			handle_expansion(args, i, env_list, exit_status, &k);
+			handle_expansion(args, i, env_list, exit_status, &k, gc);
 			change_qoutes(args[i]);
 			if (k >= (int)ft_strlen(args[i]))
 				break ;
@@ -694,7 +698,7 @@ void expan_herdoc(char **args, t_env *env_list, int exit_status)
 	}
 }
 
-void	expansion_process(t_node **head, t_env *env_list, int exit_status)
+void	expansion_process(t_node **head, t_env *env_list, int exit_status, MemoryManager *gc)
 {
 	t_node *current;
 	t_command *current_command;
@@ -705,9 +709,9 @@ void	expansion_process(t_node **head, t_env *env_list, int exit_status)
 		current_command = current->command;
 		while (current_command != NULL)
 		{
-			process_arguments(current_command, env_list, exit_status);
+			process_arguments(current_command, env_list, exit_status, gc);
 			if (current_command->redirect)
-			expand_redirect(&current_command->redirect, env_list, exit_status);
+			expand_redirect(&current_command->redirect, env_list, exit_status, gc);
 			current_command = current_command->next;
 		}
 		current = current->next;

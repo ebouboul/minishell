@@ -55,7 +55,7 @@ int is_special_char2(char c)
     return 0;
 }
 
-char *add_spaces(char *input)
+char *add_spaces(char *input, MemoryManager *manger)
 {
     int i = 0;
     int j = 0;
@@ -79,7 +79,7 @@ char *add_spaces(char *input)
     }
 
     // Allocate new memory for the input with additional spaces
-    char *new_input = (char *)gc_malloc(length + (j * 2) + 1);
+    char *new_input = (char *)gc_malloc(manger, length + (j * 2) + 1);
     if (!new_input)
         return NULL; // Handle memory allocation failure
 
@@ -111,8 +111,7 @@ char *add_spaces(char *input)
             new_input[j++] = input[i++];
         }
     }
-    
-    new_input[j] = '\0';  // Null-terminate the new string
+    new_input[j] = '\0';
     return new_input;
 }
 
@@ -389,62 +388,9 @@ int is_quote(char c)
 {
     return (c == '\'' || c == '"');
 }
-char *remove_all_quotes22(const char *input) {
-    if (input == NULL)
-        return NULL;
-
-    int i = 0, j = 0;
-    int len = strlen(input);
-    char *result = (char *)gc_malloc(len + 1); // Allocate memory for the result string
-
-    if (!result) {
-        perror("Memory allocation failed\n");
-        return NULL;
-    }
-
-    while (input[i] != '\0') {
-        if (input[i] != '"' && input[i] != '\'') {
-            result[j++] = input[i]; // Copy characters that are not quotes
-        }
-        i++;
-    }
-
-    result[j] = '\0'; // Null-terminate the result string
-    return result;
-}
-
 
 // Function to remove all quotes before and after any character
-char *remove_all_quotes(const char *str)
-{
-    if (str == NULL)
-        return NULL;
 
-    int i = 0, j = 0;
-    int len = strlen(str);
-    char *result = (char *)gc_malloc(len + 1); // Allocate memory for the result
-
-    if (result == NULL)
-    {
-        perror("Memory allocation failed");
-        return NULL;
-    }
-
-    while (str[i] != '\0')
-    {
-        // If the current character is not a quote or if it is a quote but there is no character before or after it
-        if (!is_quote(str[i]) || 
-           (i > 0 && !is_quote(str[i - 1]) && str[i + 1] != '\0' && !is_quote(str[i + 1])))
-        {
-            result[j++] = str[i];
-        }
-        i++;
-    }
-
-    result[j] = '\0'; // Null-terminate the result
-
-    return result;
-}
 // check if qoutes in the first and last only
 int check_qoutes_in_first_and_last_only(char *input)
 {
@@ -459,9 +405,10 @@ int is_quote2(char c)
     return (c == '"' || c == '\'');
 }
 
-char *remove_closed_quotes(const char *input) {
+char *remove_closed_quotes(const char *input, MemoryManager *manager)
+{
     int i = 0, j = 0;
-    char *result = (char *)gc_malloc(ft_strlen(input) + 1);
+    char *result = (char *)gc_malloc(manager, ft_strlen(input) + 1);
     if (!result) {
         return NULL;  // Handle memory allocation failure.
     }
@@ -484,6 +431,26 @@ char *remove_closed_quotes(const char *input) {
     result[j] = '\0';
     return result;
 }
+
+char *change_closed_quotes(char *input, MemoryManager *manager)
+{
+    int i = 0, j = 0;
+    char *result = (char *)gc_malloc(manager, ft_strlen(input) + 1);
+    if (!result) {
+        return NULL;
+    }
+
+    while (input[i] != '\0') {
+        if (input[i] != '"' && input[i] != '\'') {
+            result[j++] = input[i];
+        }
+        i++;
+    }
+
+    result[j] = '\0';
+    return result;
+}
+
 void get_quote_back(char *input)
 {
     int i = 0;
@@ -500,10 +467,10 @@ void get_quote_back(char *input)
         i++;
     }
 }
-char *remove_all_quotes2(const char *input) 
+char *remove_all_quotes2(const char *input, MemoryManager *manger)
 {
     int i = 0, j = 0;
-    char *result = (char *)gc_malloc(ft_strlen(input) + 1);
+    char *result = (char *)gc_malloc(manger, ft_strlen(input) + 1);
     if (!result) {
         return NULL;
     }
@@ -519,7 +486,8 @@ char *remove_all_quotes2(const char *input)
     return result;
 }
 
-void remove_quotes_and_join(t_node *head)
+
+void remove_quotes_and_join(t_node *head, MemoryManager *manager)
 {
     t_node *current = head;
     while (current != NULL) 
@@ -531,12 +499,31 @@ void remove_quotes_and_join(t_node *head)
             int i = 0;
             while (args[i] != NULL) 
             {
-               args[i] = remove_closed_quotes(args[i]);
-               get_quote_back(args[i]);
+                args[i] = remove_closed_quotes(args[i], manager);
                 i++;
             }
             current_command = current_command->next;
         }
         current = current->next;
+    }
+}
+
+void change_quotes(char *input)
+{
+    int i = 0;
+    while (input[i] != '\0' && input[i] != '\'' && input[i] != '"') 
+        i++;
+    
+    while (input[i] != '\0') 
+    {
+        if (input[i] == '"') 
+        {
+            input[i] = 15;
+        }
+        if (input[i] == '\'') 
+        {
+            input[i] = 16;
+        }
+        i++;
     }
 }

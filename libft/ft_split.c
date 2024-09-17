@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:20:41 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/16 20:04:36 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/17 02:28:21 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	ft_word_len(char *s, int i)
 	return (wordlen);
 }
 
-char	**ft_splitall(char **str, char const *s, int countword)
+char	**ft_splitall(char **str, char const *s, int countword, MemoryManager *gc)
 {
 	int	i;
 	int	j;
@@ -86,7 +86,7 @@ char	**ft_splitall(char **str, char const *s, int countword)
 		while (s[i] && (s[i] == ' ' || (s[i] >= 9 && s[i] <= 13)))
 			i++;
 		wordlen = ft_word_len((char *)s, i);
-		str[j] = gc_malloc((wordlen + 1) * sizeof(char));
+		str[j] = gc_malloc(gc, (wordlen + 1) * sizeof(char));
 		if (!str[j])
 			return (ft_freespace(str, countword));
 		set_word(str[j], s, &i);
@@ -96,7 +96,8 @@ char	**ft_splitall(char **str, char const *s, int countword)
 	return (str);
 }
 
-char	**ft_split(char const *s)
+
+char	**ft_split(char const *s, MemoryManager *gc)
 {
 	int		countword;
 	char	**str;
@@ -104,9 +105,9 @@ char	**ft_split(char const *s)
 	if (!s)
 		return (NULL);
 	countword = ft_wordcount(s);
-	str = gc_malloc((countword + 2) * sizeof(char *));
+	str = gc_malloc(gc, (countword + 2) * sizeof(char *));
 	if (!str)
 		return (NULL);
-	ft_splitall(str, s, countword);
+	ft_splitall(str, s, countword, gc);
 	return (str);
 }

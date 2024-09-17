@@ -45,17 +45,17 @@ int checking(TokenNode *list_head)
         return 2;
     return 0;
 }
-TokenInfo *process_input(char *input, int *exit_status) 
+TokenInfo *process_input(char *input, int *exit_status, MemoryManager *manager)
 {
     char **inp;
     TokenInfo *tokens;
 
-    input = add_spaces(input);
-    inp = ft_split(input);
-    tokens = tokenizer(inp);
+    input = add_spaces(input, manager);
+    inp = ft_split(input, manager);
+    tokens = tokenizer(inp, manager);
     if (!tokens) 
         return NULL;
-    TokenNode *list_head = ArrayIntoNodes(tokens);
+    TokenNode *list_head = ArrayIntoNodes(tokens, manager);
     if (checking(list_head) == 2)
     {
         *exit_status = 2;
@@ -65,21 +65,22 @@ TokenInfo *process_input(char *input, int *exit_status)
     return tokens;
 }
 
-t_node *prepare_execution(TokenInfo *tokens, t_env *env_list, int exit_status) 
+t_node *prepare_execution(TokenInfo *tokens, t_env *env_list, int exit_status, MemoryManager *manager)
 {
-    TokenNode *list_head = ArrayIntoNodes(tokens);
-    t_node *node = convert_to_node_list(list_head);
-    
+    TokenNode *list_head = ArrayIntoNodes(tokens, manager);
+    t_node *node = convert_to_node_list(list_head, manager);
+    (void)env_list;
+    (void)exit_status;
 
-    expansion_process(&node, env_list, exit_status);
+    expansion_process(&node, env_list, exit_status, manager);
     
     // print_node_list(node);
-    replace_wildcard_in_args(node);
-    remove_quotes_and_join(node);
+    replace_wildcard_in_args(node, manager);
+    remove_quotes_and_join(node, manager);
     return node;
 }
 
-void increment_shlvl(t_env *env_list)
+void increment_shlvl(t_env *env_list, MemoryManager *manager)
 {
     t_env *current;
     int value;
@@ -91,25 +92,29 @@ void increment_shlvl(t_env *env_list)
         {
             value = ft_atoi(current->env->value);
             value++;
-            new_value = ft_itoa(value);
-            gc_free(current->env->value);
+            new_value = ft_itoa(value, manager);
+            gc_free(manager, current->env->value);
             current->env->value = new_value;
             break;
         }
         current = current->next;
     }
 }
+
 int main(int argc, char **argv, char **env) 
 {
     (void)argc;
     (void)argv;
+    MemoryManager *manager = (MemoryManager *)malloc(sizeof(MemoryManager));
+   
+    manager->head = NULL;
     
-    t_env *env_list = (t_env*)gc_malloc(sizeof(t_env));
-    t_node *node = (t_node*)gc_malloc(sizeof(t_node));
-    int exit_status = 0;
+    t_env *env_list = (t_env*)gc_malloc(manager, sizeof(t_env));
+    t_node *node = (t_node*)gc_malloc(manager, sizeof(t_node));
+    node->exit_status = 0;
     char *input = NULL;
-    fill_env_list(env, env_list);
-    increment_shlvl(env_list);
+    fill_env_list(manager, env, env_list);
+    increment_shlvl(env_list, manager);
     signal(SIGQUIT, SIG_IGN);
     struct sigaction sa;
     sa.sa_handler = handler;
@@ -123,7 +128,6 @@ int main(int argc, char **argv, char **env)
 
     while (1) 
     {
-        // printf("exit status: %d\n", node->exit_status);
         input = read_user_input();
         if (input == NULL) 
         {
@@ -133,21 +137,23 @@ int main(int argc, char **argv, char **env)
 
         if (!input || is_space1(input) == 1)
             continue;
-        if(validate_input(input, &exit_status))
+        if(validate_input(input, &node->exit_status))
         {
-            TokenInfo *tokens = process_input(input, &exit_status);
+            TokenInfo *tokens = process_input(input, &node->exit_status, manager);
             free(input);
             if (!tokens)
                 continue;
 
 
-            node = prepare_execution(tokens, env_list, exit_status);
-            execute_cmds(node, &env_list, &exit_status);
+            node = prepare_execution(tokens, env_list, node->exit_status, manager);
+            // printf("exit status: %d\n", node->exit_status);
+            execute_cmds(node, &env_list, &node->exit_status, manager);
         }
     }
-    gc_free_all();
+    gc_free_all(manager);
     return 0;
 }
+
 
 
 

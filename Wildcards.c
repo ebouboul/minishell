@@ -1,19 +1,7 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Wildcards.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/08 19:03:28 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/12 17:14:13 by ebouboul         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 #include <dirent.h>   // Include for DIR, opendir, readdir, closedir
 #include <fnmatch.h>  // Include for fnmatch
-// #include <string.h>   // Include for strerror
+#include <string.h>   // Include for strerror
 
 int is_wildcard(char *str)
 {
@@ -38,7 +26,6 @@ int is_wildcard_in_args(char **args)
     }
     return 0;
 }
-
 
 int wildcard_match(const char *pattern, const char *str)
 {
@@ -88,8 +75,7 @@ int wildcard_match(const char *pattern, const char *str)
     return (pattern[pIndex] == '\0');
 }
 
-
-void replace_wildcard(char ***args, int *i)
+void replace_wildcard(char ***args, int *i, MemoryManager *manager)
 {
     char *path = (*args)[*i];
     struct dirent *entry;
@@ -109,19 +95,22 @@ void replace_wildcard(char ***args, int *i)
         if (wildcard_match(path, entry->d_name))
         {
             match_count++;
-            matches = realloc(matches, match_count * sizeof(char *));
-            matches[match_count - 1] = ft_strdup(entry->d_name);
+            matches = realloc( matches, match_count * sizeof(char *));
+            matches[match_count - 1] = ft_strdup(manager, entry->d_name);
         }
     }
     closedir(dir);
 
     if (match_count == 0)
+    {
+        gc_free(manager, matches); // Free matches array if no matches
         return; // No matches found
+    }
 
     // Resize the args array to accommodate the new matches
     int old_size = ft_strlen1(*args);
     int new_size = old_size + match_count - 1;
-    *args = resize_args(*args, new_size);
+    *args = realloc( *args, new_size);
 
     // Shift arguments to make room for the new matches
     shift_args(*args, *i, old_size, match_count);
@@ -129,12 +118,12 @@ void replace_wildcard(char ***args, int *i)
     // Insert the new matches
     for (int j = 0; j < match_count; j++)
     {
-        // gc_free((*args)[*i + j]);
         (*args)[*i + j] = matches[j];
     }
 
-    gc_free(matches);
+    gc_free(manager, matches);
 }
+
 
 
 
@@ -189,7 +178,7 @@ void replace_wildcard(char ***args, int *i)
 // }
 
 
-void replace_wildcard_in_args(t_node *head)
+void replace_wildcard_in_args(t_node *head, MemoryManager *manager)
 {
     t_node *current = head;
     while(current != NULL)
@@ -201,7 +190,7 @@ void replace_wildcard_in_args(t_node *head)
             {
                 if (is_wildcard(current->command->args[i]))
                 {
-                    replace_wildcard(&current->command->args, &i);
+                    replace_wildcard(&current->command->args, &i, manager);
                 }
                 i++;
             }
@@ -209,3 +198,4 @@ void replace_wildcard_in_args(t_node *head)
         current = current->next;
     }
 }
+

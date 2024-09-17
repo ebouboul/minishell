@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_v2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/16 23:27:46 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/17 02:36:08 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ char	*gett_env_value(const char *key, t_env *env_list)
 	return (NULL);
 }
 
-char	*find_executable_in_path(char *command, t_env *env_list)
+char	*find_executable_in_path(char *command, t_env *env_list, MemoryManager *gc)
+
 {
 	char	*path_value;
 	char	*executable_path;
@@ -33,22 +34,22 @@ char	*find_executable_in_path(char *command, t_env *env_list)
 	if (command[0] == '.' || command[0] == '/')
 	{
 		if (access(command, X_OK) == 0)
-			return (strdup(command));
+			return (ft_strdup(gc, command));
 		else
 			return (NULL);
 	}
 	path_value = gett_env_value("PATH", env_list);
 	if (path_value == NULL)
 		return (NULL);
-	paths = split_path(path_value);
-	executable_path = find_executable(command, paths);
+	paths = split_path(path_value, gc);
+	executable_path = find_executable(command, paths, gc);
 	i = 0;
 	while (paths && paths[i] != NULL)
 	{
-		gc_free(paths[i]);
+		gc_free(gc, paths[i]);
 		i++;
 	}
-	gc_free(paths);
+	gc_free(gc, paths);
 	return (executable_path);
 }
 
@@ -71,7 +72,7 @@ int	check_file_permissions(char *file)
 	return (0);
 }
 
-int	execute_command(char *executable_path, char **args, t_env *env_list)
+int	execute_command(char *executable_path, char **args, t_env *env_list, MemoryManager *gc)
 {
 	pid_t		pid;
 	int			status;
@@ -80,7 +81,7 @@ int	execute_command(char *executable_path, char **args, t_env *env_list)
 	pid = fork();
 	if (pid == 0)
 	{
-		env_array = create_env_array(env_list);
+		env_array = create_env_array(env_list, gc);
 		execve(executable_path, args, env_array);
 		perror("execve");
 		exit(1);
@@ -100,18 +101,18 @@ int	execute_command(char *executable_path, char **args, t_env *env_list)
 	}
 }
 
-int	execute_external(t_command *command, t_env *env_list)
+int	execute_external(t_command *command, t_env *env_list, MemoryManager *gc)
 {
 	char	*executable_path;
 	int		result;
 	int		check_result;
 
-	executable_path = find_executable_in_path(command->args[0], env_list);
+	executable_path = find_executable_in_path(command->args[0], env_list, gc);
 	if (executable_path == NULL)
 	{
 		check_result = check_file_permissions(command->args[0]);
 		if (check_result == 0)
-			executable_path = strdup(command->args[0]);
+			executable_path = ft_strdup(gc, command->args[0]);
 		else if (check_result > 0)
 			return (check_result);
 	}
@@ -120,7 +121,30 @@ int	execute_external(t_command *command, t_env *env_list)
 		fprintf(stderr, "minishell: %s: command not found\n", command->args[0]);
 		return (127);
 	}
-	result = execute_command(executable_path, command->args, env_list);
-	gc_free(executable_path);
+	result = execute_command(executable_path, command->args, env_list, gc);
+	gc_free(gc, executable_path);
 	return (result);
 }
+// {
+// 	char	*executable_path;
+// 	int		result;
+// 	int		check_result;
+
+// 	executable_path = find_executable_in_path(command->args[0], env_list);
+// 	if (executable_path == NULL)
+// 	{
+// 		check_result = check_file_permissions(command->args[0]);
+// 		if (check_result == 0)
+// 			executable_path = strdup(command->args[0]);
+// 		else if (check_result > 0)
+// 			return (check_result);
+// 	}
+// 	if (executable_path == NULL)
+// 	{
+// 		fprintf(stderr, "minishell: %s: command not found\n", command->args[0]);
+// 		return (127);
+// 	}
+// 	result = execute_command(executable_path, command->args, env_list);
+// 	gc_free(executable_path);
+// 	return (result);
+// }

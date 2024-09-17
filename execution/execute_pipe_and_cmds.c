@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe_and_cmds.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:13 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/16 23:27:18 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/17 02:37:08 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ void	handle_child_io(int prev_pipe, int fd[2], t_node *current)
 }
 
 void	handle_child_process(int prev_pipe, int fd[2],
-		t_node *current, t_env **env_list, int *exit_status)
+		t_node *current, t_env **env_list, int *exit_status, MemoryManager *gc)
 {
 	handle_child_io(prev_pipe, fd, current);
-	execute_single_command(current, env_list, exit_status);
+	execute_single_command(current, env_list, exit_status, gc);
 	exit(0);
 }
 
@@ -58,7 +58,7 @@ void	handle_parent_io(int *prev_pipe, int fd[2],
 }
 
 void	handle_pipe_and_multiple_commands(t_node *head, t_env **env_list,
-		int *exit_status)
+		int *exit_status, MemoryManager *gc)
 {
 	t_node	*current;
 	int		fd[2];
@@ -74,7 +74,7 @@ void	handle_pipe_and_multiple_commands(t_node *head, t_env **env_list,
 		setup_pipe(fd);
 		pid = fork();
 		if (pid == 0)
-			handle_child_process(prev_pipe, fd, current, env_list, exit_status);
+			handle_child_process(prev_pipe, fd, current, env_list, exit_status, gc);
 		else if (pid > 0)
 		{
 			handle_parent_io(&prev_pipe, fd, current, &last_pid, pid);

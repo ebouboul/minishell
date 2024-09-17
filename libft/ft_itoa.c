@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 23:44:22 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/08/30 20:38:36 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/17 02:29:06 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static long int	ft_len(int n)
 	return (len);
 }
 
-char	*ft_itoa(int n)
+char	*ft_itoa(int n, MemoryManager *gc)
 {
 	char			*s;
 	long int		len;
@@ -46,7 +46,7 @@ char	*ft_itoa(int n)
 
 	sign = 1;
 	len = ft_len(n);
-	s = (char *)gc_malloc(sizeof(char) * (len + 1));
+	s = (char *)gc_malloc(gc ,sizeof(char) * (len + 1));
 	if (!(s))
 		return (NULL);
 	s[len--] = '\0';

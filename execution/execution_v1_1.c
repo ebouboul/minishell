@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execution_v1_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:02:51 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/16 23:27:30 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/17 02:37:38 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 // NORM=OK! //one func with more 25 lines
-void	handle_builtin_command(t_node *node, t_env **env_list, int *exit_status)
+void	handle_builtin_command(t_node *node, t_env **env_list, int *exit_status, MemoryManager *gc)
 {
 	int	stdout_copy;
 	int	stdin_copy;
@@ -20,15 +20,16 @@ void	handle_builtin_command(t_node *node, t_env **env_list, int *exit_status)
 	stdout_copy = dup(STDOUT_FILENO);
 	stdin_copy = dup(STDIN_FILENO);
 	handle_redirections(node, env_list, exit_status);
-	*exit_status = execute_builtin(node, env_list);
+	*exit_status = execute_builtin(node, env_list, gc);
 	dup2(stdout_copy, STDOUT_FILENO);
 	dup2(stdin_copy, STDIN_FILENO);
 	close(stdout_copy);
 	close(stdin_copy);
 }
 
+
 void	execute_external_command(t_node *node,
-		t_env **env_list, int *exit_status)
+		t_env **env_list, int *exit_status, MemoryManager *gc)
 {
 	pid_t	pid;
 	int		status;
@@ -46,9 +47,9 @@ void	execute_external_command(t_node *node,
 		if (node->command->args[0])
 		{
 			executable_path = find_executable_in_path
-				(node->command->args[0], *env_list);
+				(node->command->args[0], *env_list, gc);
 			if (execve(executable_path,
-					node->command->args, create_env_array(*env_list)) == -1)
+					node->command->args, create_env_array(*env_list, gc)) == -1)
 			{
 				perror("execve");
 				exit(EXIT_FAILURE);
@@ -65,7 +66,7 @@ void	execute_external_command(t_node *node,
 	}
 }
 
-void	execute_single_command(t_node *node, t_env **env_list, int *exit_status)
+void	execute_single_command(t_node *node, t_env **env_list, int *exit_status, MemoryManager *gc)
 {
 	char	*cmd;
 
@@ -73,12 +74,12 @@ void	execute_single_command(t_node *node, t_env **env_list, int *exit_status)
 		return ;
 	cmd = node->command->args[0];
 	if (cmd && is_builtin(cmd))
-		handle_builtin_command(node, env_list, exit_status);
+		handle_builtin_command(node, env_list, exit_status, gc);
 	else
-		execute_external_command(node, env_list, exit_status);
+		execute_external_command(node, env_list, exit_status, gc);
 }
 
-char	*find_executable(const char *command, char **paths)
+char	*find_executable(const char *command, char **paths, MemoryManager *gc)
 {
 	int		i;
 	char	*full_path;
@@ -86,16 +87,17 @@ char	*find_executable(const char *command, char **paths)
 	i = 0;
 	while (paths[i] != NULL)
 	{
-		full_path = gc_malloc(strlen(paths[i]) + strlen(command) + 2);
-		full_path = ft_strjoin(paths[i], "/");
-		full_path = ft_strjoin(full_path, command);
+		full_path = gc_malloc(gc, strlen(paths[i]) + strlen(command) + 2);
+		full_path = ft_strjoin(paths[i], "/", gc);
+		full_path = ft_strjoin(full_path, command, gc);
 		if (access(full_path, X_OK) == 0)
 			return (full_path);
-		gc_free(full_path);
+		gc_free(gc, full_path);
 		i++;
 	}
 	return (NULL);
 }
+
 
 int	count_env_variables(t_env *env_list)
 {
