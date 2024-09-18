@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 06:57:26 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 20:11:09 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 00:13:42 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,6 @@ char	**get_key_value_for_plus(MemoryManager *manager, char *var)
 	char	**key_value;
 
 	key_value = (char **)gc_malloc(manager, 3 * sizeof(char *));
-	if (key_value == NULL)
-	{
-		perror("Memory allocation failed\n");
-		exit(1);
-	}
 	key_value[0] = ft_strndup(manager, var, ft_strchr(var, '+') - var);
 	key_value[1] = ft_strdup(manager, ft_strchr(var, '+') + 2);
 	key_value[2] = NULL;
@@ -62,7 +57,7 @@ void	print_export_values(char **keys, char **values)
 	i = 0;
 	while (keys[i] != NULL)
 	{
-		if (values[i] == NULL)
+		if (values[i] == NULL || values[i][0] == 16)
 			printf("declare -x %s\n", keys[i]);
 		else if (ft_strcmp(keys[i], "_") != 0)
 			printf("declare -x %s=\"%s\"\n", keys[i], values[i]);
@@ -117,6 +112,7 @@ void	add_new_env_entry(MemoryManager *manager, char *key, char *value, t_env **e
 	current_env->next = (t_env *)gc_malloc(manager, sizeof(t_env));
 	current_env->next->env = (env *)gc_malloc(manager, sizeof(env));
 	current_env->next->env->key = ft_strdup(manager, key);
+	if (value != NULL)
 	current_env->next->env->value = ft_strdup(manager, value);
 	current_env->next->next = NULL;
 }
@@ -217,7 +213,7 @@ int	check_export(char *args)
 	return (0);
 }
 
-void	handle_export_arg(MemoryManager *manager, char *arg, t_env **env_list)
+int	handle_export_arg(MemoryManager *manager, char *arg, t_env **env_list)
 {
 	char	**key_value;
 
@@ -231,7 +227,9 @@ void	handle_export_arg(MemoryManager *manager, char *arg, t_env **env_list)
 		else
 			handle_export_key_value(manager, key_value[0], key_value[1], env_list);
 		gc_free(manager, key_value);
+		return (0);
 	}
+	return (1);
 }
 
 int	ft_export(t_command *command, t_env **env_list, MemoryManager *manager)
@@ -246,7 +244,8 @@ int	ft_export(t_command *command, t_env **env_list, MemoryManager *manager)
 	i = 1;
 	while (command->args[i] != NULL)
 	{
-		handle_export_arg(manager, command->args[i], env_list);
+		if (handle_export_arg(manager, command->args[i], env_list) == 1)
+			return (1);
 		i++;
 	}
 	return (0);

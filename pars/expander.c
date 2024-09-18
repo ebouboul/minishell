@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 16:13:42 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 20:14:20 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 00:14:04 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,6 @@ char	**resize_args(char **args, int new_size, MemoryManager *gc)
 	int		i;
 
 	new_args = (char **)gc_malloc(gc, (new_size + 1) * sizeof(char *));
-	if (!new_args)
-	{
-		perror("Memory allocation failed\n");
-		exit(1);
-	}
 	i = 0;
 	while (i < new_size)
 	{

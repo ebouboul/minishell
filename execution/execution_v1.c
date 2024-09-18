@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:18 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/17 18:16:03 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 03:43:13 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ int	is_heredoc(t_node *node)
 void	execute_heredoc(t_node *current, t_env **env_list, int *exit_status, MemoryManager *gc)
 {
 	pid_t	pid;
-	int		status;
 
 	pid = fork();
 	if (pid == -1)
@@ -42,10 +41,10 @@ void	execute_heredoc(t_node *current, t_env **env_list, int *exit_status, Memory
 	else if (pid == 0)
 	{
 		handle_heredoc(current, env_list, exit_status, gc);
-		exit(EXIT_SUCCESS);
+		exit(*exit_status);
 	}
 	else
-		waitpid(pid, &status, 0);
+		ft_waitpid(pid, exit_status);
 }
 
 
@@ -58,20 +57,21 @@ void	execute_heredoc(t_node *current, t_env **env_list, int *exit_status, Memory
 void	execute_cmds(t_node *head, t_env **env_list, int *exit_status, MemoryManager *gc)
 {
 	t_node	*current;
+	(void)exit_status;
 
 	current = head;
 	while (current)
 	{
 		if (is_heredoc(current))
-			execute_heredoc(current, env_list, exit_status, gc);
+			execute_heredoc(current, env_list, &head->exit_status, gc);
 		else if (current->next)
 		{
-			handle_pipe_and_multiple_commands(current, env_list, exit_status, gc);
+			handle_pipe_and_multiple_commands(current, env_list, &head->exit_status, gc);
 			break ;
 		}
 		else
 		{
-			execute_single_command(current, env_list, exit_status, gc);
+			execute_single_command(current, env_list, &head->exit_status, gc);
 		}
 		current = current->next;
 	}

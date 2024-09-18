@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:14:04 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 20:14:05 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 00:14:23 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 TokenNode *create_node(TokenInfo token, MemoryManager *manager)
 {
     TokenNode *new_node = (TokenNode *)gc_malloc(manager, sizeof(TokenNode));
-    if (new_node == NULL)
-    {
-        perror("Memory allocation failed\n");
-        exit(1);
-    }
     new_node->info = token;
     new_node->next = NULL;
     return new_node;
@@ -70,10 +65,6 @@ int is_special_redc(char c)
 char *ft_strjoin1(char c, char *s, MemoryManager *manager)
 {
     char *result = (char*)gc_malloc(manager, strlen(s) + 2);
-    if (result == NULL) {
-        perror("Memory allocation failed\n");
-        exit(1);
-    }
     result[0] = c;
     strcpy(result + 1, s);
     return result;

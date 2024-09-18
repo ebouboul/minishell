@@ -134,6 +134,7 @@ void    expansion_process(t_node **head, t_env *env_list, int exit_status, Memor
 void remove_all_quotes_and_join(char *input);
 int ft_strlen1(char **str);
 int is_numeric(const char *str);
+char	*remove_closed_quotes(const char *input, MemoryManager *manager);
 char *remove_all_quotes2(const char *str, MemoryManager *manager);
 void remove_quotes_from_first_and_last_only(char *input);
 
@@ -152,6 +153,12 @@ int ft_exit(t_command *command, MemoryManager *manager);
 int	ft_unset(t_command *command, t_env **env_list, MemoryManager *manager);
 int ft_cd(t_command *command, t_env **env_list, MemoryManager *manager);
 void replace_env_value(t_env *env_list, char *key, char *value, MemoryManager *manager);
+
+// utils functions:
+void print_error11(char *command, char *error);
+void ft_waitpid(pid_t last_pid, int *exit_status);
+
+
 
 // execution functions v1:
 
@@ -217,8 +224,8 @@ void redirect_input(const char *str);
 // redirectionsP2 functions
 
 void handle_single_redirection(t_redirect *redirect);
-void handle_redirections(t_node *node, t_env **env_list, int *exit_status);
-void wait_for_children(pid_t last_pid);
+int handle_redirections(t_node *node, t_env **env_list, int *exit_status);
+void wait_for_children(pid_t last_pid, int *exit_status);
 
 //execute_pipe_and_cmds functions
 

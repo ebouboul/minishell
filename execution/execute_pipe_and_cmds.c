@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:13 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/17 02:37:08 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 01:36:35 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ void	handle_child_process(int prev_pipe, int fd[2],
 {
 	handle_child_io(prev_pipe, fd, current);
 	execute_single_command(current, env_list, exit_status, gc);
-	exit(0);
+
+	exit(*exit_status);
 }
 
 void	handle_parent_io(int *prev_pipe, int fd[2],
@@ -67,7 +68,7 @@ void	handle_pipe_and_multiple_commands(t_node *head, t_env **env_list,
 	pid_t	pid;
 
 	current = head;
-	prev_pipe = STDIN_FILENO;
+	prev_pipe = dup(STDIN_FILENO);
 	last_pid = -1;
 	while (current != NULL)
 	{
@@ -83,5 +84,5 @@ void	handle_pipe_and_multiple_commands(t_node *head, t_env **env_list,
 		else
 			return ;
 	}
-	wait_for_children(last_pid);
+	wait_for_children(last_pid, exit_status);
 }

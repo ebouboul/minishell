@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:02:51 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/17 02:37:38 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 03:54:22 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,17 @@ void	handle_builtin_command(t_node *node, t_env **env_list, int *exit_status, Me
 
 	stdout_copy = dup(STDOUT_FILENO);
 	stdin_copy = dup(STDIN_FILENO);
-	handle_redirections(node, env_list, exit_status);
+	*exit_status = handle_redirections(node, env_list, exit_status);
+	if (*exit_status == 1)
+		return ;
 	*exit_status = execute_builtin(node, env_list, gc);
+	// printf("exit status: %d\n", *exit_status);
 	dup2(stdout_copy, STDOUT_FILENO);
 	dup2(stdin_copy, STDIN_FILENO);
 	close(stdout_copy);
 	close(stdin_copy);
+
+	// ask why we need to do this
 }
 
 
@@ -32,7 +37,6 @@ void	execute_external_command(t_node *node,
 		t_env **env_list, int *exit_status, MemoryManager *gc)
 {
 	pid_t	pid;
-	int		status;
 	char	*executable_path;
 
 	pid = fork();
@@ -43,27 +47,25 @@ void	execute_external_command(t_node *node,
 	}
 	else if (pid == 0)
 	{
-		handle_redirections(node, env_list, exit_status);
+		signal(SIGQUIT, SIG_DFL);
+		if (handle_redirections(node, env_list, exit_status) == 1)
+			exit(1);		
 		if (node->command->args[0])
 		{
 			executable_path = find_executable_in_path
 				(node->command->args[0], *env_list, gc);
-			if (execve(executable_path,
-					node->command->args, create_env_array(*env_list, gc)) == -1)
+			if (executable_path == NULL || executable_path[0] == '.' )
+				*exit_status = check_file_permissions(node->command->args[0]);
+			if (execve(executable_path, node->command->args, create_env_array(*env_list, gc)) == -1)
 			{
-				perror("execve");
-				exit(EXIT_FAILURE);
+				perror(node->command->args[0]);
+				*exit_status = 127;
+				exit(127);
 			}
 		}
 	}
 	else
-	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			*exit_status = WEXITSTATUS(status);
-		else
-			*exit_status = 1;
-	}
+		ft_waitpid(pid, exit_status);
 }
 
 void	execute_single_command(t_node *node, t_env **env_list, int *exit_status, MemoryManager *gc)
@@ -95,6 +97,8 @@ char	*find_executable(const char *command, char **paths, MemoryManager *gc)
 		gc_free(gc, full_path);
 		i++;
 	}
+	print_error11((char *)command, "command not found");
+	exit(127);
 	return (NULL);
 }
 

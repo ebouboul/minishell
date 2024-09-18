@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 20:14:25 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 00:14:49 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,6 @@
 char *ft_strndup(MemoryManager *manager, char *s, int n)
 {
     char *result = (char *)gc_malloc(manager, n + 1);
-    if (result == NULL) {
-        perror("Memory allocation failed\n");
-        exit(1);
-    }
     strncpy(result, s, n);
     result[n] = '\0';
     return result;
@@ -69,17 +65,13 @@ void fill_env_list(MemoryManager *manager, char **envv, t_env *env_list)
 
 char **get_key_value(MemoryManager *manager, char *var)
 {
-    char **key_value = (char **)gc_malloc(manager, 3 * sizeof(char *));
-    if (!key_value)
-    {
-        perror("Memory allocation failed\n");
-        exit(1);
-    }
-
+    char **key_value;
+    
+    key_value = (char **)gc_malloc(manager, 3 * sizeof(char *));
     if (ft_strchr(var, '=') == NULL)
     {
         key_value[0] = ft_strdup(manager, var);
-        key_value[1] = NULL;
+        key_value[1] = ft_strdup(manager, "\20");
         key_value[2] = NULL;
         return key_value;
     }
@@ -95,8 +87,9 @@ void print_env_list(t_env *env_list)
     current = env_list;
     while(current != NULL)
     {
-        if (current->env->value != NULL || (current->env->value && current->env->value[0] == '\0'))
-        printf("%s=%s\n", current->env->key, current->env->value);
+        if (current->env->value != NULL && ( current->env->value[0] != '\0')
+            && ( current->env->value[0] != 16))
+        printf("%s=%s \n", current->env->key, current->env->value);
         current = current->next;
        
     }

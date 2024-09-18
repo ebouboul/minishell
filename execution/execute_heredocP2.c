@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:53 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/17 18:23:45 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 03:40:13 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	execute_command_with_heredoc(t_node *temp, t_env **env_list,
 	int *exit_status, const char *temp_file, MemoryManager *gc)
 {
-	int		status;
 	int		fd;
 	pid_t	pid;
 
@@ -35,10 +34,10 @@ void	execute_command_with_heredoc(t_node *temp, t_env **env_list,
 			if (temp->command && temp->command->args && temp->command->args[0])
 				execute_single_command(temp, env_list, exit_status, gc);
 		}
-		exit(EXIT_FAILURE);
+		exit(*exit_status);
 	}
 	else
-		waitpid(pid, &status, 0);
+		ft_waitpid(pid, exit_status);
 }
 
 
@@ -68,4 +67,15 @@ void	handle_heredoc(t_node *node, t_env **env_list, int *exit_status, MemoryMana
 	}
 	unlink(temp_file);
 	free(temp_file);
+}
+
+void ft_waitpid(pid_t last_pid, int *exit_status)
+{
+	int status;
+
+	waitpid(last_pid, &status, 0);
+	if (WIFEXITED(status))
+		*exit_status = WEXITSTATUS(status);
+	if (WIFSIGNALED(status))
+		*exit_status = 128 + WTERMSIG(status);
 }
