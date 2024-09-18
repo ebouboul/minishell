@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:18 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/18 03:43:13 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:16:43 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	execute_heredoc(t_node *current, t_env **env_list, int *exit_status, Memory
 	else if (pid == 0)
 	{
 		handle_heredoc(current, env_list, exit_status, gc);
-		exit(*exit_status);
+		my_exit(*exit_status, gc);
 	}
 	else
 		ft_waitpid(pid, exit_status);

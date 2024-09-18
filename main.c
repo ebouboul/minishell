@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:17:11 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 20:17:12 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:53:25 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,6 @@ t_node *prepare_execution(TokenInfo *tokens, t_env *env_list, int exit_status, M
 {
     TokenNode *list_head = ArrayIntoNodes(tokens, manager);
     t_node *node = convert_to_node_list(list_head, manager);
-    (void)env_list;
-    (void)exit_status;
 
     expansion_process(&node, env_list, exit_status, manager);
     
@@ -130,6 +128,32 @@ void increment_shlvl(t_env *env_list, MemoryManager *manager)
         current = current->next;
     }
 }
+void whiling(t_node *node, t_env *env_list, MemoryManager *manager)
+{
+    char *input;
+    input = NULL;
+    while (1) 
+    {
+        input = read_user_input();
+        if (input == NULL) 
+        {
+            write(1, "exit\n", 5);
+            break;
+        }
+        if (!input || is_space1(input) == 1)
+            continue;
+        if(validate_input(input, &node->exit_status))
+        {
+            TokenInfo *tokens;
+            tokens = process_input(input, &node->exit_status, manager);
+            free(input);
+            if (!tokens)
+                continue;
+        node = prepare_execution(tokens, env_list, node->exit_status, manager);
+        execute_cmds(node, &env_list, &node->exit_status, manager);
+        }
+    }
+}
 
 int main(int argc, char **argv, char **env) 
 {
@@ -142,47 +166,27 @@ int main(int argc, char **argv, char **env)
     t_env *env_list = (t_env*)gc_malloc(manager, sizeof(t_env));
     t_node *node = (t_node*)gc_malloc(manager, sizeof(t_node));
     node->exit_status = 0;
-    char *input = NULL;
     fill_env_list(manager, env, env_list);
     increment_shlvl(env_list, manager);
     signal(SIGQUIT, SIG_IGN);
+    signal(SIGINT, handler);
     struct sigaction sa;
     sa.sa_handler = handler;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = SA_RESTART;
-    if (sigaction(SIGINT, &sa, NULL) == -1)
-    {
-        perror("sigaction");
-        return 1;
-    }
-
-    while (1) 
-    {
-        input = read_user_input();
-        if (input == NULL) 
-        {
-            write(1, "exit\n", 5);
-            break;
-        }
-
-        if (!input || is_space1(input) == 1)
-            continue;
-        if(validate_input(input, &node->exit_status))
-        {
-            TokenInfo *tokens = process_input(input, &node->exit_status, manager);
-            free(input);
-            if (!tokens)
-                continue;
-
-
-            node = prepare_execution(tokens, env_list, node->exit_status, manager);
-            // printf("exit status: %d\n", node->exit_status);
-            execute_cmds(node, &env_list, &node->exit_status, manager);
-        }
-    }
+    // if (sigaction(SIGINT, &sa, NULL) == -1)
+    // {
+    //     perror("sigaction");
+    //     return 1;
+    // }
+    whiling(node, env_list, manager);
     gc_free_all(manager);
+    free(manager);
+    rl_clear_history();
     return 0;
 }
+
+
 
 
 

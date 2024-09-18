@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:13 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/18 01:36:35 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:15:53 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	handle_child_process(int prev_pipe, int fd[2],
 	handle_child_io(prev_pipe, fd, current);
 	execute_single_command(current, env_list, exit_status, gc);
 
-	exit(*exit_status);
+	my_exit(*exit_status, gc);
 }
 
 void	handle_parent_io(int *prev_pipe, int fd[2],

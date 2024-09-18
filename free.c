@@ -70,6 +70,7 @@ void gc_free_all(MemoryManager *manager)
         current = next_node;
     }
     manager->head = NULL; // Reset the head pointer
+      // Free the manager itself
 }
 
 // Function to free a specific memory block

@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/18 03:45:51 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:31:15 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ char	*find_executable_in_path(char *command, t_env *env_list, MemoryManager *gc)
 void print_error11(char *command, char *error)
 {
 	write(2, "minishell: ", 11);
+	if (command)
 	write(2, command, strlen(command));
 	write(2, ": ", 2);
 	write(2, error, strlen(error));
@@ -82,6 +83,6 @@ int	check_file_permissions(char *file)
 		print_error11(file, "Permission denied");
 		result = 126;
 	}
-		exit(result);
+		my_exit(result, NULL);
 	return (0);
 }

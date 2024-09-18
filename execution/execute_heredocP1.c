@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/18 03:14:57 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 19:02:33 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char	**process_heredoc_input(const char *delimiter, MemoryManager *gc)
 
 	i = 0;
 	args = (char **)gc_malloc(gc, sizeof(char *) * 100);
-	signal(SIGINT, handler_c);
+	// signal(SIGINT, handler_c);
 	while (1)
 	{
 		line = readline("> ");

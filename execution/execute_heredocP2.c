@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:53 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/18 03:40:13 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:15:45 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	execute_command_with_heredoc(t_node *temp, t_env **env_list,
 			if (temp->command && temp->command->args && temp->command->args[0])
 				execute_single_command(temp, env_list, exit_status, gc);
 		}
-		exit(*exit_status);
+		my_exit(*exit_status, gc);
 	}
 	else
 		ft_waitpid(pid, exit_status);

@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:02:51 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/18 03:54:22 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:16:32 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	execute_external_command(t_node *node,
 	{
 		signal(SIGQUIT, SIG_DFL);
 		if (handle_redirections(node, env_list, exit_status) == 1)
-			exit(1);		
+			my_exit(*exit_status, gc);	
 		if (node->command->args[0])
 		{
 			executable_path = find_executable_in_path
@@ -60,7 +60,7 @@ void	execute_external_command(t_node *node,
 			{
 				perror(node->command->args[0]);
 				*exit_status = 127;
-				exit(127);
+				my_exit(*exit_status, gc);
 			}
 		}
 	}
@@ -98,7 +98,7 @@ char	*find_executable(const char *command, char **paths, MemoryManager *gc)
 		i++;
 	}
 	print_error11((char *)command, "command not found");
-	exit(127);
+	my_exit(127, gc);
 	return (NULL);
 }
 

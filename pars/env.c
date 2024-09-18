@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/18 00:14:49 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:26:09 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,4 +93,12 @@ void print_env_list(t_env *env_list)
         current = current->next;
        
     }
+}
+void my_exit(int status, MemoryManager *manager)
+{
+    if (manager)
+    gc_free_all(manager);
+    free(manager);
+    rl_clear_history();
+    exit(status);
 }

@@ -157,6 +157,7 @@ void replace_env_value(t_env *env_list, char *key, char *value, MemoryManager *m
 // utils functions:
 void print_error11(char *command, char *error);
 void ft_waitpid(pid_t last_pid, int *exit_status);
+void my_exit(int status, MemoryManager *manager);
 
 
 
