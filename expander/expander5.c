@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:46:48 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 19:46:53 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/19 21:11:21 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ int	is_last_dollar(char *str, char c)
 void	expand_variable(char *arg, char **new_arg, int *j, t_env *env_list,
 		int *k, MemoryManager *gc)
 {
-	char *var_name;
-	char *value;
+	char	*var_name;
+	char	*value;
 
 	if (arg == NULL || *j >= (int)ft_strlen(arg))
 		return ;
