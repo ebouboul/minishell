@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 03:34:20 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 03:39:26 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/19 19:51:48 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,10 @@ int	is_quote(char c)
 int	is_quote2(char c)
 {
 	return (c == '"' || c == '\'');
+}
+int	is_dollar_only(char *str)
+{
+	if ((str[0] == '$' && str[1] == '\0' ))
+		return (1);
+	return (0);
 }

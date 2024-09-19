@@ -162,6 +162,47 @@ char	*remove_closed_quotes(const char *input, MemoryManager *manager);
 char *remove_all_quotes2(const char *str, MemoryManager *manager);
 void remove_quotes_from_first_and_last_only(char *input);
 
+
+
+// expander functions
+
+char    *get_env_value3(t_env *env_list, char *key);
+int     ft_strlen1(char **str);
+char    **resize_args(char **args, int new_size, MemoryManager *gc);
+int     dollar_position(char *str);
+void    remove_args(char **args, int i);
+int     in_quotes(char *str, int i, char c);
+int     dstrchr2(char *s, char c, int *i);
+char    *dstrchr(char *s, char c, int *flag);
+void    append_char(char c, char **new_arg, MemoryManager *gc);
+char    *ft_charjoin(char *s, char c, MemoryManager *gc);
+int     is_quot1e(char c);
+char    *extract_var_name(char *arg, int *j, MemoryManager *gc);
+char    *get_variable_value(t_env *env_list, char *var_name, MemoryManager *gc);
+void    append_expanded_value(char **new_arg, char *value, MemoryManager *gc);
+int     is_last_dollar(char *str, char c);
+void    expand_variable(char *arg, char **new_arg, int *j, t_env *env_list, int *k, MemoryManager *gc);
+void    update_args(char **args, char *new_arg, int i);
+int     get_arg_size(char **args);
+void    shift_args(char **args, int i, int original_size, int num_splits);
+void    split_and_remove_quotes(char ***args, char **split_args, int i, int num_splits);
+void    handle_splitting(char ***args, int i, MemoryManager *gc);
+int     is_single_qupte_after_dollar(char *str);
+int     no_expansion_needed(char *arg);
+void    handle_exit_status(char **new_arg, int *j, int exit_status, MemoryManager *gc);
+void    handle_expansion(char **args, int i, t_env *env_list, int exit_status, int *k, MemoryManager *gc);
+int     is_dollar_only(char *str);
+int     is_qouted(char *str);
+void    change_qoutes1(char *str);
+void    change_qoutes(char *str);
+int     double_quotes(const char *str);
+void    process_arguments(t_command *current_command, t_env *env_list, int exit_status, MemoryManager *gc);
+void    exp_Reddd(char **args, t_env *env_list, int exit_status, MemoryManager *gc);
+void    expand_redirect(t_redirect **redirect, t_env *env_list, int exit_status, MemoryManager *gc);
+int     need_expansion(char *str);
+void    expan_herdoc(char **args, t_env *env_list, int exit_status, MemoryManager *gc);
+
+
 // builtins functions:
 
 int is_builtin(char *command);
