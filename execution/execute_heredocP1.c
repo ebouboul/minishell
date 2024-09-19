@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/18 19:02:33 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 22:13:15 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	handle_single_heredoc(t_redirect *redirect, const char *temp_file,
 	int		fd;
 	char	**args;
 	char	*str;
-
+	
 	str = remove_all_quotes2(redirect->str, gc);
 	fd = open_temp_file(temp_file, O_WRONLY | O_CREAT | O_TRUNC);
 	if (fd != -1)

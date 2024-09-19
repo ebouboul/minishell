@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:17:11 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/18 18:53:25 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/19 03:11:23 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ TokenInfo *process_input(char *input, int *exit_status, MemoryManager *manager)
     tokens = tokenizer(inp, manager);
     if (!tokens) 
         return NULL;
-    TokenNode *list_head = ArrayIntoNodes(tokens, manager);
+    TokenNode *list_head = arrayintonodes(tokens, manager);
     if (checking(list_head) == 2)
     {
         *exit_status = 2;
@@ -97,7 +97,7 @@ TokenInfo *process_input(char *input, int *exit_status, MemoryManager *manager)
 
 t_node *prepare_execution(TokenInfo *tokens, t_env *env_list, int exit_status, MemoryManager *manager)
 {
-    TokenNode *list_head = ArrayIntoNodes(tokens, manager);
+    TokenNode *list_head = arrayintonodes(tokens, manager);
     t_node *node = convert_to_node_list(list_head, manager);
 
     expansion_process(&node, env_list, exit_status, manager);
@@ -134,7 +134,9 @@ void whiling(t_node *node, t_env *env_list, MemoryManager *manager)
     input = NULL;
     while (1) 
     {
+        ig_signal(node, 1);
         input = read_user_input();
+        ig_signal(node, 3);
         if (input == NULL) 
         {
             write(1, "exit\n", 5);
@@ -168,17 +170,6 @@ int main(int argc, char **argv, char **env)
     node->exit_status = 0;
     fill_env_list(manager, env, env_list);
     increment_shlvl(env_list, manager);
-    signal(SIGQUIT, SIG_IGN);
-    signal(SIGINT, handler);
-    struct sigaction sa;
-    sa.sa_handler = handler;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_RESTART;
-    // if (sigaction(SIGINT, &sa, NULL) == -1)
-    // {
-    //     perror("sigaction");
-    //     return 1;
-    // }
     whiling(node, env_list, manager);
     gc_free_all(manager);
     free(manager);

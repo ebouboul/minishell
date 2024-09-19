@@ -6,21 +6,11 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:27:35 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 20:32:51 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/19 03:41:17 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	is_quote(char c)
-{
-	return (c == '\'' || c == '"');
-}
-
-int	is_quote2(char c)
-{
-	return (c == '"' || c == '\'');
-}
 
 char	*remove_closed_quotes(const char *input, MemoryManager *manager)
 {
@@ -99,4 +89,31 @@ void	remove_quotes_and_join(t_node *head, MemoryManager *manager)
 		}
 		current = current->next;
 	}
+}
+
+void	remove_closed(char *input)
+{
+	int		i;
+	int		j;
+	char	quote;
+
+	i = 0;
+	j = 0;
+	while (input[i] != '\0')
+	{
+		if (is_quote2(input[i]))
+		{
+			quote = input[i];
+			i++;
+			while (input[i] != '\0' && input[i] != quote)
+				input[j++] = input[i++];
+			if (input[i] == quote)
+				i++;
+		}
+		else
+		{
+			input[j++] = input[i++];
+		}
+	}
+	input[j] = '\0';
 }

@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:10 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/18 02:30:21 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/19 02:00:58 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,50 @@ void	handle_single_redirection(t_redirect *redirect)
 		redirect_output(redirect->str, O_WRONLY | O_CREAT | O_APPEND);
 	else if (redirect->flag == 3)
 		redirect_input(redirect->str);
-	else
-	{
-		fprintf(stderr, "Unknown redirection type\n");
-		exit(EXIT_FAILURE);
-	}
 }
-int ambigous_redirect(char *str)
+
+int is_empty_in_qotes(char *str)
 {
-	if (ft_strchr(str, ' ') || ft_strchr(str, '\t') || ft_strchr(str, '\n') 
-	|| ft_strchr(str, '\v') || ft_strchr(str, '\f') || ft_strchr(str, '\r')
-	|| ft_strlen(str) == 0)
+	int i;
+	i = 0;
+	while (str[i])
 	{
-		print_error11(str, "ambiguous redirect");
+		if (str[i] == '"' || str[i] == '\'')
+		{
+			i++;
+			break;
+		}
+		i++;
+	}
+	while (str[i] && str[i] != '"' && str[i] != '\'')
+	{
+		if (str[i] != ' ' && str[i] != '\t' && str[i] != '\n' &&
+			 str[i] != '\v' && str[i] != '\f' && str[i] != '\r')
+			return (1);
+		i++;
+	}
+	
+	return (0);
+}
+
+int ambigous_redirect(char *str, char *old)
+{
+	int flag;
+	if ((ft_strchr(str, '"') || ft_strchr(str, '\'')) && is_empty_in_qotes(str))
+		flag = 1;
+	else
+		flag = 0;
+	remove_closed(str);
+	if ((ft_strchr(str, ' ') || ft_strchr(str, '\t') || ft_strchr(str, '\n') 
+	|| ft_strchr(str, '\v') || ft_strchr(str, '\f') || ft_strchr(str, '\r')
+	|| ft_strlen(str) == 0) && flag == 0)
+	{
+		print_error11(old, "ambiguous redirect");
 		return (1);
 	}
 	return (0);
 }
+
 
 int	handle_redirections(t_node *node, t_env **env_list, int *exit_status)
 {
@@ -49,7 +76,7 @@ int	handle_redirections(t_node *node, t_env **env_list, int *exit_status)
 	{
 		if (redirect->flag != 8)
 		{
-			if(ambigous_redirect(redirect->str) == 0)
+			if(ambigous_redirect(redirect->str, redirect->old_str) == 0)
 				handle_single_redirection(redirect);
 			else
 				return (1);
@@ -59,33 +86,6 @@ int	handle_redirections(t_node *node, t_env **env_list, int *exit_status)
 	return (0);
 }
 
-// void	wait_for_children(pid_t last_pid)
-// {
-// 	pid_t	wpid;
-// 	int		status;
-
-// 	wpid = waitpid(-1, &status, WUNTRACED);
-// 	while (wpid > 0)
-// 	{
-// 		if (WIFEXITED(status))
-// 		{
-// 			printf("Child process %d exited with status %d\n",
-// 				wpid, WEXITSTATUS(status));
-// 		}
-// 		else if (WIFSIGNALED(status))
-// 		{
-// 			printf("Child process %d killed by signal %d\n",
-// 				wpid, WTERMSIG(status));
-// 		}
-// 	}
-// 	if (wpid == -1 && errno != ECHILD)
-// 	{
-// 		perror("waitpid");
-// 		exit(EXIT_FAILURE);
-// 	}
-// 	if (last_pid > 0)
-// 		waitpid(last_pid, &status, 0);
-// }
 
 void wait_for_children(pid_t last_pid, int *exit_status)
 {

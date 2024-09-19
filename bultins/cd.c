@@ -12,8 +12,6 @@
 
 #include "../minishell.h"
 
-
-
 char	*process_path(char *path, t_env **env_list, MemoryManager *manager)
 {
 	if (ft_strcmp(path, "-") == 0)

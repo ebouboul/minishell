@@ -45,7 +45,7 @@ typedef struct
 {
     char *value;
     TokenType type;
-    int token_count;
+    int c;
 } TokenInfo;
 
 typedef struct TokenNode 
@@ -69,6 +69,7 @@ typedef struct t_env
 typedef struct t_redirect
 {
     char  *str;
+    char *old_str;
     int flag;
     struct t_redirect *next;
 } t_redirect;
@@ -88,12 +89,37 @@ typedef struct t_node
     struct t_node *next;
 } t_node;
 
+typedef struct s_token_data
+{
+    TokenInfo   *tokens;
+    int         c;
+    char        *input;
+    int         i;
+    MemoryManager *manager;
+} TokenData;
 
+
+
+
+
+
+
+
+
+
+
+
+// tokenizer functions
 TokenInfo *tokenizer(char **inputs, MemoryManager *manager);
 TokenType get_token_type(char *c);
+int	get_token_type_from_previous(TokenInfo *previous_token);
+int	create_token(TokenData *data, int type);
+int	skip_spaces(char *input, int index);
+int	handle_special_char(TokenData *data);
+        
 int is_special_char(char c);
 int is_space(char c);
-TokenNode *ArrayIntoNodes(TokenInfo *tokens, MemoryManager *manager);
+TokenNode *arrayintonodes(TokenInfo *tokens, MemoryManager *manager);
 TokenNode *create_node(TokenInfo token, MemoryManager *manager);
 void print_linked_list(TokenNode *head);
 void free_linked_list(TokenNode *head);
@@ -116,15 +142,13 @@ int check_syntax_double_special_charcters(TokenNode *head);
 int check_syntax_special_Face_to_Face(TokenNode *head);
 char *check_value_env(char *str, t_env *head, MemoryManager *manager);
 // void expansion_process(TokenNode *head, t_env *key);
-void replace_quotes_by_spaces(char *input);
-void replace_quotes_by_spaces_and_join(char *input, int closed);
-void remove_quotes(char *input, int closed);
 void remove_quotes_from_first_and_last(char *input);
 int execute_builtin(t_node *head, t_env **env_list, MemoryManager *manager);
 char *ft_strndup(MemoryManager *manager, char *s, int n);
 void add_env_node(t_env **current, char *key, char *value, MemoryManager *manager);
 t_node *convert_to_node_list(TokenNode *token_list, MemoryManager *manager);
 void print_node_list(t_node *node_list);
+void remove_closed(char *input);
 void remove_quotes_and_join(t_node *head, MemoryManager *manager);
 // void unset_env1(char **env, char *input);
 // char **get_key_value(char *var, MemoryManager *manager);
@@ -145,6 +169,7 @@ char	*get_oldpwd_path(t_env **env_list);
 char	*handle_home_shortcut(char *path, t_env **env_list,
 		MemoryManager *manager);
 int ft_export(t_command *command, t_env **env_list, MemoryManager *manager);
+int	handle_export_arg(MemoryManager *manager, char *arg, t_env **env_list);
 char *get_env_value(t_env *env_list, char *key);
 int ft_echo(t_command *command);
 int ft_pwd();
@@ -158,6 +183,19 @@ void replace_env_value(t_env *env_list, char *key, char *value, MemoryManager *m
 void print_error11(char *command, char *error);
 void ft_waitpid(pid_t last_pid, int *exit_status);
 void my_exit(int status, MemoryManager *manager);
+int	is_plus_equal_case(char *arg);
+void	add_new_env_entry(MemoryManager *manager, char *key, char *value,
+		t_env **env_list);
+char	**get_key_value_for_plus(MemoryManager *manager, char *var);
+int	is_special_char(char c);
+int	is_space(char c);
+int	skip_spaces(char *input, int index);
+int	is_quote(char c);
+int	is_quote2(char c);
+
+
+
+
 
 
 
@@ -200,7 +238,11 @@ char	**split_path(const char *path, MemoryManager *gc);
 
 void handler(int signum);
 void handler_c(int signum);
-
+void	ig_signal(t_node *m, int i);
+void	sig_i_herdoc(int sig);
+void	sig_child(void);
+void	sig_herdoc(void);
+void	sig_ignor(void);
 // heredocP1 functions
 
 char* create_temp_filename(MemoryManager *manager);

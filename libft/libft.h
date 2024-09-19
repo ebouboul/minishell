@@ -12,10 +12,10 @@
 
 #ifndef LIBFT_H
 # define LIBFT_H
+# include "../minishell.h"
 # include <stddef.h>
 # include <stdlib.h>
 # include <unistd.h>
-#include "../minishell.h"
 
 typedef struct s_list
 {
@@ -38,8 +38,10 @@ char				*ft_strchr(char *s, int c);
 char				*ft_strrchr(const char *s, int c);
 char				*ft_strnstr(const char *str, const char *to_find,
 						size_t len);
-char				*ft_substr(char const *s, unsigned int start, size_t len, MemoryManager *gc);
-char	*ft_strjoin(char const *s1, char const *s2, MemoryManager *gc);
+char				*ft_substr(char const *s, unsigned int start, size_t len,
+						MemoryManager *gc);
+char				*ft_strjoin(char const *s1, char const *s2,
+						MemoryManager *gc);
 char				*ft_strtrim(char const *s1, char const *set);
 char				**ft_split(char const *s, MemoryManager *gc);
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
@@ -53,14 +55,12 @@ void				*ft_memmove(void *dest, const void *src, size_t n);
 void				*ft_memchr(const void *s, int c, size_t n);
 void				*ft_memcpy(void *dest, const void *src, size_t n);
 char				*set_word(char *word, char const *s, int *i);
-void	set_word2(char *word, char const *s, int *i, int *j);
+void				set_word2(char *word, char const *s, int *i, int *j);
 int					ft_wordcount(char const *s);
 void				ft_wordcount2(char const *s, int *i, int *count);
 int					w_space(char c);
 char				**ft_freespace(char **str, int size);
 char				**ft_split3(char const *s, char c, MemoryManager *gc);
-
-
 
 void				*ft_calloc(size_t nmemb, size_t size, MemoryManager *gc);
 void				ft_striteri(char *s, void (*f)(unsigned int, char *));

@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 23:44:02 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 02:32:06 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/19 03:08:05 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,14 @@ static char	**free_tab(char **tab, size_t j, MemoryManager *gc)
 	return (NULL);
 }
 
-char find_dilm(char *str)
+char	find_dilm(char *str)
 {
-	int i;
+	int	i;
+
 	i = 0;
-	while ( str && str[i])
+	while (str && str[i])
 	{
-		if (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13) )
+		if (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
 			return (str[i]);
 		i++;
 	}
@@ -63,18 +64,16 @@ char find_dilm(char *str)
 char	**ft_split3(char const *s, char c, MemoryManager *gc)
 {
 	char	**tab;
-	size_t	i;
-	size_t	j;
-	size_t	k;
+
+	int (i), (j), (k);
 	if (find_dilm((char *)s) != 0)
 		c = find_dilm((char *)s);
-
-	tab = (char **)gc_malloc(gc ,sizeof(char *) * (ft_countword(s, c) + 1));
+	tab = (char **)gc_malloc(gc, sizeof(char *) * (ft_countword(s, c) + 1));
 	if (!s || !tab)
 		return (NULL);
 	i = 0;
 	j = 0;
-	while (s[i] && j < ft_countword(s, c))
+	while (s[i] && j < (int)ft_countword(s, c))
 	{
 		while (s[i] == c)
 			i++;

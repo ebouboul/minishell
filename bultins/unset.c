@@ -26,7 +26,8 @@ void	free_env_node(t_env *node, MemoryManager *manager)
 	}
 }
 
-void	remove_env_node(t_env **env_list, t_env *node_to_remove, t_env *prev, MemoryManager *manager)
+void	remove_env_node(t_env **env_list, t_env *node_to_remove, t_env *prev,
+		MemoryManager *manager)
 {
 	if (prev == NULL)
 		*env_list = node_to_remove->next;
@@ -48,7 +49,7 @@ void	unset_variable(t_env **env_list, char *key, MemoryManager *manager)
 			&& ft_strcmp(current_env->env->key, "_") != 0)
 		{
 			remove_env_node(env_list, current_env, prev, manager);
-			break;
+			break ;
 		}
 		prev = current_env;
 		current_env = current_env->next;

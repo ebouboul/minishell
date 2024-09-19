@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 16:13:42 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/18 00:14:04 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/19 04:12:00 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -543,11 +543,12 @@ int double_quotes(const char *str)
     {
         if (str[i] == '"')
             in_double_quotes = 1;
-        else if (str[i++] == '$' && in_double_quotes == 1)
+        else if (str[i] == '$')
 		{
         	in_double_quotes = 2;
 			break;
 		}
+		i++;
     }
 	while (str[i] != '\0')
 		if (str[i++] == '\"' && in_double_quotes == 2)
@@ -571,7 +572,7 @@ void	process_arguments(t_command *current_command, t_env *env_list,
 			handle_expansion(args, i, env_list, exit_status, &k, gc);
 			if (args[i] && ft_strchr(args[i], ' ') != NULL 
 				&& ft_strncmp(args[0], "export", 6) != 0
-				&& is_last_dollar(args[i], '$') == 0&& double_quotes(last) == 0)
+				&& is_last_dollar(args[i], '$') == 0 && double_quotes(last) == 0)
 				{
 					handle_splitting(&args, i, gc);
 					break;

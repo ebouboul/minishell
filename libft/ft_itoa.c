@@ -46,7 +46,7 @@ char	*ft_itoa(int n, MemoryManager *gc)
 
 	sign = 1;
 	len = ft_len(n);
-	s = (char *)gc_malloc(gc ,sizeof(char) * (len + 1));
+	s = (char *)gc_malloc(gc, sizeof(char) * (len + 1));
 	if (!(s))
 		return (NULL);
 	s[len--] = '\0';

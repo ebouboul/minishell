@@ -12,7 +12,8 @@
 
 #include "libft.h"
 
-char	*ft_substr(const char *s, unsigned int start, size_t len, MemoryManager *gc)
+char	*ft_substr(const char *s, unsigned int start, size_t len,
+		MemoryManager *gc)
 {
 	char	*str;
 	size_t	a;

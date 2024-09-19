@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:02:51 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/18 18:16:32 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/19 00:32:43 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,17 @@ void	execute_external_command(t_node *node,
 	}
 	else if (pid == 0)
 	{
-		signal(SIGQUIT, SIG_DFL);
+		sig_child();
 		if (handle_redirections(node, env_list, exit_status) == 1)
 			my_exit(*exit_status, gc);	
 		if (node->command->args[0])
 		{
 			executable_path = find_executable_in_path
 				(node->command->args[0], *env_list, gc);
-			if (executable_path == NULL || executable_path[0] == '.' )
+			if (executable_path == NULL)
 				*exit_status = check_file_permissions(node->command->args[0]);
+			// printf("executable path: %s\n", executable_path);
+			// sig_child();
 			if (execve(executable_path, node->command->args, create_env_array(*env_list, gc)) == -1)
 			{
 				perror(node->command->args[0]);

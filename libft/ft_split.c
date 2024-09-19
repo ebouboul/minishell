@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "libft.h"
 
 char	**ft_freespace(char **str, int size)
@@ -38,7 +37,7 @@ void	ft_word_len2(char *str, int *i, int *wordlen)
 	}
 	else
 	{
-		while (str &&  str[*i] != '\"')
+		while (str && str[*i] != '\"')
 		{
 			(*wordlen)++;
 			(*i)++;
@@ -73,7 +72,8 @@ int	ft_word_len(char *s, int i)
 	return (wordlen);
 }
 
-char	**ft_splitall(char **str, char const *s, int countword, MemoryManager *gc)
+char	**ft_splitall(char **str, char const *s, int countword,
+		MemoryManager *gc)
 {
 	int	i;
 	int	j;
@@ -95,7 +95,6 @@ char	**ft_splitall(char **str, char const *s, int countword, MemoryManager *gc)
 	str[j] = NULL;
 	return (str);
 }
-
 
 char	**ft_split(char const *s, MemoryManager *gc)
 {

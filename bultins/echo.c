@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:46:53 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 20:11:11 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/19 02:55:18 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	process_echo_option(char *option)
 
 int	ft_echo(t_command *command)
 {
-	int(option_n), (i), (first_arg);
+	int (option_n), (i), (first_arg);
 	option_n = 0;
 	i = 1;
 	first_arg = 1;
@@ -49,9 +49,8 @@ int	ft_echo(t_command *command)
 	{
 		if (!first_arg)
 			printf(" ");
-		printf("%s", command->args[i]);
+		printf("%s", command->args[i++]);
 		first_arg = 0;
-		i++;
 	}
 	if (!option_n)
 		printf("\n");

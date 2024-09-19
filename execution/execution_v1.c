@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:18 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/18 18:16:43 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/19 02:05:31 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,21 +60,23 @@ void	execute_cmds(t_node *head, t_env **env_list, int *exit_status, MemoryManage
 	(void)exit_status;
 
 	current = head;
-	while (current)
-	{
-		if (is_heredoc(current))
-			execute_heredoc(current, env_list, &head->exit_status, gc);
-		else if (current->next)
+	
+		while (current)
 		{
-			handle_pipe_and_multiple_commands(current, env_list, &head->exit_status, gc);
-			break ;
+			if (is_heredoc(current) || is_heredoc(current->next))
+				execute_heredoc(current, env_list, &head->exit_status, gc);
+			else if (current->next)
+			{
+				handle_pipe_and_multiple_commands(current, env_list, &head->exit_status, gc);
+				break ;
+			}
+			else
+			{
+				execute_single_command(current, env_list, &head->exit_status, gc);
+			}
+			current = current->next;
 		}
-		else
-		{
-			execute_single_command(current, env_list, &head->exit_status, gc);
-		}
-		current = current->next;
-	}
+
 }
 
 

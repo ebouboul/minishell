@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:53 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/18 18:15:45 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/18 22:13:52 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	handle_heredoc(t_node *node, t_env **env_list, int *exit_status, MemoryMana
 
 	temp_file = create_temp_filename(gc);
 	temp = node;
+	signal(SIGINT, handler_c);
 	while (temp)
 	{
 		redirect = temp->command->redirect;
@@ -66,8 +67,7 @@ void	handle_heredoc(t_node *node, t_env **env_list, int *exit_status, MemoryMana
 		break ;
 	}
 	unlink(temp_file);
-	free(temp_file);
-}
+	gc_free(gc, temp_file);}
 
 void ft_waitpid(pid_t last_pid, int *exit_status)
 {

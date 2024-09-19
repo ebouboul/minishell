@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 17:23:01 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 20:14:17 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/19 01:40:21 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,31 +23,33 @@ t_command	*initialize_command(MemoryManager *manager)
 	return (cmd);
 }
 
-void	handle_redirection(MemoryManager *manager, t_command *cmd, TokenNode **current)
+void	handle_redirection(MemoryManager *manager, t_command *cmd,
+		TokenNode **current)
 {
-    t_redirect	*redir;
-    t_redirect	*last_redir;
+	t_redirect	*redir;
+	t_redirect	*last_redir;
 
-    if ((*current)->info.type == TOKEN_REDIRECT_IN
-        || (*current)->info.type == TOKEN_REDIRECT_OUT
-        || (*current)->info.type == TOKEN_APPEND
-        || (*current)->info.type == TOKEN_HEREDOC)
-    {
-        redir = gc_malloc(manager, sizeof(t_redirect));
-        redir->str = ft_strdup(manager, (*current)->next->info.value);
-        redir->flag = (*current)->info.type;
-        redir->next = NULL;        
-        if (cmd->redirect == NULL)
-            cmd->redirect = redir;
-        else
-        {
-            last_redir = cmd->redirect;
-            while (last_redir->next != NULL)
-                last_redir = last_redir->next;
-            last_redir->next = redir;
-        }
-        *current = (*current)->next;
-    }
+	if ((*current)->info.type == TOKEN_REDIRECT_IN
+		|| (*current)->info.type == TOKEN_REDIRECT_OUT
+		|| (*current)->info.type == TOKEN_APPEND
+		|| (*current)->info.type == TOKEN_HEREDOC)
+	{
+		redir = gc_malloc(manager, sizeof(t_redirect));
+		redir->str = ft_strdup(manager, (*current)->next->info.value);
+		redir->old_str = ft_strdup(manager, (*current)->next->info.value);
+		redir->flag = (*current)->info.type;
+		redir->next = NULL;
+		if (cmd->redirect == NULL)
+			cmd->redirect = redir;
+		else
+		{
+			last_redir = cmd->redirect;
+			while (last_redir->next != NULL)
+				last_redir = last_redir->next;
+			last_redir->next = redir;
+		}
+		*current = (*current)->next;
+	}
 }
 
 t_command	*convert_to_command(MemoryManager *manager, TokenNode **current)
