@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe_and_cmds.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 00:39:32 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 00:39:39 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 22:02:19 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	handle_pipe_and_multiple_commands(t_node *head, t_exec_context *ctx)
 	proc_data.last_pid = -1;
 	while (current != NULL)
 	{
+
 		setup_pipe(&proc_data);
 		proc_data.pid = fork();
 		if (proc_data.pid == 0)

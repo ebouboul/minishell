@@ -29,6 +29,29 @@ int	is_heredoc(t_node *node)
 	}
 	return (0);
 }
+// int	is_heredoc(t_node *node)
+// {
+//     t_redirect	*redirect;
+// 	t_node		*current;
+// 	current = node;
+
+//     while (current) // Traverse through all nodes
+//     {
+//         if (current->command && current->command->redirect)
+//         {
+//             redirect = current->command->redirect;
+//             while (redirect)
+//             {
+//                 if (redirect->flag == 8) // Check if the redirect is a heredoc
+//                     return (1);
+//                 redirect = redirect->next;
+//             }
+//         }
+//         current = current->next; // Move to the next node in the list
+//     }
+//     return (0); // No heredoc found in any node
+// }
+
 
 void	execute_heredoc(t_node *current, t_env **env_list, int *exit_status,
 		MemoryManager *gc)
