@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:57:40 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 02:46:16 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 21:12:22 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	ft_pwd(void)
 	path = getcwd(NULL, 0);
 	if (path == NULL)
 	{
-		printf("pwd: %s\n", strerror(1));
+		print_error11("pwd", strerror(1));
 		return (1);
 	}
 	printf("%s\n", path);

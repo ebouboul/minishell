@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 03:34:20 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 03:36:10 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 20:38:07 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,37 @@ int	is_dollar_only(char *str)
 {
 	if ((str[0] == '$' && str[1] == '\0' ))
 		return (1);
+	return (0);
+}
+
+int	is_space1(char *input)
+{
+	int	i;
+
+	i = 0;
+	while (input[i] != '\0')
+	{
+		if (input[i] > 32)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	count_heredoc(TokenNode *list_head)
+{
+	int			count;
+	TokenNode	*temp;
+
+	count = 0;
+	temp = list_head;
+	while (temp)
+	{
+		if (temp->info.type == TOKEN_HEREDOC)
+			count++;
+		temp = temp->next;
+	}
+	if (count > 16)
+		return (2);
 	return (0);
 }

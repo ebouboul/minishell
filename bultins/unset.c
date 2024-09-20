@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:10:44 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 20:10:58 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 21:12:44 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	ft_unset(t_command *command, t_env **env_list, MemoryManager *manager)
 		return (1);
 	if (command->args[1] == NULL)
 	{
-		printf("unset: not enough arguments\n");
+		print_error11("unset", "too few arguments");
 		return (1);
 	}
 	i = 1;

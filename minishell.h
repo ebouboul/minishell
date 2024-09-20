@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 03:43:09 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 03:44:53 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 21:09:05 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
 
@@ -304,6 +303,18 @@ int						ret_check(TokenNode *current);
 int						is_special_char2(char c);
 int						is_wildcard(char *str);
 int						is_wildcard_in_args(char **args);
+int	is_space1(char *input);
+int	validate_input(char *input, int *exit_status);
+char	*read_user_input(void);
+int	count_heredoc(TokenNode *list_head);
+int	checking(TokenNode *list_head);
+TokenInfo	*process_input(char *input, int *exit_status,
+		MemoryManager *manager);
+t_node	*prepare_execution(TokenInfo *tokens, t_env *env_list, int exit_status,
+		MemoryManager *manager);
+void	increment_shlvl(t_env *env_list, MemoryManager *manager);
+
+
 
 // execution functions v1:
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:38:26 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 20:11:14 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 21:13:40 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,7 @@ char	*get_home_path(t_env **env_list)
 
 	path = get_env_value(*env_list, "HOME");
 	if (path == NULL)
-	{
-		printf("cd: HOME not set\n");
-	}
+		print_error11("cd", "HOME not set");
 	return (path);
 }
 
@@ -67,7 +65,7 @@ int	ft_cd(t_command *command, t_env **env_list, MemoryManager *manager)
 
 	if (command->args[1] && command->args[2])
 	{
-		printf("cd: too many arguments\n");
+		print_error11("cd", "too many arguments");
 		return (1);
 	}
 	path = get_path(command, env_list, manager);
@@ -79,7 +77,7 @@ int	ft_cd(t_command *command, t_env **env_list, MemoryManager *manager)
 		update_env(env_list, oldpwd, manager);
 	else
 	{
-		printf("cd: %s: %s\n", path, strerror(errno));
+		print_error11("cd", strerror(errno));
 		gc_free(manager, oldpwd);
 		return (1);
 	}

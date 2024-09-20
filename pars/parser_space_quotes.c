@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_space_quotes.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 02:11:28 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 02:12:52 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 20:39:28 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,26 @@ char	*add_spaces(char *input, MemoryManager *manager)
 	}
 	new[j] = '\0';
 	return (new);
+}
+
+void	increment_shlvl(t_env *env_list, MemoryManager *manager)
+{
+	t_env	*current;
+	int		value;
+	char	*new_value;
+
+	current = env_list;
+	while (current != NULL)
+	{
+		if (ft_strcmp(current->env->key, "SHLVL") == 0)
+		{
+			value = ft_atoi(current->env->value);
+			value++;
+			new_value = ft_itoa(value, manager);
+			gc_free(manager, current->env->value);
+			current->env->value = new_value;
+			break ;
+		}
+		current = current->next;
+	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:46:53 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 02:55:18 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 21:11:31 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	*handle_home_shortcut(char *path, t_env **env_list,
 	home = get_env_value(*env_list, "HOME");
 	if (home == NULL)
 	{
-		printf("cd: HOME not set\n");
+		print_error11("cd", "HOME not set");
 		return (NULL);
 	}
 	return (ft_strjoin(home, path + 1, manager));
@@ -77,8 +77,6 @@ char	*get_oldpwd_path(t_env **env_list)
 
 	path = get_env_value(*env_list, "OLDPWD");
 	if (path == NULL)
-	{
-		printf("cd: OLDPWD not set\n");
-	}
+		print_error11("cd", "OLDPWD not set");
 	return (path);
 }
