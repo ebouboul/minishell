@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:25:43 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 20:35:15 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 02:43:59 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,20 @@ int	check_special_validity(TokenNode *head)
 		current = current->next;
 	}
 	return (0);
+}
+int	skip_spaces(char *input, int index)
+{
+	while (is_space(input[index]))
+		index++;
+	return (index);
+}
+int	is_space(char c)
+{
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f'
+		|| c == '\v');
+}
+
+int	is_special_char(char c)
+{
+	return (c == '|' || c == '<' || c == '>' || c == '&' || c == ';');
 }

@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:48:18 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 19:48:34 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 01:22:46 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,11 @@ int	dollar_position(char *str)
 
 void	append_char(char c, char **new_arg, MemoryManager *gc)
 {
-	char temp[2] = {c, '\0'};
-	char *old_arg;
+	char	temp[2];
+	char	*old_arg;
 
+	temp[0] = c;
+	temp[1] = '\0';
 	old_arg = *new_arg;
 	*new_arg = ft_strjoin(old_arg, temp, gc);
 	gc_free(gc, old_arg);

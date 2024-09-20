@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:44:57 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 19:54:38 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 01:47:01 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,36 +23,47 @@ void	handle_exit_status(char **new_arg, int *j, int exit_status,
 	*j += 2;
 }
 
-void	handle_expansion(char **args, int i, t_env *env_list, int exit_status,
-		int *k, MemoryManager *gc)
+void	handle_special_case(char **new_arg, char *arg, int *j,
+		t_exec_context *context)
+{
+	int		flag;
+
+	flag = 0;
+	if (arg[*j] == '$' && arg[*j + 1] == '?')
+	{
+		handle_exit_status(new_arg, j, *context->exit_status, context->gc);
+		flag = 1;
+	}
+	else if (flag == 0)
+	{
+		expand_variable(arg, new_arg, j, context);
+		flag = 1;
+	}
+}
+
+void	handle_expansion(char **args, int i, t_exec_context *context, int *k)
 {
 	char	*new_arg;
+	int		j;
 
-	int(*j),
-		(flag)
-			j = 0;
-	flag = 0;
-	new_arg = ft_strdup(gc, "");
+	j = 0;
+	context->k = k;
+	new_arg = ft_strdup(context->gc, "");
 	while (args[i][j] != '\0')
 	{
 		if (args[i][j] == '$' && args[i][j + 1] != '\0')
-		{
-			if (args[i][j + 1] == '?')
-				handle_exit_status(&new_arg, &j, exit_status, gc);
-			else if (flag == 0)
-			{
-				expand_variable(args[i], &new_arg, &j, env_list, k, gc);
-				flag = 1;
-			}
-			else
-				append_char(args[i][j++], &new_arg, gc);
-			*k = j;
-		}
+			handle_special_case(&new_arg, args[i], &j, context);
 		else
-		{
-			append_char(args[i][j++], &new_arg, gc);
-			*k = j;
-		}
+			append_char(args[i][j++], &new_arg, context->gc);
+		*k = j;
 	}
 	update_args(args, new_arg, i);
+}
+
+int	should_split_argument(char **args, int i, char *last)
+{
+	return (args[i] && ft_strchr(args[i], ' ') != NULL
+		&& ft_strncmp(args[0], "export", 6) != 0
+		&& is_last_dollar(args[i], '$') == 0
+		&& double_quotes(last) == 0);
 }

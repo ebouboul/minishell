@@ -6,11 +6,12 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/18 22:30:44 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 00:56:10 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 // NORM=OK!
 char	*gett_env_value(const char *key, t_env *env_list)
 {
@@ -23,7 +24,30 @@ char	*gett_env_value(const char *key, t_env *env_list)
 	return (NULL);
 }
 
-char	*find_executable_in_path(char *command, t_env *env_list, MemoryManager *gc)
+int	check_is_directory(char *file, MemoryManager *gc)
+
+{
+	struct stat	file_stat;
+	int			result;
+
+	result = 0;
+	if (stat(file, &file_stat) != 0)
+	{
+		print_error11(file, "No such file or directory");
+		result = 127;
+	}
+	else if (S_ISDIR(file_stat.st_mode))
+	{
+		print_error11(file, "Is a directory");
+		result = 126;
+	}
+	if (result != 0)
+		my_exit(result, gc);
+	return (result);
+}
+
+char	*find_executable_in_path(char *command, t_env *env_list,
+		MemoryManager *gc)
 {
 	char	*path_value;
 	char	*executable_path;
@@ -32,7 +56,7 @@ char	*find_executable_in_path(char *command, t_env *env_list, MemoryManager *gc)
 
 	if (command[0] == '.' || command[0] == '/')
 	{
-		if (access(command, X_OK) == 0)
+		if (check_is_directory(command, gc) == 0)
 			return (ft_strdup(gc, command));
 		else
 			return (NULL);
@@ -52,11 +76,11 @@ char	*find_executable_in_path(char *command, t_env *env_list, MemoryManager *gc)
 	return (executable_path);
 }
 
-void print_error11(char *command, char *error)
+void	print_error11(char *command, char *error)
 {
 	write(2, "minishell: ", 11);
 	if (command)
-	write(2, command, strlen(command));
+		write(2, command, strlen(command));
 	write(2, ": ", 2);
 	write(2, error, strlen(error));
 	write(2, "\n", 1);
@@ -64,25 +88,14 @@ void print_error11(char *command, char *error)
 
 int	check_file_permissions(char *file)
 {
-	struct stat	file_stat;
-	int 		result;
-	
+	int	result;
+
 	result = 0;
-	if (stat(file, &file_stat) != 0)
-	{
-		print_error11(file, "No such file or directory");
-		result = 127;
-	}
-	else if (S_ISDIR(file_stat.st_mode))
-	{
-		print_error11(file, "Is a directory");
-		result = 126;
-	}
-	else if (access(file, X_OK) != 0)
+	if (access(file, X_OK) != 0)
 	{
 		print_error11(file, "Permission denied");
 		result = 126;
 	}
-		my_exit(result, NULL);
+	my_exit(result, NULL);
 	return (0);
 }

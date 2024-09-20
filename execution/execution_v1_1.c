@@ -6,13 +6,15 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:02:51 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/19 00:32:43 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 00:56:39 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 // NORM=OK! //one func with more 25 lines
-void	handle_builtin_command(t_node *node, t_env **env_list, int *exit_status, MemoryManager *gc)
+void	handle_builtin_command(t_node *node, t_env **env_list, int *exit_status,
+		MemoryManager *gc)
 {
 	int	stdout_copy;
 	int	stdin_copy;
@@ -23,21 +25,42 @@ void	handle_builtin_command(t_node *node, t_env **env_list, int *exit_status, Me
 	if (*exit_status == 1)
 		return ;
 	*exit_status = execute_builtin(node, env_list, gc);
-	// printf("exit status: %d\n", *exit_status);
 	dup2(stdout_copy, STDOUT_FILENO);
 	dup2(stdin_copy, STDIN_FILENO);
 	close(stdout_copy);
 	close(stdin_copy);
-
-	// ask why we need to do this
 }
 
+void	handle_child_process1(t_node *node, t_env **env_list, int *exit_status,
+		MemoryManager *gc)
+{
+	char	*executable_path;
+	char	**args;
 
-void	execute_external_command(t_node *node,
-		t_env **env_list, int *exit_status, MemoryManager *gc)
+	args = node->command->args;
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	if (handle_redirections(node, env_list, exit_status) == 1)
+		my_exit(*exit_status, gc);
+	if (args[0])
+	{
+		executable_path = find_executable_in_path(args[0], *env_list, gc);
+		if (executable_path == NULL)
+			*exit_status = check_file_permissions(args[0]);
+		if (execve(executable_path, args,
+				create_env_array(*env_list, gc)) == -1)
+		{
+			perror(args[0]);
+			*exit_status = 127;
+			my_exit(*exit_status, gc);
+		}
+	}
+}
+
+void	execute_external_command(t_node *node, t_env **env_list,
+		int *exit_status, MemoryManager *gc)
 {
 	pid_t	pid;
-	char	*executable_path;
 
 	pid = fork();
 	if (pid == -1)
@@ -47,30 +70,15 @@ void	execute_external_command(t_node *node,
 	}
 	else if (pid == 0)
 	{
-		sig_child();
-		if (handle_redirections(node, env_list, exit_status) == 1)
-			my_exit(*exit_status, gc);	
-		if (node->command->args[0])
-		{
-			executable_path = find_executable_in_path
-				(node->command->args[0], *env_list, gc);
-			if (executable_path == NULL)
-				*exit_status = check_file_permissions(node->command->args[0]);
-			// printf("executable path: %s\n", executable_path);
-			// sig_child();
-			if (execve(executable_path, node->command->args, create_env_array(*env_list, gc)) == -1)
-			{
-				perror(node->command->args[0]);
-				*exit_status = 127;
-				my_exit(*exit_status, gc);
-			}
-		}
+		handle_child_process1(node, env_list, exit_status, gc);
+		exit(*exit_status);
 	}
 	else
 		ft_waitpid(pid, exit_status);
 }
 
-void	execute_single_command(t_node *node, t_env **env_list, int *exit_status, MemoryManager *gc)
+void	execute_single_command(t_node *node, t_env **env_list, int *exit_status,
+		MemoryManager *gc)
 {
 	char	*cmd;
 
@@ -102,20 +110,4 @@ char	*find_executable(const char *command, char **paths, MemoryManager *gc)
 	print_error11((char *)command, "command not found");
 	my_exit(127, gc);
 	return (NULL);
-}
-
-
-int	count_env_variables(t_env *env_list)
-{
-	int		count;
-	t_env	*current;
-
-	count = 0;
-	current = env_list;
-	while (current != NULL)
-	{
-		count++;
-		current = current->next;
-	}
-	return (count);
 }

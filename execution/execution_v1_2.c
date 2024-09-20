@@ -3,26 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   execution_v1_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: peaky <peaky@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:03:37 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/17 02:37:46 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/19 22:45:37 by peaky            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-// norm=OK! //strtok
+
+// norm=OK!
 char	*create_env_string(t_env *env, MemoryManager *gc)
 {
 	char	*env_string;
 
-	env_string = gc_malloc(gc, strlen(env->env->key) + ft_strlen(env->env->value) + 2);
+	env_string = gc_malloc(gc, strlen(env->env->key)
+			+ ft_strlen(env->env->value) + 2);
 	env_string = ft_strdup(gc, env->env->key);
 	env_string = ft_strjoin(env_string, "=", gc);
 	env_string = ft_strjoin(env_string, env->env->value, gc);
 	return (env_string);
 }
-
 
 char	**create_env_array(t_env *env_list, MemoryManager *gc)
 {
@@ -44,7 +45,6 @@ char	**create_env_array(t_env *env_list, MemoryManager *gc)
 	env_array[i] = NULL;
 	return (env_array);
 }
-
 
 int	count_path_components(const char *path)
 {
@@ -74,7 +74,7 @@ char	**split_path(const char *path, MemoryManager *gc)
 	count = count_path_components(path);
 	paths = gc_malloc(gc, sizeof(char *) * (count + 1));
 	i = 0;
-	token = ft_split3(path_copy, ':' , gc);
+	token = ft_split3(path_copy, ':', gc);
 	while (token[i] != NULL)
 	{
 		paths[i] = ft_strdup(gc, token[i]);

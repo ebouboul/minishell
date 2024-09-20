@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/18 22:13:15 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 00:55:49 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ char	*create_temp_filename(MemoryManager *manager)
 	base = "/tmp/minishell_heredoc_";
 	return (ft_strjoin(base, tty + 9, manager));
 }
-
 
 int	open_temp_file(const char *filename, int flags)
 {
@@ -48,7 +47,8 @@ char	**process_heredoc_input(const char *delimiter, MemoryManager *gc)
 
 	i = 0;
 	args = (char **)gc_malloc(gc, sizeof(char *) * 100);
-	// signal(SIGINT, handler_c);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	while (1)
 	{
 		line = readline("> ");
@@ -66,21 +66,21 @@ char	**process_heredoc_input(const char *delimiter, MemoryManager *gc)
 	return (args);
 }
 
-
 void	handle_single_heredoc(t_redirect *redirect, const char *temp_file,
-		t_env **env_list, int *exit_status, MemoryManager *gc)
+		t_exec_context *context)
 {
 	int		fd;
 	char	**args;
 	char	*str;
-	
-	str = remove_all_quotes2(redirect->str, gc);
+
+	str = remove_all_quotes2(redirect->str, context->gc);
 	fd = open_temp_file(temp_file, O_WRONLY | O_CREAT | O_TRUNC);
 	if (fd != -1)
 	{
-		args = process_heredoc_input(str, gc);
+		args = process_heredoc_input(str, context->gc);
 		if (!ft_strchr(redirect->str, '"') && !ft_strchr(redirect->str, '\''))
-			expan_herdoc(args, *env_list, *exit_status, gc);
+			expan_herdoc(args, *context->env_list, *context->exit_status,
+				context->gc);
 		while (args && *args)
 		{
 			write_to_file(fd, *args);

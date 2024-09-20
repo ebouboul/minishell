@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:24:30 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 20:25:10 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 02:07:03 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,14 @@ int	check_quotes_spiclal_chars(TokenNode *head, char c)
 			if (current->info.value[0] == c && current->next != NULL
 				&& current->next->info.type != TOKEN_COMMAND
 				&& current->next->info.type != TOKEN_ARG)
-				return (print_error("Error: special characters not allowed after quotes\n"));
+				return (print_error(
+						"Error: special char not allowed after quotes\n"));
 		}
 		current = current->next;
 	}
 	return (0);
 }
+
 int	check_syntax_double_commands(TokenNode *head)
 {
 	TokenNode	*current;
@@ -48,13 +50,15 @@ int	check_syntax_double_commands(TokenNode *head)
 	}
 	return (0);
 }
+
 int	check_special_chars(TokenNode *head)
 {
 	TokenNode	*current;
 
 	current = head;
 	if (current->info.type == TOKEN_PIPE)
-		return (print_error("Error: Special character at the beginning of the command\n"));
+		return (print_error(
+				"Error: Special character at the beginning of the command\n"));
 	while (current != NULL)
 	{
 		if (current->info.type == TOKEN_PIPE
@@ -64,12 +68,14 @@ int	check_special_chars(TokenNode *head)
 			|| current->info.type == TOKEN_HEREDOC)
 		{
 			if (current->next == NULL)
-				return (print_error("Error: Special character at the end of the command\n"));
+				return (print_error(
+						"Error: Special char at the end of the command\n"));
 		}
 		current = current->next;
 	}
 	return (0);
 }
+
 int	check_syntax_double_special_charcters(TokenNode *head)
 {
 	TokenNode	*current;
@@ -89,9 +95,12 @@ int	check_syntax_double_special_charcters(TokenNode *head)
 	}
 	return (0);
 }
-int	check_syntax_special_Face_to_Face(TokenNode *head)
+
+int	check_syntax_special_face_to_face(TokenNode *head)
 {
-	TokenNode *current = head;
+	TokenNode	*current;
+
+	current = head;
 	while (current != NULL)
 	{
 		if (current->info.type == TOKEN_APPEND
@@ -99,14 +108,7 @@ int	check_syntax_special_Face_to_Face(TokenNode *head)
 			|| current->info.type == TOKEN_REDIRECT_IN
 			|| current->info.type == TOKEN_REDIRECT_OUT)
 		{
-			if ((current->next != NULL
-					&& current->next->info.type == TOKEN_APPEND)
-				|| (current->next != NULL
-					&& current->next->info.type == TOKEN_HEREDOC)
-				|| (current->next != NULL
-					&& current->next->info.type == TOKEN_REDIRECT_IN)
-				|| (current->next != NULL
-					&& current->next->info.type == TOKEN_REDIRECT_OUT))
+			if (ret_check(current))
 				return (print_error("Error: Face to Face\n"));
 		}
 		else if (current->info.type == TOKEN_PIPE)

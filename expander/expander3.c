@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:44:37 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 19:44:42 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 01:46:23 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,10 @@ int	is_qouted(char *str)
 		return (1);
 	return (0);
 }
+
 void	change_qoutes1(char *str)
 {
-	int	i;
-	int	j;
-
+	int (i), (j);
 	i = 0;
 	j = ft_strlen(str);
 	while (str[i] != '\0')
@@ -65,7 +64,7 @@ void	change_qoutes(char *str)
 
 int	double_quotes(const char *str)
 {
-	int(in_double_quotes), (i);
+	int (in_double_quotes), (i);
 	i = 0;
 	in_double_quotes = 0;
 	while (str[i] != '\0' && str[i] != '"')
@@ -90,11 +89,12 @@ int	double_quotes(const char *str)
 	return (0);
 }
 
-void	process_arguments(t_command *current_command, t_env *env_list,
-		int exit_status, MemoryManager *gc)
+void	process_arguments(t_command *current_command, t_exec_context *context)
 {
-	char(**args), (*last);
-	int(i), (j), (k);
+	char	**args;
+	char	*last;
+
+	int (i), (j), (k);
 	args = current_command->args;
 	i = 0;
 	while (args[i] != NULL)
@@ -103,15 +103,10 @@ void	process_arguments(t_command *current_command, t_env *env_list,
 		k = 0;
 		while (last && dstrchr(last, '$', &j) && !is_dollar_only(last))
 		{
-			handle_expansion(args, i, env_list, exit_status, &k, gc);
-			printf("last = %s\n", last);
-			if (args[i] && ft_strchr(args[i], ' ') != NULL
-				&& ft_strncmp(args[0], "export", 6) != 0
-				&& is_last_dollar(args[i], '$') == 0
-				&& double_quotes(last) == 0)
+			handle_expansion(args, i, context, &k);
+			if (should_split_argument(args, i, last))
 			{
-				printf("args[i] = %s\n", args[i]);
-				handle_splitting(&args, i, gc);
+				handle_splitting(&args, i, context->gc);
 				break ;
 			}
 			if (k >= (int)ft_strlen(args[i]))

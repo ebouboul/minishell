@@ -5,84 +5,78 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/12 19:36:13 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/19 00:11:15 by ebouboul         ###   ########.fr       */
+/*   Created: 2024/09/20 00:39:32 by ebouboul          #+#    #+#             */
+/*   Updated: 2024/09/20 00:39:39 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	setup_pipe(int fd[2])
+void	setup_pipe(t_process_data *proc_data)
 {
-	if (pipe(fd) == -1)
+	if (pipe(proc_data->fd) == -1)
 	{
 		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
 }
 
-void	handle_child_io(int prev_pipe, int fd[2], t_node *current)
+void	handle_child_io(t_process_data *proc_data, t_node *current)
 {
-	if (prev_pipe != STDIN_FILENO)
+	if (proc_data->prev_pipe != STDIN_FILENO)
 	{
-		dup2(prev_pipe, STDIN_FILENO);
-		close(prev_pipe);
+		dup2(proc_data->prev_pipe, STDIN_FILENO);
+		close(proc_data->prev_pipe);
 	}
 	if (current->next != NULL)
-		dup2(fd[1], STDOUT_FILENO);
-	close(fd[0]);
-	close(fd[1]);
+		dup2(proc_data->fd[1], STDOUT_FILENO);
+	close(proc_data->fd[0]);
+	close(proc_data->fd[1]);
 }
 
-void	handle_child_process(int prev_pipe, int fd[2],
-		t_node *current, t_env **env_list, int *exit_status, MemoryManager *gc)
+void	handle_child_process(t_process_data *proc_data, t_node *current,
+		t_exec_context *ctx)
 {
-	handle_child_io(prev_pipe, fd, current);
-	execute_single_command(current, env_list, exit_status, gc);
-
-	my_exit(*exit_status, gc);
+	handle_child_io(proc_data, current);
+	execute_single_command(current, ctx->env_list, ctx->exit_status, ctx->gc);
+	my_exit(*(ctx->exit_status), ctx->gc);
 }
 
-void	handle_parent_io(int *prev_pipe, int fd[2],
-		t_node *current, pid_t *last_pid, pid_t pid)
+void	handle_parent_io(t_process_data *proc_data, t_node *current, pid_t pid)
 {
-	if (*prev_pipe != STDIN_FILENO)
-		close(*prev_pipe);
-	close(fd[1]);
+	if (proc_data->prev_pipe != STDIN_FILENO)
+		close(proc_data->prev_pipe);
+	close(proc_data->fd[1]);
 	if (current->next == NULL)
 	{
-		close(fd[0]);
-		*last_pid = pid;
+		close(proc_data->fd[0]);
+		proc_data->last_pid = pid;
 	}
 	else
-		*prev_pipe = fd[0];
+		proc_data->prev_pipe = proc_data->fd[0];
 }
 
-void	handle_pipe_and_multiple_commands(t_node *head, t_env **env_list,
-		int *exit_status, MemoryManager *gc)
+void	handle_pipe_and_multiple_commands(t_node *head, t_exec_context *ctx)
 {
-	t_node	*current;
-	int		fd[2];
-	int		prev_pipe;
-	pid_t	last_pid;
-	pid_t	pid;
+	t_node			*current;
+	t_process_data	proc_data;
 
 	current = head;
-	prev_pipe = dup(STDIN_FILENO);
-	last_pid = -1;
+	proc_data.prev_pipe = dup(STDIN_FILENO);
+	proc_data.last_pid = -1;
 	while (current != NULL)
 	{
-		setup_pipe(fd);
-		pid = fork();
-		if (pid == 0)
-			handle_child_process(prev_pipe, fd, current, env_list, exit_status, gc);
-		else if (pid > 0)
+		setup_pipe(&proc_data);
+		proc_data.pid = fork();
+		if (proc_data.pid == 0)
+			handle_child_process(&proc_data, current, ctx);
+		else if (proc_data.pid > 0)
 		{
-			handle_parent_io(&prev_pipe, fd, current, &last_pid, pid);
+			handle_parent_io(&proc_data, current, proc_data.pid);
 			current = current->next;
 		}
 		else
 			return ;
 	}
-	wait_for_children(last_pid, exit_status);
+	wait_for_children(proc_data.last_pid, ctx->exit_status);
 }

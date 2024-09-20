@@ -6,18 +6,22 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:43:57 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 19:44:03 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 01:21:33 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exp_Reddd(char **args, t_env *env_list, int exit_status,
+void	exp_reddd(char **args, t_env *env_list, int exit_status,
 		MemoryManager *gc)
 {
-	char	*last;
+	t_exec_context	context;
+	char			*last;
 
-	int(i), (j), (k);
+	int (i), (j), (k);
+	context.env_list = &env_list;
+	context.exit_status = &exit_status;
+	context.gc = gc;
 	i = 0;
 	while (args[i] != NULL)
 	{
@@ -25,7 +29,7 @@ void	exp_Reddd(char **args, t_env *env_list, int exit_status,
 		k = 0;
 		while (last && dstrchr(last, '$', &j) && !is_dollar_only(last))
 		{
-			handle_expansion(args, i, env_list, exit_status, &k, gc);
+			handle_expansion(args, i, &context, &k);
 			change_qoutes(args[i]);
 			if (k >= (int)ft_strlen(args[i]))
 				break ;
@@ -49,7 +53,7 @@ void	expand_redirect(t_redirect **redirect, t_env *env_list, int exit_status,
 			args = (char **)gc_malloc(gc, sizeof(char *) * 2);
 			args[0] = current->str;
 			args[1] = NULL;
-			exp_Reddd(args, env_list, exit_status, gc);
+			exp_reddd(args, env_list, exit_status, gc);
 			current->str = args[0];
 		}
 		current = current->next;
@@ -69,12 +73,17 @@ int	need_expansion(char *str)
 	}
 	return (0);
 }
+
 void	expan_herdoc(char **args, t_env *env_list, int exit_status,
 		MemoryManager *gc)
 {
-	char	*last;
+	char			*last;
+	t_exec_context	context;
 
-	int(i), (k);
+	int (i), (k);
+	context.env_list = &env_list;
+	context.exit_status = &exit_status;
+	context.gc = gc;
 	i = 0;
 	while (args[i] != NULL)
 	{
@@ -82,7 +91,7 @@ void	expan_herdoc(char **args, t_env *env_list, int exit_status,
 		k = 0;
 		while (last && need_expansion(last) && !is_dollar_only(last))
 		{
-			handle_expansion(args, i, env_list, exit_status, &k, gc);
+			handle_expansion(args, i, &context, &k);
 			change_qoutes(args[i]);
 			if (k >= (int)ft_strlen(args[i]))
 				break ;
@@ -95,16 +104,20 @@ void	expan_herdoc(char **args, t_env *env_list, int exit_status,
 void	expansion_process(t_node **head, t_env *env_list, int exit_status,
 		MemoryManager *gc)
 {
-	t_node *current;
-	t_command *current_command;
+	t_node			*current;
+	t_command		*current_command;
+	t_exec_context	context;
 
 	current = *head;
+	context.env_list = &env_list;
+	context.exit_status = &exit_status;
+	context.gc = gc;
 	while (current != NULL)
 	{
 		current_command = current->command;
 		while (current_command != NULL)
 		{
-			process_arguments(current_command, env_list, exit_status, gc);
+			process_arguments(current_command, &context);
 			if (current_command->redirect)
 				expand_redirect(&current_command->redirect, env_list,
 					exit_status, gc);

@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:46:48 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 21:11:21 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 01:19:25 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@ char	*extract_var_name(char *arg, int *j, MemoryManager *gc)
 		return (ft_strdup(gc, "$"));
 	}
 	while (arg[k] && (isalpha(arg[k + 1]) || isdigit(arg[k + 1]) || arg[k
-			+ 1] == '_'))
+				+ 1] == '_'))
 		k++;
 	if (ft_strchr(ft_substr(arg, *j, k, gc), '\'') != NULL
-			&& ft_strchr(ft_substr(arg, *j, k, gc), '"') == NULL
-			&& ft_strchr(ft_substr(arg, *j, k + 1, gc), '\'')[1] != '"')
+		&& ft_strchr(ft_substr(arg, *j, k, gc), '"') == NULL
+		&& ft_strchr(ft_substr(arg, *j, k + 1, gc), '\'')[1] != '"')
 		return (NULL);
 	var_name = ft_substr(arg, *j + 1, k - *j, gc);
 	if (!var_name)
@@ -70,8 +70,9 @@ int	is_last_dollar(char *str, char c)
 		return (1);
 	return (0);
 }
-void	expand_variable(char *arg, char **new_arg, int *j, t_env *env_list,
-		int *k, MemoryManager *gc)
+
+void	expand_variable(char *arg, char **new_arg, int *j,
+		t_exec_context *context)
 {
 	char	*var_name;
 	char	*value;
@@ -80,15 +81,15 @@ void	expand_variable(char *arg, char **new_arg, int *j, t_env *env_list,
 		return ;
 	var_name = NULL;
 	value = NULL;
-	var_name = extract_var_name(arg, j, gc);
+	var_name = extract_var_name(arg, j, context->gc);
 	if (var_name)
 	{
-		value = get_variable_value(env_list, var_name, gc);
+		value = get_variable_value(*context->env_list, var_name, context->gc);
 		if (value)
-			append_expanded_value(new_arg, value, gc);
+			append_expanded_value(new_arg, value, context->gc);
 		if (value[0] != '\0')
-			*k = *j;
+			*context->k = *j;
 	}
 	if (*j < (int)ft_strlen(arg))
-		append_char(arg[(*j)++], new_arg, gc);
+		append_char(arg[(*j)++], new_arg, context->gc);
 }

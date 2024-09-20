@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/18 18:26:09 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/20 02:07:35 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ char	**set_env(MemoryManager *manager)
 	return (envv);
 }
 
-void	fill_env_list(MemoryManager *manager, char **envv, t_env *env_list)
+void	fill_env_list(MemoryManager *manager, char **envv,
+	t_env *env_list)
 {
 	t_env	*current;
 	int		i;
@@ -82,6 +83,7 @@ char	**get_key_value(MemoryManager *manager, char *var)
 	key_value[2] = NULL;
 	return (key_value);
 }
+
 void	print_env_list(t_env *env_list)
 {
 	t_env	*current;
@@ -94,12 +96,4 @@ void	print_env_list(t_env *env_list)
 			printf("%s=%s \n", current->env->key, current->env->value);
 		current = current->next;
 	}
-}
-void	my_exit(int status, MemoryManager *manager)
-{
-	if (manager)
-		gc_free_all(manager);
-	free(manager);
-	rl_clear_history();
-	exit(status);
 }
