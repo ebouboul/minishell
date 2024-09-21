@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:02:51 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/21 01:50:19 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 04:22:30 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,15 +97,18 @@ char	*find_executable(const char *command, char **paths, t_MemoryManager *gc)
 	char	*full_path;
 
 	i = 0;
-	while (paths[i] != NULL)
+	if (ft_strlen(command) > 0)
 	{
-		full_path = gc_malloc(gc, strlen(paths[i]) + strlen(command) + 2);
-		full_path = ft_strjoin(paths[i], "/", gc);
-		full_path = ft_strjoin(full_path, command, gc);
-		if (access(full_path, X_OK) == 0)
-			return (full_path);
-		gc_free(gc, full_path);
-		i++;
+		while (paths[i] != NULL)
+		{
+			full_path = gc_malloc(gc, strlen(paths[i]) + strlen(command) + 2);
+			full_path = ft_strjoin(paths[i], "/", gc);
+			full_path = ft_strjoin(full_path, command, gc);
+			if (access(full_path, X_OK) == 0)
+				return (full_path);
+			gc_free(gc, full_path);
+			i++;
+		}
 	}
 	print_error11((char *)command, "command not found");
 	my_exit(127, gc);

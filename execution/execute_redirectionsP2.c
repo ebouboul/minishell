@@ -6,21 +6,22 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:10 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/20 00:28:10 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 04:33:39 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 // NORM=OK!
-void	handle_single_redirection(t_redirect *redirect)
+int	handle_single_redirection(t_redirect *redirect)
 {
 	if (redirect->flag == 4)
-		redirect_output(redirect->str, O_WRONLY | O_CREAT | O_TRUNC);
+		return (redirect_output(redirect->str, O_WRONLY | O_CREAT | O_TRUNC));
 	else if (redirect->flag == 5)
-		redirect_output(redirect->str, O_WRONLY | O_CREAT | O_APPEND);
+		return (redirect_output(redirect->str, O_WRONLY | O_CREAT | O_APPEND));
 	else if (redirect->flag == 3)
-		redirect_input(redirect->str);
+		return (redirect_input(redirect->str));
+	return (EXIT_SUCCESS);
 }
 
 int	is_empty_in_qotes(char *str)
@@ -50,10 +51,10 @@ int	is_empty_in_qotes(char *str)
 int	ambigous_redirect(char *str, char *old)
 {
 	int	flag;
-
-	if ((ft_strchr(str, '"') || ft_strchr(str, '\'')) && is_empty_in_qotes(str))
+	
+	if ((ft_strchr(str, '"') || ft_strchr(str, '\'')) )
 		flag = 1;
-	else
+	else if (ft_strcmp(str, old) != 0)
 		flag = 0;
 	remove_closed(str);
 	if ((ft_strchr(str, ' ') || ft_strchr(str, '\t') || ft_strchr(str, '\n')
@@ -78,9 +79,15 @@ int	handle_redirections(t_node *node, t_env **env_list, int *exit_status)
 		if (redirect->flag != 8)
 		{
 			if (ambigous_redirect(redirect->str, redirect->old_str) == 0)
-				handle_single_redirection(redirect);
+			{
+				if (handle_single_redirection(redirect) == EXIT_FAILURE)
+						*exit_status = 1;
+			}
 			else
-				return (1);
+			{
+					*exit_status = 1;
+					return (EXIT_FAILURE);
+			}
 		}
 		redirect = redirect->next;
 	}

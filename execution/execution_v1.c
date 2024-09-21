@@ -70,16 +70,19 @@ void	execute_cmds(t_node *head, t_env **env_list, int *exit_status,
 	sig_ignore();
 	if (is_exe_bult(current, env_list, exit_status, gc))
 		return ;
-	pid = fork();
-	if (pid == -1)
+	else 
 	{
-		perror("fork");
-		my_exit(1, gc);
+		pid = fork();
+		if (pid == -1)
+		{
+			perror("fork");
+			my_exit(1, gc);
+		}
+		else if (pid == 0)
+			exeall(current, &context);
+		else
+			ft_waitpid(pid, exit_status);
 	}
-	else if (pid == 0)
-		exeall(current, &context);
-	else
-		ft_waitpid(pid, exit_status);
 }
 
 int	is_redirection(t_node *node)

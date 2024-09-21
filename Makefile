@@ -2,7 +2,7 @@
 ###################
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -fsanitize=address -g3
 LDFLAGS = -I/usr/local/opt/readline/include
 RDFLAG = -L/usr/local/opt/readline/lib -lreadline
 RM = rm -rf

@@ -69,3 +69,26 @@ int fd[2]; line 108 exec_v2
 NORM:
 fprintf... 
 
+
+
+
+
+➜  minishell git:(ebouboul) ✗ bash                
+groups: cannot find name for group ID 4221
+ebouboul@c4r9p9:~/Desktop/minishell$ exit 9223372036854775807
+exit
+➜  minishell git:(ebouboul) ✗ echo $?
+255
+➜  minishell git:(ebouboul) ✗ bash   
+groups: cannot find name for group ID 4221
+ebouboul@c4r9p9:~/Desktop/minishell$ exit 9223372036854775808
+exit
+bash: exit: 9223372036854775808: numeric argument required
+➜  minishell git:(ebouboul) ✗ echo $?
+2
+➜  minishell git:(ebouboul) ✗ bash   
+groups: cannot find name for group ID 4221
+ebouboul@c4r9p9:~/Desktop/minishell$ exit 9223372036854775808543
+exit
+bash: exit: 9223372036854775808543: numeric argument required
+➜  minishell git:(ebouboul) ✗ echo $?

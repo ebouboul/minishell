@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:27:35 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 01:54:30 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 03:46:29 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,9 @@ void	remove_closed(char *input)
 
 	i = 0;
 	j = 0;
-	while (input[i] != '\0')
+	if (!input)
+		return ;
+	while (input &&  input[i] != '\0')
 	{
 		if (is_quote2(input[i]))
 		{

@@ -3,26 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   execute_redirectionsP1.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:03 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/16 23:27:22 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/21 04:19:21 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 // NORM=OK!
-void	handle_open_error(void)
+int	handle_open_error(void)
 {
 	perror("open");
-	exit(EXIT_FAILURE);
+	return (EXIT_FAILURE);
 }
 
-void	handle_dup2_error(void)
+int	handle_dup2_error(void)
 {
 	perror("dup2");
-	exit(EXIT_FAILURE);
+	return (EXIT_FAILURE);
 }
 
 int	open_file(const char *str, int flags)
@@ -31,26 +31,30 @@ int	open_file(const char *str, int flags)
 
 	fd = open(str, flags, 0644);
 	if (fd == -1)
-		handle_open_error();
+		return (handle_open_error());
 	return (fd);
 }
 
-void	redirect_output(const char *str, int flags)
+int	redirect_output(const char *str, int flags)
 {
 	int	fd;
 
 	fd = open_file(str, flags);
 	if (dup2(fd, STDOUT_FILENO) == -1)
-		handle_dup2_error();
+		return (handle_dup2_error());
 	close(fd);
+	return (EXIT_SUCCESS);
 }
 
-void	redirect_input(const char *str)
+int	redirect_input(const char *str)
 {
 	int	fd;
 
 	fd = open_file(str, O_RDONLY);
-	if (dup2(fd, STDIN_FILENO) == -1)
-		handle_dup2_error();
+	if (fd == -1)
+		return (EXIT_FAILURE);
+	else if (dup2(fd, STDIN_FILENO) == -1)
+		return (handle_dup2_error());
 	close(fd);
+	return (EXIT_SUCCESS);
 }

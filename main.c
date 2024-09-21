@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:17:11 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 02:06:59 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 03:50:42 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	process_and_execute_input(char *input, t_node **node, t_env *env_list,
 				manager);
 		execute_cmds(*node, &env_list, &(*node)->exit_status, manager);
 	}
+	return ;
 }
 
 void	whiling(t_node *node, t_env *env_list, t_MemoryManager *manager)

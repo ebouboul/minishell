@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 17:53:53 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 01:53:08 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 03:07:39 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stddef.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include "../structs.h"
 
 typedef struct s_list
 {
