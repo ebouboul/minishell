@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:44:57 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 01:51:10 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 06:34:40 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,10 @@ void	handle_expansion(char **args, int i, t_exec_context *context, int *k)
 int	should_split_argument(char **args, int i, char *last)
 {
 	return (args[i] && ft_strchr(args[i], ' ') != NULL
-		&& ft_strncmp(args[0], "export", 6) != 0
+		&& (ft_strncmp(args[0], "export", 6) != 0
+			|| (ft_strncmp(args[0], "export", 6) == 0
+				&& args[i][0] != '$'))
 		&& is_last_dollar(args[i], '$') == 0
-		&& double_quotes(last) == 0);
+		&& double_quotes(last) == 0
+		&& is_space1(args[i]) == 0);
 }

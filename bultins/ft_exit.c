@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:59:36 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 05:36:12 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 05:48:28 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,14 @@ int	ft_exit(t_command *command, t_MemoryManager *manager)
 	
 	if (!is_numeric(command->args[1]))
 		print_error11(command->args[1], "numeric argument required");
-	else if (ft_atoi(command->args[1]) > 9223372036854775807
+	else if (command->args[0] 
+		&& ft_atoi(command->args[1]) > 9223372036854775807
 		&& command->args[1][0] != '-')
 	{
 		print_error11(command->args[1], "numeric argument required");
 		status = 2;
 	}
-	else if (ft_atoi(command->args[1]) < 0)
+	else if (command->args[1] && ft_atoi(command->args[1]) < 0)
 		status = ft_atoi(command->args[1]);
 	my_exit(status, manager);
 	return (0);

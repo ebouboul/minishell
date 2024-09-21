@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:43:57 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 01:51:16 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 06:36:24 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	expan_herdoc(char **args, t_env *env_list, int exit_status,
 		while (last && need_expansion(last) && !is_dollar_only(last))
 		{
 			handle_expansion(args, i, &context, &k);
-			change_qoutes(args[i]);
+			// change_qoutes(args[i]);
 			if (k >= (int)ft_strlen(args[i]))
 				break ;
 			last = args[i] + k;

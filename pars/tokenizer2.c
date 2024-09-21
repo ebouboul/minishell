@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 03:17:08 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 02:18:14 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 07:08:15 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,17 +53,38 @@ int	tokenize_line(t_TokenData *data)
 	return (data->c);
 }
 
-t_TokenInfo	*allocate_tokens(t_MemoryManager *manager)
+t_TokenInfo	*allocate_tokens(t_MemoryManager *manager, int size)
 {
 	t_TokenInfo	*tokens;
 
-	tokens = (t_TokenInfo *)gc_malloc(manager, 100 * sizeof(t_TokenInfo));
+	tokens = (t_TokenInfo *)gc_malloc(manager, (size + 10000) * sizeof(t_TokenInfo));
 	if (!tokens)
 	{
 		perror("Memory allocation failed");
 		exit(EXIT_FAILURE);
 	}
 	return (tokens);
+}
+int count_pipe(char **inputs)
+{
+	int i;
+	int j;
+	int count;
+	
+	i = 0;
+	count = 2;
+	while (inputs[i])
+	{
+		j = 0;
+		while (inputs[i][j])
+		{
+			if (inputs[i][j] == '|')
+				count++;
+			j++;
+		}
+		i++;
+	}
+	return (count);
 }
 
 t_TokenInfo	*tokenizer(char **inputs, t_MemoryManager *manager)
@@ -74,7 +95,7 @@ t_TokenInfo	*tokenizer(char **inputs, t_MemoryManager *manager)
 
 	j = 0;
 	data.c = 0;
-	tokens = allocate_tokens(manager);
+	tokens = allocate_tokens(manager, count_pipe(inputs));
 	data.tokens = tokens;
 	data.manager = manager;
 	while (inputs[j])

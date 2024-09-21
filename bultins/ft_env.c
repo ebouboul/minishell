@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:57:40 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 01:49:14 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 06:20:39 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,14 @@ int	ft_pwd(t_env *env_list, t_MemoryManager *gc)
 	path = getcwd(NULL, 0);
 	if (path)
 	{
-		printf("PWD=%s\n", path);
+		printf("%s\n", path);
 		free(path);
 	}
 	else
 	{
 		path = ft_strdup(gc, get_env_value(env_list, "PWD"));
 		if (path)
-			printf("PWD=%s\n", path);
+			printf("%s\n", path);
 		gc_free(gc, path);
 	}
 	return (0);
