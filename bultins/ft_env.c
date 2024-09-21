@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:57:40 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 06:20:39 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 17:44:16 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	ft_env(t_command *command, t_env *env_list)
 	current = env_list;
 	if (command->args[1] == NULL)
 	{
-		print_env_list(env_list);
+		print_env_list(current);
 		return (0);
 	}
 	else

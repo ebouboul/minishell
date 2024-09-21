@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   execute_heredocP1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/21 01:49:56 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 18:53:31 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// NORM = OK
 char	*create_temp_filename(t_MemoryManager *manager)
 {
 	char	*tty;

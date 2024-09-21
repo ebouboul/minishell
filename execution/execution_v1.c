@@ -39,7 +39,6 @@ void	exeall(t_node *current, t_exec_context *context)
 	{
 		execute_heredoc(current, context->env_list, context->exit_status,
 			context->gc);
-		my_exit(*(context->exit_status), context->gc);
 	}
 	while (current)
 	{

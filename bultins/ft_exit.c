@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:59:36 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 05:48:28 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 18:26:33 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ int	ft_exit(t_command *command, t_MemoryManager *manager)
 		print_error11(command->args[1], "numeric argument required");
 		status = 2;
 	}
-	else if (command->args[1] && ft_atoi(command->args[1]) < 0)
-		status = ft_atoi(command->args[1]);
+	// else if ((command->args[1] && ft_atoi(command->args[1])) < 0)
+	// 	status = ft_atoi(command->args[1]);
 	my_exit(status, manager);
 	return (0);
 }

@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   execution_v1_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:02:51 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/21 04:22:30 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 18:52:45 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// NORM=OK! //one func with more 25 lines
 void	handle_builtin_command(t_node *node, t_env **env_list, int *exit_status,
 		t_MemoryManager *gc)
 {
