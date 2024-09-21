@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 02:33:37 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 02:42:26 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:54:49 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ DIR	*open_directory(char *path)
 }
 
 void	collect_matches(DIR *dir, char *path, t_replace_wildcard_vars *vars,
-		MemoryManager *manager)
+		t_MemoryManager *manager)
 {
 	struct dirent	*entry;
 
@@ -46,7 +46,7 @@ void	collect_matches(DIR *dir, char *path, t_replace_wildcard_vars *vars,
 }
 
 void	insert_wildcard_matches(char ***args, int i,
-		t_replace_wildcard_vars *vars, MemoryManager *manager)
+		t_replace_wildcard_vars *vars, t_MemoryManager *manager)
 {
 	int	j;
 
@@ -62,7 +62,7 @@ void	insert_wildcard_matches(char ***args, int i,
 	}
 }
 
-void	replace_wildcard(char ***args, int *i, MemoryManager *manager)
+void	replace_wildcard(char ***args, int *i, t_MemoryManager *manager)
 {
 	t_replace_wildcard_vars	vars;
 	DIR						*dir;
@@ -84,7 +84,7 @@ void	replace_wildcard(char ***args, int *i, MemoryManager *manager)
 	gc_free(manager, vars.matches);
 }
 
-void	replace_wildcard_in_args(t_node *head, MemoryManager *manager)
+void	replace_wildcard_in_args(t_node *head, t_MemoryManager *manager)
 {
 	t_node	*current;
 	int		i;

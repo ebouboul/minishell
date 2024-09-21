@@ -6,14 +6,14 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/20 00:55:49 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:49:56 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 // NORM = OK
-char	*create_temp_filename(MemoryManager *manager)
+char	*create_temp_filename(t_MemoryManager *manager)
 {
 	char	*tty;
 	char	*base;
@@ -39,7 +39,7 @@ void	write_to_file(int fd, const char *str)
 	write(fd, "\n", 1);
 }
 
-char	**process_heredoc_input(const char *delimiter, MemoryManager *gc)
+char	**process_heredoc_input(const char *delimiter, t_MemoryManager *gc)
 {
 	char	*line;
 	char	**args;

@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   checking2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:25:43 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 20:28:16 by amousaid         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:45:53 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	check_quotes(TokenNode *head, char c)
+int	check_quotes(t_TokenNode *head, char c)
 {
-	TokenNode	*current;
+	t_TokenNode	*current;
 
 	current = head;
 	while (current != NULL)
@@ -31,9 +31,9 @@ int	check_quotes(TokenNode *head, char c)
 	return (0);
 }
 
-int	check_special_validity(TokenNode *head)
+int	check_special_validity(t_TokenNode *head)
 {
-	TokenNode	*current;
+	t_TokenNode	*current;
 
 	current = head;
 	while (current != NULL)

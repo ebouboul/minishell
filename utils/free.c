@@ -6,17 +6,17 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 02:46:26 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 02:50:04 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:55:52 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	add_memory(MemoryManager *manager, void *ptr)
+void	add_memory(t_MemoryManager *manager, void *ptr)
 {
-	MemoryNode	*new_node;
+	t_MemoryNode	*new_node;
 
-	new_node = (MemoryNode *)malloc(sizeof(MemoryNode));
+	new_node = (t_MemoryNode *)malloc(sizeof(t_MemoryNode));
 	if (!new_node)
 	{
 		perror("Failed to allocate memory for tracking node");
@@ -27,10 +27,10 @@ void	add_memory(MemoryManager *manager, void *ptr)
 	manager->head = new_node;
 }
 
-void	remove_memory(MemoryManager *manager, void *ptr)
+void	remove_memory(t_MemoryManager *manager, void *ptr)
 {
-	MemoryNode	*current;
-	MemoryNode	*previous;
+	t_MemoryNode	*current;
+	t_MemoryNode	*previous;
 
 	current = manager->head;
 	previous = NULL;
@@ -54,7 +54,7 @@ void	remove_memory(MemoryManager *manager, void *ptr)
 	}
 }
 
-void	*gc_malloc(MemoryManager *manager, size_t size)
+void	*gc_malloc(t_MemoryManager *manager, size_t size)
 {
 	void	*ptr;
 
@@ -68,10 +68,10 @@ void	*gc_malloc(MemoryManager *manager, size_t size)
 	return (ptr);
 }
 
-void	gc_free_all(MemoryManager *manager)
+void	gc_free_all(t_MemoryManager *manager)
 {
-	MemoryNode	*current;
-	MemoryNode	*next_node;
+	t_MemoryNode	*current;
+	t_MemoryNode	*next_node;
 
 	current = manager->head;
 	while (current != NULL)
@@ -85,7 +85,7 @@ void	gc_free_all(MemoryManager *manager)
 	manager->head = NULL;
 }
 
-void	gc_free(MemoryManager *manager, void *ptr)
+void	gc_free(t_MemoryManager *manager, void *ptr)
 {
 	remove_memory(manager, ptr);
 	if (ptr != NULL)

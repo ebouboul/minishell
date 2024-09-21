@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   execution_v1_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: peaky <peaky@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:03:37 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/19 22:45:37 by peaky            ###   ########.fr       */
+/*   Updated: 2024/09/21 01:50:33 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 // norm=OK!
-char	*create_env_string(t_env *env, MemoryManager *gc)
+char	*create_env_string(t_env *env, t_MemoryManager *gc)
 {
 	char	*env_string;
 
@@ -25,7 +25,7 @@ char	*create_env_string(t_env *env, MemoryManager *gc)
 	return (env_string);
 }
 
-char	**create_env_array(t_env *env_list, MemoryManager *gc)
+char	**create_env_array(t_env *env_list, t_MemoryManager *gc)
 {
 	int		count;
 	char	**env_array;
@@ -62,7 +62,7 @@ int	count_path_components(const char *path)
 	return (count + 1);
 }
 
-char	**split_path(const char *path, MemoryManager *gc)
+char	**split_path(const char *path, t_MemoryManager *gc)
 {
 	char	*path_copy;
 	int		count;

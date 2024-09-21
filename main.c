@@ -3,63 +3,63 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:17:11 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 21:00:53 by amousaid         ###   ########.fr       */
+/*   Updated: 2024/09/21 02:06:59 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-void process_and_execute_input(char *input, t_node **node, t_env *env_list, MemoryManager *manager)
+void	process_and_execute_input(char *input, t_node **node, t_env *env_list,
+		t_MemoryManager *manager)
 {
-    TokenInfo *tokens;
+	t_TokenInfo	*tokens;
 
-    if (validate_input(input, &(*node)->exit_status))
-    {
-        tokens = process_input(input, &(*node)->exit_status, manager);
-        free(input);
-        if (!tokens)
-            return;
-        *node = prepare_execution(tokens, env_list, (*node)->exit_status, manager);
-        execute_cmds(*node, &env_list, &(*node)->exit_status, manager);
-    }
+	if (validate_input(input, &(*node)->exit_status))
+	{
+		tokens = process_input(input, &(*node)->exit_status, manager);
+		free(input);
+		if (!tokens)
+			return ;
+		*node = prepare_execution(tokens, env_list, (*node)->exit_status,
+				manager);
+		execute_cmds(*node, &env_list, &(*node)->exit_status, manager);
+	}
 }
 
-void whiling(t_node *node, t_env *env_list, MemoryManager *manager)
+void	whiling(t_node *node, t_env *env_list, t_MemoryManager *manager)
 {
-    char *input;
+	char	*input;
 
-    input = NULL;
-    while (1)
-    {
-        sigoo(node);
-        input = readline("minishell$ ");
-        sigoo(node);
+	input = NULL;
+	while (1)
+	{
+		sigoo(node);
+		input = readline("minishell$ ");
+		sigoo(node);
 		if (input == NULL)
 		{
 			write(1, "exit\n", 5);
 			break ;
 		}
-        if (!input || is_space1(input) == 1)
+		if (!input || is_space1(input) == 1)
 			continue ;
 		add_history(input);
-
-        process_and_execute_input(input, &node, env_list, manager);
-    }
+		process_and_execute_input(input, &node, env_list, manager);
+	}
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	MemoryManager	*manager;
+	t_MemoryManager	*manager;
 	t_env			*env_list;
 	t_node			*node;
 
 	(void)argc;
 	(void)argv;
-	manager = (MemoryManager *)malloc(sizeof(MemoryManager));
+	manager = (t_MemoryManager *)malloc(sizeof(t_MemoryManager));
 	manager->head = NULL;
 	env_list = (t_env *)gc_malloc(manager, sizeof(t_env));
 	node = (t_node *)gc_malloc(manager, sizeof(t_node));

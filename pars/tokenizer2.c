@@ -6,14 +6,14 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 03:17:08 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 03:32:10 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 02:18:14 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	finalize_tokens(TokenInfo *tokens, int c,
-		MemoryManager *manager)
+void	finalize_tokens(t_TokenInfo *tokens, int c,
+		t_MemoryManager *manager)
 {
 	tokens[c].value = (char *)gc_malloc(manager, 1);
 	if (tokens[c].value == NULL)
@@ -25,12 +25,12 @@ void	finalize_tokens(TokenInfo *tokens, int c,
 	tokens[c].value[0] = '\0';
 }
 
-int	handle_regular_token(TokenData *data)
+int	handle_regular_token(t_TokenData *data)
 {
 	int	type;
 
 	if (data->c > 0)
-		type = get_token_type_from_previous(&data->tokens[data->c
+		type = get_token_type_from_pr(&data->tokens[data->c
 				- 1]);
 	else
 		type = TOKEN_COMMAND;
@@ -38,7 +38,7 @@ int	handle_regular_token(TokenData *data)
 	return (data->c);
 }
 
-int	tokenize_line(TokenData *data)
+int	tokenize_line(t_TokenData *data)
 {
 	while (data->input[data->i] != '\0' && data->c < MAX_TOKENS)
 	{
@@ -53,11 +53,11 @@ int	tokenize_line(TokenData *data)
 	return (data->c);
 }
 
-TokenInfo	*allocate_tokens(MemoryManager *manager)
+t_TokenInfo	*allocate_tokens(t_MemoryManager *manager)
 {
-	TokenInfo	*tokens;
+	t_TokenInfo	*tokens;
 
-	tokens = (TokenInfo *)gc_malloc(manager, 100 * sizeof(TokenInfo));
+	tokens = (t_TokenInfo *)gc_malloc(manager, 100 * sizeof(t_TokenInfo));
 	if (!tokens)
 	{
 		perror("Memory allocation failed");
@@ -66,11 +66,11 @@ TokenInfo	*allocate_tokens(MemoryManager *manager)
 	return (tokens);
 }
 
-TokenInfo	*tokenizer(char **inputs, MemoryManager *manager)
+t_TokenInfo	*tokenizer(char **inputs, t_MemoryManager *manager)
 {
-	TokenInfo	*tokens;
+	t_TokenInfo	*tokens;
 	int			j;
-	TokenData	data;
+	t_TokenData	data;
 
 	j = 0;
 	data.c = 0;

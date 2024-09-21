@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 23:44:02 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 03:08:05 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:52:30 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static size_t	ft_countword(char const *s, char c)
 	return (count);
 }
 
-static char	**free_tab(char **tab, size_t j, MemoryManager *gc)
+static char	**free_tab(char **tab, size_t j, t_MemoryManager *gc)
 {
 	size_t	i;
 
@@ -61,7 +61,7 @@ char	find_dilm(char *str)
 	return (0);
 }
 
-char	**ft_split3(char const *s, char c, MemoryManager *gc)
+char	**ft_split3(char const *s, char c, t_MemoryManager *gc)
 {
 	char	**tab;
 

@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:38:26 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 21:13:40 by amousaid         ###   ########.fr       */
+/*   Updated: 2024/09/21 02:15:24 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*process_path(char *path, t_env **env_list, MemoryManager *manager)
+char	*process_path(char *path, t_env **env_list,
+	t_MemoryManager *manager)
 {
 	if (ft_strcmp(path, "-") == 0)
 	{
@@ -35,7 +36,8 @@ char	*get_home_path(t_env **env_list)
 	return (path);
 }
 
-char	*get_path(t_command *command, t_env **env_list, MemoryManager *manager)
+char	*get_path(t_command *command, t_env **env_list,
+	t_MemoryManager *manager)
 {
 	if (command->args[1] == NULL)
 	{
@@ -47,17 +49,20 @@ char	*get_path(t_command *command, t_env **env_list, MemoryManager *manager)
 	}
 }
 
-void	update_env(t_env **env_list, char *oldpwd, MemoryManager *manager)
+void	update_env(t_env **env_list, char *oldpwd, t_MemoryManager *manager)
 {
 	char	*pwd;
 
 	pwd = getcwd(NULL, 0);
-	replace_env_value(*env_list, "OLDPWD", oldpwd, manager);
-	replace_env_value(*env_list, "PWD", pwd, manager);
-	gc_free(manager, pwd);
+	if (pwd)
+	{
+		replace_env_value(env_list, "OLDPWD", oldpwd, manager);
+		replace_env_value(env_list, "PWD", pwd, manager);
+		free(pwd);
+	}
 }
 
-int	ft_cd(t_command *command, t_env **env_list, MemoryManager *manager)
+int	ft_cd(t_command *command, t_env **env_list, t_MemoryManager *manager)
 {
 	int		status;
 	char	*path;
@@ -81,6 +86,6 @@ int	ft_cd(t_command *command, t_env **env_list, MemoryManager *manager)
 		gc_free(manager, oldpwd);
 		return (1);
 	}
-	gc_free(manager, oldpwd);
+	free(oldpwd);
 	return (0);
 }

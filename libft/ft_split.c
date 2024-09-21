@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:20:41 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 02:28:21 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:52:22 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	ft_word_len(char *s, int i)
 }
 
 char	**ft_splitall(char **str, char const *s, int countword,
-		MemoryManager *gc)
+		t_MemoryManager *gc)
 {
 	int	i;
 	int	j;
@@ -96,7 +96,7 @@ char	**ft_splitall(char **str, char const *s, int countword,
 	return (str);
 }
 
-char	**ft_split(char const *s, MemoryManager *gc)
+char	**ft_split(char const *s, t_MemoryManager *gc)
 {
 	int		countword;
 	char	**str;

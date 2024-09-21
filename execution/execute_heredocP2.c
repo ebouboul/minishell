@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:53 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/20 00:55:30 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:50:12 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	execute_command_with_heredoc(t_node *temp, const char *temp_file,
 }
 
 void	handle_heredoc(t_node *node, t_env **env_list, int *exit_status,
-		MemoryManager *gc)
+		t_MemoryManager *gc)
 {
 	char			*temp_file;
 	t_node			*temp;
@@ -66,7 +66,7 @@ void	handle_heredoc(t_node *node, t_env **env_list, int *exit_status,
 		}
 		if (temp->next == NULL)
 			execute_command_with_heredoc(temp, temp_file, &context);
-		break ;
+		temp = temp->next;
 	}
 	unlink(temp_file);
 	gc_free(gc, temp_file);

@@ -6,13 +6,13 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 02:07:35 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 02:05:13 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*ft_strndup(MemoryManager *manager, char *s, int n)
+char	*ft_strndup(t_MemoryManager *manager, char *s, int n)
 {
 	char	*result;
 
@@ -22,7 +22,7 @@ char	*ft_strndup(MemoryManager *manager, char *s, int n)
 	return (result);
 }
 
-char	**set_env(MemoryManager *manager)
+char	**set_env(t_MemoryManager *manager)
 {
 	char	*pwd;
 	char	**envv;
@@ -38,7 +38,7 @@ char	**set_env(MemoryManager *manager)
 	return (envv);
 }
 
-void	fill_env_list(MemoryManager *manager, char **envv,
+void	fill_env_list(t_MemoryManager *manager, char **envv,
 	t_env *env_list)
 {
 	t_env	*current;
@@ -52,7 +52,7 @@ void	fill_env_list(MemoryManager *manager, char **envv,
 	while (envv[i])
 	{
 		key_value = get_key_value(manager, envv[i]);
-		current->env = (env *)gc_malloc(manager, sizeof(env));
+		current->env = (t_envv *)gc_malloc(manager, sizeof(t_envv));
 		current->env->key = ft_strdup(manager, key_value[0]);
 		current->env->value = ft_strdup(manager, key_value[1]);
 		if (envv[i + 1])
@@ -66,7 +66,7 @@ void	fill_env_list(MemoryManager *manager, char **envv,
 	}
 }
 
-char	**get_key_value(MemoryManager *manager, char *var)
+char	**get_key_value(t_MemoryManager *manager, char *var)
 {
 	char	**key_value;
 

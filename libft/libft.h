@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 17:53:53 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 21:08:33 by amousaid         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:53:08 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,18 @@ int					ft_tolower(int c);
 int					ft_atoi(const char *str);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 int					ft_memcmp(const void *s1, const void *s2, size_t n);
-char				*ft_itoa(int n, MemoryManager *gc);
-char				*ft_strdup(MemoryManager *manger, const char *src);
+char				*ft_itoa(int n, t_MemoryManager *gc);
+char				*ft_strdup(t_MemoryManager *manger, const char *src);
 char				*ft_strchr(char *s, int c);
 char				*ft_strrchr(const char *s, int c);
 char				*ft_strnstr(const char *str, const char *to_find,
 						size_t len);
 char				*ft_substr(char const *s, unsigned int start, size_t len,
-						MemoryManager *gc);
+						t_MemoryManager *gc);
 char				*ft_strjoin(char const *s1, char const *s2,
-						MemoryManager *gc);
+						t_MemoryManager *gc);
 char				*ft_strtrim(char const *s1, char const *set);
-char				**ft_split(char const *s, MemoryManager *gc);
+char				**ft_split(char const *s, t_MemoryManager *gc);
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char *s, int fd);
@@ -60,9 +60,9 @@ int					ft_wordcount(char const *s);
 void				ft_wordcount2(char const *s, int *i, int *count);
 int					w_space(char c);
 char				**ft_freespace(char **str, int size);
-char				**ft_split3(char const *s, char c, MemoryManager *gc);
+char				**ft_split3(char const *s, char c, t_MemoryManager *gc);
 
-void				*ft_calloc(size_t nmemb, size_t size, MemoryManager *gc);
+void				*ft_calloc(size_t nmemb, size_t size, t_MemoryManager *gc);
 void				ft_striteri(char *s, void (*f)(unsigned int, char *));
 size_t				ft_strlen(const char *str);
 size_t				ft_strlcpy(char *dest, const char *src, size_t size);

@@ -6,13 +6,13 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:47:25 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 19:53:27 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:51:50 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	**resize_args(char **args, int new_size, MemoryManager *gc)
+char	**resize_args(char **args, int new_size, t_MemoryManager *gc)
 {
 	char	**new_args;
 	int		i;

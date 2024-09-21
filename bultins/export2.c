@@ -6,14 +6,14 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 02:49:19 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 02:57:08 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 02:14:57 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	handle_export_key_value(MemoryManager *manager, char *key, char *value,
-		t_env **env_list)
+void	handle_export_key_value(t_MemoryManager *manager, char *key,
+	char *value, t_env **env_list)
 {
 	t_env	*current_env;
 
@@ -37,7 +37,7 @@ void	handle_export_key_value(MemoryManager *manager, char *key, char *value,
 	}
 }
 
-void	handle_plus_equal_case(MemoryManager *manager, char *arg,
+void	handle_plus_equal_case(t_MemoryManager *manager, char *arg,
 		t_env **env_list)
 {
 	t_env	*current_env;
@@ -67,7 +67,7 @@ void	handle_plus_equal_case(MemoryManager *manager, char *arg,
 	gc_free(manager, key_value_plus);
 }
 
-void	handle_export_key_only(MemoryManager *manager, char *key,
+void	handle_export_key_only(t_MemoryManager *manager, char *key,
 		t_env **env_list)
 {
 	t_env	*current_env;
@@ -113,7 +113,7 @@ int	check_export(char *args)
 	return (0);
 }
 
-int	handle_export_arg(MemoryManager *manager, char *arg, t_env **env_list)
+int	handle_export_arg(t_MemoryManager *manager, char *arg, t_env **env_list)
 {
 	char	**key_value;
 

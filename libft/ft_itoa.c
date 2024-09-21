@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 23:44:22 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 02:29:06 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:52:03 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static long int	ft_len(int n)
 	return (len);
 }
 
-char	*ft_itoa(int n, MemoryManager *gc)
+char	*ft_itoa(int n, t_MemoryManager *gc)
 {
 	char			*s;
 	long int		len;

@@ -6,13 +6,13 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 03:31:01 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 03:36:49 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 02:18:02 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-TokenType	get_token_type(char *c)
+t_TokenType	get_token_type(char *c)
 {
 	if (ft_strcmp(c, "|") == 0)
 		return (TOKEN_PIPE);
@@ -28,7 +28,7 @@ TokenType	get_token_type(char *c)
 		return (TOKEN_COMMAND);
 }
 
-int	get_token_type_from_previous(TokenInfo *previous_token)
+int	get_token_type_from_pr(t_TokenInfo *previous_token)
 {
 	if (previous_token->type == TOKEN_REDIRECT_IN
 		|| previous_token->type == TOKEN_REDIRECT_OUT
@@ -42,7 +42,7 @@ int	get_token_type_from_previous(TokenInfo *previous_token)
 	return (TOKEN_COMMAND);
 }
 
-int	create_token(TokenData *data, int type)
+int	create_token(t_TokenData *data, int type)
 {
 	int	k;
 
@@ -58,7 +58,7 @@ int	create_token(TokenData *data, int type)
 	return (++data->c);
 }
 
-int	handle_special_char(TokenData *data)
+int	handle_special_char(t_TokenData *data)
 {
 	int	start;
 	int	length;

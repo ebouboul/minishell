@@ -6,13 +6,13 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 02:50:40 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 02:50:46 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:55:05 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	*gc_realloc(MemoryManager *manager, void *ptr, size_t new_size)
+void	*gc_realloc(t_MemoryManager *manager, void *ptr, size_t new_size)
 {
 	void	*new_ptr;
 

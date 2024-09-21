@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:46:53 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 21:11:31 by amousaid         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:48:42 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	ft_echo(t_command *command)
 }
 
 char	*handle_home_shortcut(char *path, t_env **env_list,
-		MemoryManager *manager)
+		t_MemoryManager *manager)
 {
 	char	*home;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:57:40 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 21:12:22 by amousaid         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:49:14 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,18 @@ char	*get_env_value(t_env *env_list, char *key)
 	return (NULL);
 }
 
-void	replace_env_value(t_env *env_list, char *key, char *value,
-		MemoryManager *manager)
+void	replace_env_value(t_env **env_list, char *key, char *value,
+		t_MemoryManager *manager)
 {
 	t_env	*current;
 
-	current = env_list;
+	current = *env_list;
 	if (value == NULL)
 		return ;
 	while (current != NULL)
 	{
 		if (ft_strcmp(current->env->key, key) == 0)
 		{
-			gc_free(manager, current->env->value);
 			current->env->value = ft_strdup(manager, value);
 			break ;
 		}
@@ -62,23 +61,39 @@ void	replace_env_value(t_env *env_list, char *key, char *value,
 	}
 }
 
-int	ft_pwd(void)
+int	ft_pwd(t_env *env_list, t_MemoryManager *gc)
 {
 	char	*path;
 
 	path = getcwd(NULL, 0);
-	if (path == NULL)
+	if (path)
 	{
-		print_error11("pwd", strerror(1));
-		return (1);
+		printf("PWD=%s\n", path);
+		free(path);
 	}
-	printf("%s\n", path);
-	free(path);
+	else
+	{
+		path = ft_strdup(gc, get_env_value(env_list, "PWD"));
+		if (path)
+			printf("PWD=%s\n", path);
+		gc_free(gc, path);
+	}
 	return (0);
 }
 
-int	ft_env(t_env *env_list)
+int	ft_env(t_command *command, t_env *env_list)
 {
-	print_env_list(env_list);
-	return (0);
+	t_env	*current;
+
+	current = env_list;
+	if (command->args[1] == NULL)
+	{
+		print_env_list(env_list);
+		return (0);
+	}
+	else
+	{
+		print_error11("env", "too many arguments");
+		return (1);
+	}
 }

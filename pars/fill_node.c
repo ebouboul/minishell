@@ -6,13 +6,13 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 17:23:01 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 01:40:21 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:54:01 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_command	*initialize_command(MemoryManager *manager)
+t_command	*initialize_command(t_MemoryManager *manager)
 {
 	t_command	*cmd;
 
@@ -23,8 +23,8 @@ t_command	*initialize_command(MemoryManager *manager)
 	return (cmd);
 }
 
-void	handle_redirection(MemoryManager *manager, t_command *cmd,
-		TokenNode **current)
+void	handle_redirection(t_MemoryManager *manager, t_command *cmd,
+		t_TokenNode **current)
 {
 	t_redirect	*redir;
 	t_redirect	*last_redir;
@@ -52,7 +52,7 @@ void	handle_redirection(MemoryManager *manager, t_command *cmd,
 	}
 }
 
-t_command	*convert_to_command(MemoryManager *manager, TokenNode **current)
+t_command	*convert_to_command(t_MemoryManager *manager, t_TokenNode **current)
 {
 	t_command	*cmd;
 	int			arg_count;
@@ -75,7 +75,7 @@ t_command	*convert_to_command(MemoryManager *manager, TokenNode **current)
 	return (cmd);
 }
 
-t_node	*convert_to_node_list(TokenNode *token_list, MemoryManager *manager)
+t_node	*convert_to_node_list(t_TokenNode *token_list, t_MemoryManager *manager)
 {
 	t_node	*node_list;
 	t_node	*last_node;

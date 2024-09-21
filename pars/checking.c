@@ -6,15 +6,15 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:24:30 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 02:07:03 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 02:21:28 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	check_quotes_spiclal_chars(TokenNode *head, char c)
+int	check_quotes_spiclal_chars(t_TokenNode *head, char c)
 {
-	TokenNode	*current;
+	t_TokenNode	*current;
 
 	current = head;
 	while (current != NULL)
@@ -33,9 +33,9 @@ int	check_quotes_spiclal_chars(TokenNode *head, char c)
 	return (0);
 }
 
-int	check_syntax_double_commands(TokenNode *head)
+int	check_syntax_double_commands(t_TokenNode *head)
 {
-	TokenNode	*current;
+	t_TokenNode	*current;
 
 	current = head;
 	while (current != NULL)
@@ -51,9 +51,9 @@ int	check_syntax_double_commands(TokenNode *head)
 	return (0);
 }
 
-int	check_special_chars(TokenNode *head)
+int	check_special_chars(t_TokenNode *head)
 {
-	TokenNode	*current;
+	t_TokenNode	*current;
 
 	current = head;
 	if (current->info.type == TOKEN_PIPE)
@@ -76,9 +76,9 @@ int	check_special_chars(TokenNode *head)
 	return (0);
 }
 
-int	check_syntax_double_special_charcters(TokenNode *head)
+int	check_syntax_double_special_cha(t_TokenNode *head)
 {
-	TokenNode	*current;
+	t_TokenNode	*current;
 
 	current = head;
 	while (current != NULL)
@@ -96,9 +96,9 @@ int	check_syntax_double_special_charcters(TokenNode *head)
 	return (0);
 }
 
-int	check_syntax_special_face_to_face(TokenNode *head)
+int	check_syntax_special_face_to_face(t_TokenNode *head)
 {
-	TokenNode	*current;
+	t_TokenNode	*current;
 
 	current = head;
 	while (current != NULL)

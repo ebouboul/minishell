@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/20 00:56:10 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:50:51 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*gett_env_value(const char *key, t_env *env_list)
 	return (NULL);
 }
 
-int	check_is_directory(char *file, MemoryManager *gc)
+int	check_is_directory(char *file, t_MemoryManager *gc)
 
 {
 	struct stat	file_stat;
@@ -47,7 +47,7 @@ int	check_is_directory(char *file, MemoryManager *gc)
 }
 
 char	*find_executable_in_path(char *command, t_env *env_list,
-		MemoryManager *gc)
+		t_MemoryManager *gc)
 {
 	char	*path_value;
 	char	*executable_path;

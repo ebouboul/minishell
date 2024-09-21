@@ -6,13 +6,13 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:27:35 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 03:41:17 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:54:30 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*remove_closed_quotes(const char *input, MemoryManager *manager)
+char	*remove_closed_quotes(const char *input, t_MemoryManager *manager)
 {
 	char	*result;
 	char	quote;
@@ -41,7 +41,7 @@ char	*remove_closed_quotes(const char *input, MemoryManager *manager)
 	return (result);
 }
 
-char	*remove_all_quotes2(const char *input, MemoryManager *manger)
+char	*remove_all_quotes2(const char *input, t_MemoryManager *manger)
 {
 	char	*result;
 
@@ -65,7 +65,7 @@ char	*remove_all_quotes2(const char *input, MemoryManager *manger)
 	return (result);
 }
 
-void	remove_quotes_and_join(t_node *head, MemoryManager *manager)
+void	remove_quotes_and_join(t_node *head, t_MemoryManager *manager)
 {
 	t_node		*current;
 	t_command	*current_command;

@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 06:57:26 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 02:55:48 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 02:04:40 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	print_export_values(char **keys, char **values)
 	}
 }
 
-void	print_export_sorted(MemoryManager *manager, t_env *env_list)
+void	print_export_sorted(t_MemoryManager *manager, t_env *env_list)
 {
 	t_env	*current;
 	char	**keys;
@@ -81,7 +81,7 @@ void	print_export_sorted(MemoryManager *manager, t_env *env_list)
 	gc_free(manager, values);
 }
 
-void	add_new_env_entry(MemoryManager *manager, char *key, char *value,
+void	add_new_env_entry(t_MemoryManager *manager, char *key, char *value,
 		t_env **env_list)
 {
 	t_env	*current_env;
@@ -92,14 +92,14 @@ void	add_new_env_entry(MemoryManager *manager, char *key, char *value,
 		current_env = current_env->next;
 	}
 	current_env->next = (t_env *)gc_malloc(manager, sizeof(t_env));
-	current_env->next->env = (env *)gc_malloc(manager, sizeof(env));
+	current_env->next->env = (t_envv *)gc_malloc(manager, sizeof(t_envv));
 	current_env->next->env->key = ft_strdup(manager, key);
 	if (value != NULL)
 		current_env->next->env->value = ft_strdup(manager, value);
 	current_env->next->next = NULL;
 }
 
-int	ft_export(t_command *command, t_env **env_list, MemoryManager *manager)
+int	ft_export(t_command *command, t_env **env_list, t_MemoryManager *manager)
 {
 	int	i;
 

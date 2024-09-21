@@ -6,13 +6,13 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 02:52:41 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 02:04:53 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:55:11 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	**get_key_value_for_plus(MemoryManager *manager, char *var)
+char	**get_key_value_for_plus(t_MemoryManager *manager, char *var)
 {
 	char	**key_value;
 
@@ -38,7 +38,7 @@ int	is_special_redc(char c)
 	return (c == '<' || c == '>');
 }
 
-char	*ft_strjoin1(char c, char *s, MemoryManager *manager)
+char	*ft_strjoin1(char c, char *s, t_MemoryManager *manager)
 {
 	char	*result;
 

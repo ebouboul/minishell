@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:02:51 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/20 00:56:39 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:50:19 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // NORM=OK! //one func with more 25 lines
 void	handle_builtin_command(t_node *node, t_env **env_list, int *exit_status,
-		MemoryManager *gc)
+		t_MemoryManager *gc)
 {
 	int	stdout_copy;
 	int	stdin_copy;
@@ -32,7 +32,7 @@ void	handle_builtin_command(t_node *node, t_env **env_list, int *exit_status,
 }
 
 void	handle_child_process1(t_node *node, t_env **env_list, int *exit_status,
-		MemoryManager *gc)
+		t_MemoryManager *gc)
 {
 	char	*executable_path;
 	char	**args;
@@ -58,7 +58,7 @@ void	handle_child_process1(t_node *node, t_env **env_list, int *exit_status,
 }
 
 void	execute_external_command(t_node *node, t_env **env_list,
-		int *exit_status, MemoryManager *gc)
+		int *exit_status, t_MemoryManager *gc)
 {
 	pid_t	pid;
 
@@ -78,7 +78,7 @@ void	execute_external_command(t_node *node, t_env **env_list,
 }
 
 void	execute_single_command(t_node *node, t_env **env_list, int *exit_status,
-		MemoryManager *gc)
+		t_MemoryManager *gc)
 {
 	char	*cmd;
 
@@ -91,7 +91,7 @@ void	execute_single_command(t_node *node, t_env **env_list, int *exit_status,
 		execute_external_command(node, env_list, exit_status, gc);
 }
 
-char	*find_executable(const char *command, char **paths, MemoryManager *gc)
+char	*find_executable(const char *command, char **paths, t_MemoryManager *gc)
 {
 	int		i;
 	char	*full_path;

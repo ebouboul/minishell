@@ -6,13 +6,13 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:46:48 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 01:19:25 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 02:14:23 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*extract_var_name(char *arg, int *j, MemoryManager *gc)
+char	*extract_var_name(char *arg, int *j, t_MemoryManager *gc)
 {
 	int		k;
 	char	*var_name;
@@ -37,7 +37,8 @@ char	*extract_var_name(char *arg, int *j, MemoryManager *gc)
 	return (var_name);
 }
 
-char	*get_variable_value(t_env *env_list, char *var_name, MemoryManager *gc)
+char	*get_variable_value(t_env *env_list, char *var_name,
+	t_MemoryManager *gc)
 {
 	char	*value;
 
@@ -50,7 +51,7 @@ char	*get_variable_value(t_env *env_list, char *var_name, MemoryManager *gc)
 	return (value);
 }
 
-void	append_expanded_value(char **new_arg, char *value, MemoryManager *gc)
+void	append_expanded_value(char **new_arg, char *value, t_MemoryManager *gc)
 {
 	char	*temp;
 

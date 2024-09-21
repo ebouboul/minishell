@@ -6,26 +6,26 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:14:04 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 03:12:27 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 02:08:08 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-TokenNode	*create_node(TokenInfo token, MemoryManager *manager)
+t_TokenNode	*create_node(t_TokenInfo token, t_MemoryManager *manager)
 {
-	TokenNode	*new_node;
+	t_TokenNode	*new_node;
 
-	new_node = (TokenNode *)gc_malloc(manager, sizeof(TokenNode));
+	new_node = (t_TokenNode *)gc_malloc(manager, sizeof(t_TokenNode));
 	new_node->info = token;
 	new_node->next = NULL;
 	return (new_node);
 }
 
-TokenNode	*arrayintonodes(TokenInfo *tokens, MemoryManager *manager)
+t_TokenNode	*arrayintonodes(t_TokenInfo *tokens, t_MemoryManager *manager)
 {
-	TokenNode	*head;
-	TokenNode	*current;
+	t_TokenNode	*head;
+	t_TokenNode	*current;
 	int			i;
 
 	if (tokens == NULL || tokens[0].type == TOKEN_EOF)
@@ -42,9 +42,9 @@ TokenNode	*arrayintonodes(TokenInfo *tokens, MemoryManager *manager)
 	return (head);
 }
 
-void	print_linked_list(TokenNode *head)
+void	print_linked_list(t_TokenNode *head)
 {
-	TokenNode	*current;
+	t_TokenNode	*current;
 
 	current = head;
 	while (current != NULL)
@@ -55,10 +55,10 @@ void	print_linked_list(TokenNode *head)
 	}
 }
 
-void	free_linked_list(TokenNode *head)
+void	free_linked_list(t_TokenNode *head)
 {
-	TokenNode	*current;
-	TokenNode	*next;
+	t_TokenNode	*current;
+	t_TokenNode	*next;
 
 	current = head;
 	while (current != NULL)

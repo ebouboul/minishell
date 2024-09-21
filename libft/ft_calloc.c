@@ -6,13 +6,13 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 17:47:01 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 03:05:49 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:51:56 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_calloc(size_t nmemb, size_t size, MemoryManager *gc)
+void	*ft_calloc(size_t nmemb, size_t size, t_MemoryManager *gc)
 {
 	void	*array;
 	size_t	len;

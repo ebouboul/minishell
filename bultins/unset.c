@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:10:44 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 21:12:44 by amousaid         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:49:33 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	free_env_node(t_env *node, MemoryManager *manager)
+void	free_env_node(t_env *node, t_MemoryManager *manager)
 {
 	if (node)
 	{
@@ -27,7 +27,7 @@ void	free_env_node(t_env *node, MemoryManager *manager)
 }
 
 void	remove_env_node(t_env **env_list, t_env *node_to_remove, t_env *prev,
-		MemoryManager *manager)
+		t_MemoryManager *manager)
 {
 	if (prev == NULL)
 		*env_list = node_to_remove->next;
@@ -36,7 +36,7 @@ void	remove_env_node(t_env **env_list, t_env *node_to_remove, t_env *prev,
 	free_env_node(node_to_remove, manager);
 }
 
-void	unset_variable(t_env **env_list, char *key, MemoryManager *manager)
+void	unset_variable(t_env **env_list, char *key, t_MemoryManager *manager)
 {
 	t_env	*current_env;
 	t_env	*prev;
@@ -56,7 +56,7 @@ void	unset_variable(t_env **env_list, char *key, MemoryManager *manager)
 	}
 }
 
-int	ft_unset(t_command *command, t_env **env_list, MemoryManager *manager)
+int	ft_unset(t_command *command, t_env **env_list, t_MemoryManager *manager)
 {
 	int	i;
 

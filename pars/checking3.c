@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checking3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 20:33:19 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 21:14:03 by amousaid         ###   ########.fr       */
+/*   Updated: 2024/09/21 02:20:48 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@ int	validate_input(char *input, int *exit_status)
 	return (1);
 }
 
-int	checking(TokenNode *list_head)
+int	checking(t_TokenNode *list_head)
 {
 	if (check_special_chars(list_head) == 2)
 		return (2);
-	else if (check_syntax_double_special_charcters(list_head) == 2)
+	else if (check_syntax_double_special_cha(list_head) == 2)
 		return (2);
 	else if (check_syntax_special_face_to_face(list_head) == 2)
 		return (2);
@@ -42,12 +42,12 @@ int	checking(TokenNode *list_head)
 	return (0);
 }
 
-TokenInfo	*process_input(char *input, int *exit_status,
-		MemoryManager *manager)
+t_TokenInfo	*process_input(char *input, int *exit_status,
+		t_MemoryManager *manager)
 {
 	char		**inp;
-	TokenInfo	*tokens;
-	TokenNode	*list_head;
+	t_TokenInfo	*tokens;
+	t_TokenNode	*list_head;
 
 	input = add_spaces(input, manager);
 	inp = ft_split(input, manager);
@@ -63,10 +63,10 @@ TokenInfo	*process_input(char *input, int *exit_status,
 	return (tokens);
 }
 
-t_node	*prepare_execution(TokenInfo *tokens, t_env *env_list, int exit_status,
-		MemoryManager *manager)
+t_node	*prepare_execution(t_TokenInfo *tokens,
+	t_env *env_list, int exit_status, t_MemoryManager *manager)
 {
-	TokenNode	*list_head;
+	t_TokenNode	*list_head;
 	t_node		*node;
 
 	list_head = arrayintonodes(tokens, manager);

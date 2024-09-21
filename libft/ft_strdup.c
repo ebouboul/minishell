@@ -6,13 +6,13 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 17:47:16 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/18 00:14:39 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:52:40 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strdup(MemoryManager *manger, const char *src)
+char	*ft_strdup(t_MemoryManager *manger, const char *src)
 {
 	char	*dest;
 	int		i;

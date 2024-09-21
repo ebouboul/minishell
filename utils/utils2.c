@@ -6,13 +6,13 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 02:05:05 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 02:16:25 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:55:20 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ret_check(TokenNode *current)
+int	ret_check(t_TokenNode *current)
 {
 	return ((current->next != NULL && current->next->info.type == TOKEN_APPEND)
 		|| (current->next != NULL && current->next->info.type == TOKEN_HEREDOC)
@@ -22,7 +22,7 @@ int	ret_check(TokenNode *current)
 			&& current->next->info.type == TOKEN_REDIRECT_OUT));
 }
 
-void	my_exit(int status, MemoryManager *manager)
+void	my_exit(int status, t_MemoryManager *manager)
 {
 	if (manager)
 		gc_free_all(manager);

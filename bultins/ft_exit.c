@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:59:36 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/19 02:46:56 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:49:22 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	is_all_numeric(char **str)
 	return (1);
 }
 
-int	ft_exit(t_command *command, MemoryManager *manager)
+int	ft_exit(t_command *command, t_MemoryManager *manager)
 {
 	int	status;
 

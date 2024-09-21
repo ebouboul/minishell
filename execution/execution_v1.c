@@ -13,48 +13,8 @@
 
 #include "../minishell.h"
 
-// NORM=OK!
-int	is_heredoc(t_node *node)
-{
-	t_redirect	*redirect;
-
-	if (!node || !node->command || !node->command->redirect)
-		return (0);
-	redirect = node->command->redirect;
-	while (redirect)
-	{
-		if (redirect->flag == 8)
-			return (1);
-		redirect = redirect->next;
-	}
-	return (0);
-}
-// int	is_heredoc(t_node *node)
-// {
-//     t_redirect	*redirect;
-// 	t_node		*current;
-// 	current = node;
-
-//     while (current) // Traverse through all nodes
-//     {
-//         if (current->command && current->command->redirect)
-//         {
-//             redirect = current->command->redirect;
-//             while (redirect)
-//             {
-//                 if (redirect->flag == 8) // Check if the redirect is a heredoc
-//                     return (1);
-//                 redirect = redirect->next;
-//             }
-//         }
-//         current = current->next; // Move to the next node in the list
-//     }
-//     return (0); // No heredoc found in any node
-// }
-
-
 void	execute_heredoc(t_node *current, t_env **env_list, int *exit_status,
-		MemoryManager *gc)
+		t_MemoryManager *gc)
 {
 	pid_t	pid;
 
@@ -73,32 +33,53 @@ void	execute_heredoc(t_node *current, t_env **env_list, int *exit_status,
 		ft_waitpid(pid, exit_status);
 }
 
+void	exeall(t_node *current, t_exec_context *context)
+{
+	if (is_heredoc(current))
+	{
+		execute_heredoc(current, context->env_list, context->exit_status,
+			context->gc);
+		my_exit(*(context->exit_status), context->gc);
+	}
+	while (current)
+	{
+		if (current->next)
+		{
+			handle_pipe_and_multiple_commands(current, context);
+			break ;
+		}
+		else
+			execute_single_command(current, context->env_list,
+				context->exit_status, context->gc);
+		current = current->next;
+	}
+	my_exit(*(context->exit_status), context->gc);
+}
+
 void	execute_cmds(t_node *head, t_env **env_list, int *exit_status,
-		MemoryManager *gc)
+		t_MemoryManager *gc)
 {
 	t_node			*current;
 	t_exec_context	context;
+	pid_t			pid;
 
 	current = head;
 	context.env_list = env_list;
 	context.exit_status = exit_status;
 	context.gc = gc;
-	while (current)
+	sig_ignore();
+	if (is_exe_bult(current, env_list, exit_status, gc))
+		return ;
+	pid = fork();
+	if (pid == -1)
 	{
-		sig_ignore();
-		if (is_heredoc(current) || is_heredoc(current->next))
-			execute_heredoc(current, env_list, &head->exit_status, gc);
-		else if (current->next)
-		{
-			handle_pipe_and_multiple_commands(current, &context);
-			break ;
-		}
-		else
-		{
-			execute_single_command(current, env_list, &head->exit_status, gc);
-		}
-		current = current->next;
+		perror("fork");
+		my_exit(1, gc);
 	}
+	else if (pid == 0)
+		exeall(current, &context);
+	else
+		ft_waitpid(pid, exit_status);
 }
 
 int	is_redirection(t_node *node)

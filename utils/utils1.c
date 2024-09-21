@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 03:34:20 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 20:38:07 by amousaid         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:45:16 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ int	is_space1(char *input)
 	return (1);
 }
 
-int	count_heredoc(TokenNode *list_head)
+int	count_heredoc(t_TokenNode *list_head)
 {
 	int			count;
-	TokenNode	*temp;
+	t_TokenNode	*temp;
 
 	count = 0;
 	temp = list_head;

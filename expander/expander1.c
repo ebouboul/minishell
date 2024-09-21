@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:45:36 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 01:19:57 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:51:01 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	split_and_remove_quotes(char ***args, char **split_args, int i,
 	}
 }
 
-void	handle_splitting(char ***args, int i, MemoryManager *gc)
+void	handle_splitting(char ***args, int i, t_MemoryManager *gc)
 {
 	char	**split_args;
 	int		num_splits;

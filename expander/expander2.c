@@ -6,14 +6,14 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:44:57 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 01:47:01 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:51:10 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 void	handle_exit_status(char **new_arg, int *j, int exit_status,
-		MemoryManager *gc)
+		t_MemoryManager *gc)
 {
 	char	*value;
 

@@ -14,7 +14,7 @@ OBGDIR = obj
 SRC = main.c \
 	execution/execute_heredocP1.c execution/execute_heredocP2.c execution/execution_v1.c \
 	execution/execution_v2.c execution/execute_pipe_and_cmds.c execution/execute_redirectionsP1.c \
-	execution/execute_redirectionsP2.c execution/execution_v1_1.c execution/execution_v1_2.c \
+	execution/execute_redirectionsP2.c execution/execution_v1_1.c execution/exect.c execution/execution_v1_2.c \
 	bultins/echo.c bultins/cd.c bultins/export.c bultins/unset.c bultins/ft_env.c \
 	bultins/ft_exit.c bultins/builtins.c bultins/export2.c \
 	pars/checking3.c  pars/env.c pars/fill_node.c pars/wildcards1.c pars/parser.c pars/parser_space_quotes.c \

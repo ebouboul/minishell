@@ -6,13 +6,13 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 23:42:57 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 01:30:13 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:52:49 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin(char const *s1, char const *s2, MemoryManager *gc)
+char	*ft_strjoin(char const *s1, char const *s2, t_MemoryManager *gc)
 {
 	char	*newstr;
 	int		i;

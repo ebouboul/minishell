@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:11:18 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 20:11:19 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:48:01 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	is_builtin(char *command)
 	return (0);
 }
 
-int	execute_builtin(t_node *head, t_env **env_list, MemoryManager *manager)
+int	execute_builtin(t_node *head, t_env **env_list, t_MemoryManager *manager)
 {
 	t_node	*current;
 	int		status;
@@ -57,13 +57,13 @@ int	execute_builtin(t_node *head, t_env **env_list, MemoryManager *manager)
 	else if (ft_strcmp(current->command->args[0], "cd") == 0)
 		status = ft_cd(current->command, env_list, manager);
 	else if (ft_strcmp(current->command->args[0], "pwd") == 0)
-		status = ft_pwd();
+		status = ft_pwd(*env_list, manager);
 	else if (ft_strcmp(current->command->args[0], "export") == 0)
 		status = ft_export(current->command, env_list, manager);
 	else if (ft_strcmp(current->command->args[0], "unset") == 0)
 		status = ft_unset(current->command, env_list, manager);
 	else if (ft_strcmp(current->command->args[0], "env") == 0)
-		status = ft_env(*env_list);
+		status = ft_env(current->command, *env_list);
 	else if (ft_strcmp(current->command->args[0], "exit") == 0)
 		status = ft_exit(current->command, manager);
 	return (status);

@@ -6,14 +6,14 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 23:42:38 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/17 15:29:13 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:53:01 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
 char	*ft_substr(const char *s, unsigned int start, size_t len,
-		MemoryManager *gc)
+		t_MemoryManager *gc)
 {
 	char	*str;
 	size_t	a;

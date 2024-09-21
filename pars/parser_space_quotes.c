@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_space_quotes.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 02:11:28 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 20:39:28 by amousaid         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:54:12 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	add_space_around_single_char(char *input, char *new, int *i, int *j)
 		new[(*j)++] = ' ';
 }
 
-char	*add_spaces(char *input, MemoryManager *manager)
+char	*add_spaces(char *input, t_MemoryManager *manager)
 {
 	int		i;
 	int		j;
@@ -85,7 +85,7 @@ char	*add_spaces(char *input, MemoryManager *manager)
 	return (new);
 }
 
-void	increment_shlvl(t_env *env_list, MemoryManager *manager)
+void	increment_shlvl(t_env *env_list, t_MemoryManager *manager)
 {
 	t_env	*current;
 	int		value;

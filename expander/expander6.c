@@ -6,13 +6,13 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:48:18 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 01:22:46 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:51:33 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*ft_charjoin(char *s, char c, MemoryManager *gc)
+char	*ft_charjoin(char *s, char c, t_MemoryManager *gc)
 {
 	char	*result;
 	int		i;
@@ -73,7 +73,7 @@ int	dollar_position(char *str)
 	return (-1);
 }
 
-void	append_char(char c, char **new_arg, MemoryManager *gc)
+void	append_char(char c, char **new_arg, t_MemoryManager *gc)
 {
 	char	temp[2];
 	char	*old_arg;

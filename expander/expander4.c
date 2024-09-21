@@ -6,14 +6,14 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:43:57 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/20 01:21:33 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/21 01:51:16 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 void	exp_reddd(char **args, t_env *env_list, int exit_status,
-		MemoryManager *gc)
+		t_MemoryManager *gc)
 {
 	t_exec_context	context;
 	char			*last;
@@ -40,7 +40,7 @@ void	exp_reddd(char **args, t_env *env_list, int exit_status,
 }
 
 void	expand_redirect(t_redirect **redirect, t_env *env_list, int exit_status,
-		MemoryManager *gc)
+		t_MemoryManager *gc)
 {
 	t_redirect	*current;
 	char		**args;
@@ -75,7 +75,7 @@ int	need_expansion(char *str)
 }
 
 void	expan_herdoc(char **args, t_env *env_list, int exit_status,
-		MemoryManager *gc)
+		t_MemoryManager *gc)
 {
 	char			*last;
 	t_exec_context	context;
@@ -102,7 +102,7 @@ void	expan_herdoc(char **args, t_env *env_list, int exit_status,
 }
 
 void	expansion_process(t_node **head, t_env *env_list, int exit_status,
-		MemoryManager *gc)
+		t_MemoryManager *gc)
 {
 	t_node			*current;
 	t_command		*current_command;
