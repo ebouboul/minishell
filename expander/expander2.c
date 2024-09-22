@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:44:57 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 06:34:40 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/22 04:48:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ void	handle_exit_status(char **new_arg, int *j, int exit_status,
 		t_MemoryManager *gc)
 {
 	char	*value;
-
+	
+	if (*new_arg == NULL)
 	*new_arg = ft_strdup(gc, "");
 	value = ft_itoa(exit_status, gc);
 	append_expanded_value(new_arg, value, gc);
