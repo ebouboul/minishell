@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 02:49:19 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 06:54:18 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/22 21:15:44 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,14 +100,15 @@ int	check_export(char *args)
 		print_error11(args, "not a valid identifier");
 		return (1);
 	}
-	while(args[i] != '\0' && args[i] != '=')
+	while (args[i] != '\0' && args[i] != '=')
 	{
 		if (ft_isalpha(args[i]) == 0)
 		{
 			print_error11(args, "not a valid identifier");
 			return (1);
 		}
-		else if (args[i] == '=' && (isalnum(args[i - 1]) == 0 && args[i - 1] != '_'
+		else if (args[i] == '='
+			&& (isalnum(args[i - 1]) == 0 && args[i - 1] != '_'
 				&& args[i - 1] != '+'))
 		{
 			print_error11(args, "not a valid identifier");

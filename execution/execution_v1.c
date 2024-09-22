@@ -69,7 +69,7 @@ void	execute_cmds(t_node *head, t_env **env_list, int *exit_status,
 	sig_ignore();
 	if (is_exe_bult(current, env_list, exit_status, gc))
 		return ;
-	else 
+	else
 	{
 		pid = fork();
 		if (pid == -1)

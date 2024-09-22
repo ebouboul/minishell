@@ -6,7 +6,7 @@
 /*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:10 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/21 18:55:29 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/22 20:54:08 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ int	is_empty_in_qotes(char *str)
 int	ambigous_redirect(char *str, char *old)
 {
 	int	flag;
-	
-	if ((ft_strchr(str, '"') || ft_strchr(str, '\'')) )
+
+	if ((ft_strchr(str, '"') || ft_strchr(str, '\'')))
 		flag = 1;
 	else if (ft_strcmp(str, old) != 0)
 		flag = 0;
@@ -81,12 +81,12 @@ int	handle_redirections(t_node *node, t_env **env_list, int *exit_status)
 			if (ambigous_redirect(redirect->str, redirect->old_str) == 0)
 			{
 				if (handle_single_redirection(redirect) == EXIT_FAILURE)
-						*exit_status = 1;
+					*exit_status = 1;
 			}
 			else
 			{
-					*exit_status = 1;
-					return (EXIT_FAILURE);
+				*exit_status = 1;
+				return (EXIT_FAILURE);
 			}
 		}
 		redirect = redirect->next;

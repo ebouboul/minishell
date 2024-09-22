@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 03:31:01 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 02:18:02 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/22 21:12:03 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,26 @@ int	handle_special_char(t_TokenData *data)
 	data->tokens[data->c].value[length] = '\0';
 	data->tokens[data->c].type = get_token_type(data->tokens[data->c].value);
 	return (++data->c);
+}
+
+int	count_pipe(char **inputs)
+{
+	int	i;
+	int	j;
+	int	count;
+
+	i = 0;
+	count = 2;
+	while (inputs[i])
+	{
+		j = 0;
+		while (inputs[i][j])
+		{
+			if (inputs[i][j] == '|')
+				count++;
+			j++;
+		}
+		i++;
+	}
+	return (count);
 }

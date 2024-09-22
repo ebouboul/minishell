@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:11:18 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 03:45:27 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/22 21:17:44 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 {
 	int	i;
 
-	if(!s1 || !s2)
+	if (!s1 || !s2)
 		return (-1);
 	i = 0;
 	while (s1 && s2 && s1[i] != '\0' && s2[i] != '\0')

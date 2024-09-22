@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 03:43:09 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 04:11:16 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/22 21:10:14 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@
 
 # define MAX_TOKEN_LENGTH 100
 # define MAX_TOKENS 100
-
 
 // tokenizer functions
 t_TokenInfo				*tokenizer(char **inputs, t_MemoryManager *manager);
@@ -142,6 +141,8 @@ int						need_expansion(char *str);
 void					expan_herdoc(char **args, t_env *env_list,
 							int exit_status, t_MemoryManager *gc);
 int						should_split_argument(char **args, int i, char *last);
+int						count_pipe(char **inputs);
+
 
 // builtins functions:
 
@@ -271,15 +272,15 @@ void					handle_heredoc(t_node *node, t_env **env_list,
 
 // redirectionsP1 functions
 
-int					handle_open_error(void);
-int					handle_dup2_error(void);
+int						handle_open_error(void);
+int						handle_dup2_error(void);
 int						open_file(const char *str, int flags);
-int					redirect_output(const char *str, int flags);
-int					redirect_input(const char *str);
+int						redirect_output(const char *str, int flags);
+int						redirect_input(const char *str);
 
 // redirectionsP2 functions
 
-int					handle_single_redirection(t_redirect *redirect);
+int						handle_single_redirection(t_redirect *redirect);
 int						handle_redirections(t_node *node, t_env **env_list,
 							int *exit_status);
 void					wait_for_children(pid_t last_pid, int *exit_status);

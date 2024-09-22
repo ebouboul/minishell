@@ -16,9 +16,9 @@ void	handle_exit_status(char **new_arg, int *j, int exit_status,
 		t_MemoryManager *gc)
 {
 	char	*value;
-	
+
 	if (*new_arg == NULL)
-	*new_arg = ft_strdup(gc, "");
+		*new_arg = ft_strdup(gc, "");
 	value = ft_itoa(exit_status, gc);
 	append_expanded_value(new_arg, value, gc);
 	*j += 2;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 17:46:27 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 05:50:43 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/22 20:46:02 by ansoulai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 unsigned long long int	ft_atoi(const char *nptr)
 {
-	unsigned long long int	result;
-	int					sign;
-	int					i;
-	
-	if(!nptr)
+	unsigned long long int			result;
+	int								sign;
+	int								i;
+
+	if (!nptr)
 		return (0);
 	result = 0;
 	sign = 1;

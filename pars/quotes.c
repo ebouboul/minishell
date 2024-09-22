@@ -101,7 +101,7 @@ void	remove_closed(char *input)
 	j = 0;
 	if (!input)
 		return ;
-	while (input &&  input[i] != '\0')
+	while (input && input[i] != '\0')
 	{
 		if (is_quote2(input[i]))
 		{
