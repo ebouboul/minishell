@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:44:57 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/22 04:48:08 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/22 21:31:34 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ void	handle_expansion(char **args, int i, t_exec_context *context, int *k)
 			handle_special_case(&new_arg, args[i], &j, context);
 		else
 			append_char(args[i][j++], &new_arg, context->gc);
-		*k = j;
 	}
 	update_args(args, new_arg, i);
 }

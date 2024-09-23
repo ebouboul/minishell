@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe_and_cmds.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 00:39:32 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 18:33:24 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/23 02:16:51 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	handle_pipe_and_multiple_commands(t_node *head, t_exec_context *ctx)
 	{
 		setup_pipe(&proc_data);
 		proc_data.pid = fork();
-		if (proc_data.pid == 0)
+		if (proc_data.pid == 0 && !is_herefoc1(current))
 			handle_child_process(&proc_data, current, ctx);
 		else if (proc_data.pid > 0)
 		{

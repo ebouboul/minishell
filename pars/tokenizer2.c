@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 03:17:08 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/22 21:11:28 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/23 04:11:22 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,13 @@ t_TokenInfo	*tokenizer(char **inputs, t_MemoryManager *manager)
 {
 	t_TokenInfo	*tokens;
 	int			j;
+	int			coun;
 	t_TokenData	data;
 
 	j = 0;
 	data.c = 0;
-	tokens = allocate_tokens(manager, count_pipe(inputs));
+	coun = count_pipe(inputs);
+	tokens = allocate_tokens(manager, coun);
 	data.tokens = tokens;
 	data.manager = manager;
 	while (inputs[j])

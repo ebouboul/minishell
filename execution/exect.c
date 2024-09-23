@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 01:34:29 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 01:49:40 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/22 22:28:27 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int	is_exe_bult(t_node *node, t_env **env_list, int *exit_status,
 	char	*cmd;
 
 	current = node;
-	cmd = current->command->args[0];
 	sig_ignore();
+	cmd = current->command->args[0];
 	if (cmd && is_builtin(cmd) && current->next == NULL)
 	{
 		handle_builtin_command(node, env_list, exit_status, gc);
@@ -48,6 +48,20 @@ int	is_heredoc(t_node *node)
 			}
 		}
 		current = current->next;
+	}
+	return (0);
+}
+
+int	is_herefoc1(t_node *node)
+{
+	t_redirect	*redirect;
+
+	redirect = node->command->redirect;
+	while (redirect)
+	{
+		if (redirect->flag == 8)
+			return (1);
+		redirect = redirect->next;
 	}
 	return (0);
 }

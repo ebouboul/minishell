@@ -6,12 +6,14 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 03:06:22 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 03:06:53 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/22 21:53:51 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
+
+# include <sys/types.h>
 
 typedef struct t_MemoryNode
 {

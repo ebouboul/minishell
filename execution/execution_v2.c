@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/21 03:07:51 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/22 21:35:59 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,14 @@ char	*find_executable_in_path(char *command, t_env *env_list,
 	int		i;
 	char	**paths;
 
-	if (command[0] == '.' || command[0] == '/')
+	path_value = gett_env_value("PATH", env_list);
+	if (command[0] == '.' || command[0] == '/' || !path_value)
 	{
 		if (check_is_directory(command, gc) == 0)
 			return (ft_strdup(gc, command));
 		else
 			return (NULL);
 	}
-	path_value = gett_env_value("PATH", env_list);
-	if (path_value == NULL)
-		return (NULL);
 	paths = split_path(path_value, gc);
 	executable_path = find_executable(command, paths, gc);
 	i = 0;
