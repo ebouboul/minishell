@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_redirectionsP2.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:10 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/22 20:54:08 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/23 04:23:56 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,20 +73,22 @@ int	handle_redirections(t_node *node, t_env **env_list, int *exit_status)
 
 	redirect = node->command->redirect;
 	(void)env_list;
-	(void)exit_status;
 	while (redirect)
 	{
 		if (redirect->flag != 8)
 		{
 			if (ambigous_redirect(redirect->str, redirect->old_str) == 0)
 			{
-				if (handle_single_redirection(redirect) == EXIT_FAILURE)
+				if (handle_single_redirection(redirect) == 1)
+				{
 					*exit_status = 1;
+					return(1);
+				}
 			}
 			else
 			{
 				*exit_status = 1;
-				return (EXIT_FAILURE);
+				return (1);
 			}
 		}
 		redirect = redirect->next;

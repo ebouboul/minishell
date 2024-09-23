@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_v1_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:02:51 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/21 18:52:45 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/23 04:34:26 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,25 +56,25 @@ void	handle_child_process1(t_node *node, t_env **env_list, int *exit_status,
 	}
 }
 
-void	execute_external_command(t_node *node, t_env **env_list,
-		int *exit_status, t_MemoryManager *gc)
-{
-	pid_t	pid;
+// void	execute_external_command(t_node *node, t_env **env_list,
+// 		int *exit_status, t_MemoryManager *gc)
+// {
+// 	// pid_t	pid;
 
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
-	else if (pid == 0)
-	{
-		handle_child_process1(node, env_list, exit_status, gc);
-		exit(*exit_status);
-	}
-	else
-		ft_waitpid(pid, exit_status);
-}
+// 	// pid = fork();
+// 	// if (pid == -1)
+// 	// {
+// 	// 	perror("fork");
+// 	// 	exit(EXIT_FAILURE);
+// 	// }
+// 	// else if (pid == 0)
+// 	// {
+// 		handle_child_process1(node, env_list, exit_status, gc);
+// 		my_exit(*exit_status, gc);
+// 	// }
+// 	// else
+// 	// 	ft_waitpid(pid, exit_status);
+// }
 
 void	execute_single_command(t_node *node, t_env **env_list, int *exit_status,
 		t_MemoryManager *gc)
@@ -87,7 +87,10 @@ void	execute_single_command(t_node *node, t_env **env_list, int *exit_status,
 	if (cmd && is_builtin(cmd))
 		handle_builtin_command(node, env_list, exit_status, gc);
 	else
-		execute_external_command(node, env_list, exit_status, gc);
+	{
+		handle_child_process1(node, env_list, exit_status, gc);
+		my_exit(*exit_status, gc);
+	}
 }
 
 char	*find_executable(const char *command, char **paths, t_MemoryManager *gc)
