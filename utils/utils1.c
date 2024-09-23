@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 03:34:20 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 01:45:16 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/23 20:10:13 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,15 @@ int	is_quote2(char c)
 
 int	is_dollar_only(char *str)
 {
-	if ((str[0] == '$' && str[1] == '\0' ))
+	int i;
+	i = 0;
+	while(str[i] != '\0')
+	{
+		if (str[i] == '$' && str[i + 1] != '\0')
+			return (0);
+		i++;
+	}
+	if ((str[ft_strlen(str) - 1] == '$'))
 		return (1);
 	return (0);
 }
