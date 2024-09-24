@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 03:34:20 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/23 20:10:13 by amousaid         ###   ########.fr       */
+/*   Updated: 2024/09/24 22:09:49 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	is_dollar_only(char *str)
 			return (0);
 		i++;
 	}
-	if ((str[ft_strlen(str) - 1] == '$'))
+	if (str[ft_strlen(str) - 1] == '$')
 		return (1);
 	return (0);
 }
