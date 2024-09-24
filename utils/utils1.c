@@ -24,9 +24,10 @@ int	is_quote2(char c)
 
 int	is_dollar_only(char *str)
 {
-	int i;
+	int	i;
+
 	i = 0;
-	while(str[i] != '\0')
+	while (str[i] != '\0')
 	{
 		if (str[i] == '$' && str[i + 1] != '\0')
 			return (0);

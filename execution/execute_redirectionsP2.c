@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:37:10 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/23 04:23:56 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/24 22:02:30 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	handle_redirections(t_node *node, t_env **env_list, int *exit_status)
 				if (handle_single_redirection(redirect) == 1)
 				{
 					*exit_status = 1;
-					return(1);
+					return (1);
 				}
 			}
 			else
