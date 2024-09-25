@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander4.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ansoulai <ansoulai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:43:57 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/22 20:29:58 by ansoulai         ###   ########.fr       */
+/*   Updated: 2024/09/25 12:58:17 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	exp_reddd(char **args, t_env *env_list, int exit_status,
 		while (last && dstrchr(last, '$', &j) && !is_dollar_only(last))
 		{
 			handle_expansion(args, i, &context, &k);
-			change_qoutes(args[i]);
 			if (k >= (int)ft_strlen(args[i]))
 				break ;
 			last = args[i] + k;
@@ -84,6 +83,7 @@ void	expan_herdoc(char **args, t_env *env_list, int exit_status,
 	context.env_list = &env_list;
 	context.exit_status = &exit_status;
 	context.gc = gc;
+	context.q = 0;
 	i = 0;
 	while (args[i] != NULL)
 	{

@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 03:43:09 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/22 21:45:08 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/25 14:12:34 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,7 @@ int			dstrchr2(char *s, char c, int *i);
 char		*dstrchr(char *s, char c, int *flag);
 void		append_char(char c, char **new_arg, t_MemoryManager *gc);
 char		*ft_charjoin(char *s, char c, t_MemoryManager *gc);
-char		*extract_var_name(char *arg, int *j, t_MemoryManager *gc);
-char		*get_variable_value(t_env *env_list, char *var_name,
-				t_MemoryManager *gc);
+char		*extract_var_name(char *arg, int *j, t_MemoryManager *gc, int q);
 void		append_expanded_value(char **new_arg, char *value,
 				t_MemoryManager *gc);
 int			is_last_dollar(char *str, char c);
@@ -250,6 +248,12 @@ void		execute_command_with_heredoc(t_node *temp, const char *temp_file,
 				t_exec_context *context);
 void		handle_heredoc(t_node *node, t_env **env_list, int *exit_status,
 				t_MemoryManager *gc);
+int			handle_piping_and_forking(t_node *node, t_process_data *pdata,
+				char *temp_file, t_exec_context *context);
+void		handle_child_process11(t_node *node, t_process_data *pdata,
+				char *temp_file, t_exec_context *context);
+void		handle_heredoc_redirects(t_node *node, char *temp_file,
+				t_exec_context *context);
 
 // redirectionsP1 functions
 

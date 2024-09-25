@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:53 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/23 05:03:44 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/25 14:14:55 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,31 +43,28 @@ void	execute_command_with_heredoc(t_node *temp, const char *temp_file,
 }
 
 void	handle_heredoc(t_node *node, t_env **env_list, int *exit_status,
-		t_MemoryManager *gc)
+	t_MemoryManager *gc)
 {
 	char			*temp_file;
 	t_node			*temp;
-	t_redirect		*redirect;
 	t_exec_context	context;
+	t_process_data	pdata;
 
+	pdata.prev_pipe = -1;
 	temp_file = create_temp_filename(gc);
-	temp = node;
 	context.env_list = env_list;
 	context.exit_status = exit_status;
 	context.gc = gc;
+	temp = node;
 	while (temp)
 	{
-		redirect = temp->command->redirect;
-		while (redirect)
-		{
-			if (redirect->flag == 8)
-				handle_single_heredoc(redirect, temp_file, &context);
-			redirect = redirect->next;
-		}
-		if (temp->next == NULL)
-			execute_command_with_heredoc(temp, temp_file, &context);
+		handle_heredoc_redirects(temp, temp_file, &context);
+		pdata.prev_pipe = handle_piping_and_forking(temp, &pdata,
+				temp_file, &context);
 		temp = temp->next;
 	}
+	while (wait(NULL) > 0)
+		;
 	unlink(temp_file);
 	gc_free(gc, temp_file);
 }

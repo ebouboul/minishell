@@ -6,13 +6,13 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 19:46:48 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/22 21:27:57 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/25 12:54:13 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*extract_var_name(char *arg, int *j, t_MemoryManager *gc)
+char	*extract_var_name(char *arg, int *j, t_MemoryManager *gc, int q)
 {
 	int		k;
 	char	*var_name;
@@ -26,10 +26,13 @@ char	*extract_var_name(char *arg, int *j, t_MemoryManager *gc)
 	while (arg[k] && (isalpha(arg[k + 1]) || isdigit(arg[k + 1]) || arg[k
 				+ 1] == '_'))
 		k++;
-	if (ft_strchr(ft_substr(arg, *j, k, gc), '\'') != NULL
-		&& ft_strchr(ft_substr(arg, *j, k, gc), '"') == NULL
-		&& ft_strchr(ft_substr(arg, *j, k + 1, gc), '\'')[1] != '"')
-		return (NULL);
+	if (q != 0)
+	{
+		if (ft_strchr(ft_substr(arg, *j, k, gc), '\'') != NULL
+			&& ft_strchr(ft_substr(arg, *j, k, gc), '"') == NULL
+			&& ft_strchr(ft_substr(arg, *j, k + 1, gc), '\'')[1] != '"')
+			return (NULL);
+	}
 	var_name = ft_substr(arg, *j + 1, k - *j, gc);
 	if (!var_name)
 		return (NULL);
@@ -82,7 +85,7 @@ void	expand_variable(char *arg, char **new_arg, int *j,
 		return ;
 	var_name = NULL;
 	value = NULL;
-	var_name = extract_var_name(arg, j, context->gc);
+	var_name = extract_var_name(arg, j, context->gc, context->q);
 	if (var_name)
 	{
 		value = get_variable_value(*context->env_list, var_name, context->gc);
