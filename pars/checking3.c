@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checking3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 20:33:19 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 02:20:48 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/26 20:30:21 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,14 +64,14 @@ t_TokenInfo	*process_input(char *input, int *exit_status,
 }
 
 t_node	*prepare_execution(t_TokenInfo *tokens,
-	t_env *env_list, int exit_status, t_MemoryManager *manager)
+	t_env **env_list, int exit_status, t_MemoryManager *manager)
 {
 	t_TokenNode	*list_head;
 	t_node		*node;
 
 	list_head = arrayintonodes(tokens, manager);
 	node = convert_to_node_list(list_head, manager);
-	expansion_process(&node, env_list, exit_status, manager);
+	expansion_process(&node, *env_list, exit_status, manager);
 	replace_wildcard_in_args(node, manager);
 	remove_quotes_and_join(node, manager);
 	return (node);

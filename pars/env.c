@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:35:49 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 02:05:13 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/26 20:30:36 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ char	**set_env(t_MemoryManager *manager)
 }
 
 void	fill_env_list(t_MemoryManager *manager, char **envv,
-	t_env *env_list)
+	t_env **env_list)
 {
 	t_env	*current;
 	int		i;
 	char	**key_value;
 
-	current = env_list;
+	current = *env_list;
 	i = 0;
 	if (!envv[0])
 		envv = set_env(manager);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:10:44 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/21 01:49:33 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/26 20:41:57 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,7 @@ void	unset_variable(t_env **env_list, char *key, t_MemoryManager *manager)
 	prev = NULL;
 	while (current_env != NULL)
 	{
-		if (ft_strcmp(current_env->env->key, key) == 0
-			&& ft_strcmp(current_env->env->key, "_") != 0)
+		if (ft_strcmp(current_env->env->key, key) == 0)
 		{
 			remove_env_node(env_list, current_env, prev, manager);
 			break ;

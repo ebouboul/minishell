@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 03:43:09 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/25 14:12:34 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/26 20:38:59 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int			track_quots(char *input);
 int			print_error(char *str);
 
 void		fill_env_list(t_MemoryManager *manager, char **env,
-				t_env *env_list);
+				t_env **env_list);
 void		print_env_list(t_env *env_list);
 int			check_key_if_deja(t_env *env_list, char *var);
 int			check_special_validity(t_TokenNode *head);
@@ -177,9 +177,9 @@ int			count_heredoc(t_TokenNode *list_head);
 int			checking(t_TokenNode *list_head);
 t_TokenInfo	*process_input(char *input, int *exit_status,
 				t_MemoryManager *manager);
-t_node		*prepare_execution(t_TokenInfo *tokens, t_env *env_list,
+t_node		*prepare_execution(t_TokenInfo *tokens, t_env **env_list,
 				int exit_status, t_MemoryManager *manager);
-void		increment_shlvl(t_env *env_list, t_MemoryManager *manager);
+void		increment_shlvl(t_env **env_list, t_MemoryManager *manager);
 
 // execution functions v1:
 

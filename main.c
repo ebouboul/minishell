@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:17:11 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/22 22:00:14 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/26 20:38:39 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	process_and_execute_input(char *input, t_node **node, t_env *env_list,
+void	process_and_execute_input(char *input, t_node **node, t_env **env_list,
 		t_MemoryManager *manager)
 {
 	t_TokenInfo	*tokens;
@@ -25,7 +25,7 @@ void	process_and_execute_input(char *input, t_node **node, t_env *env_list,
 			return ;
 		*node = prepare_execution(tokens, env_list, (*node)->exit_status,
 				manager);
-		execute_cmds(*node, &env_list, &(*node)->exit_status, manager);
+		execute_cmds(*node, env_list, &(*node)->exit_status, manager);
 	}
 	return ;
 }
@@ -48,7 +48,7 @@ void	whiling(t_node *node, t_env *env_list, t_MemoryManager *manager)
 		if (!input || is_space1(input) == 1)
 			continue ;
 		add_history(input);
-		process_and_execute_input(input, &node, env_list, manager);
+		process_and_execute_input(input, &node, &env_list, manager);
 	}
 }
 
@@ -65,8 +65,8 @@ int	main(int argc, char **argv, char **env)
 	env_list = (t_env *)gc_malloc(manager, sizeof(t_env));
 	node = (t_node *)gc_malloc(manager, sizeof(t_node));
 	node->exit_status = 0;
-	fill_env_list(manager, env, env_list);
-	increment_shlvl(env_list, manager);
+	fill_env_list(manager, env, &env_list);
+	increment_shlvl(&env_list, manager);
 	whiling(node, env_list, manager);
 	gc_free_all(manager);
 	free(manager);
