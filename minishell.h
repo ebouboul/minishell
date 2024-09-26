@@ -6,7 +6,7 @@
 /*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 03:43:09 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/26 20:38:59 by amousaid         ###   ########.fr       */
+/*   Updated: 2024/09/26 20:49:18 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 
-# define MAX_TOKEN_LENGTH 100
-# define MAX_TOKENS 100
+# define MAX_TOKEN_LENGTH 100000000
+# define MAX_TOKENS 100000000
 
 // tokenizer functions
 t_TokenInfo	*tokenizer(char **inputs, t_MemoryManager *manager);

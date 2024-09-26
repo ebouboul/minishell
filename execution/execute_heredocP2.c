@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_heredocP2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:53 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/25 14:14:55 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/26 21:55:31 by amousaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,7 @@ void	handle_heredoc(t_node *node, t_env **env_list, int *exit_status,
 				temp_file, &context);
 		temp = temp->next;
 	}
-	while (wait(NULL) > 0)
-		;
+	wait_for_children(pdata.last_pid, exit_status);
 	unlink(temp_file);
 	gc_free(gc, temp_file);
 }
