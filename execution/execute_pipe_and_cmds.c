@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 00:39:32 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/25 13:11:59 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/27 21:43:09 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	handle_child_process(t_process_data *proc_data, t_node *current,
 		t_exec_context *ctx)
 {
 	handle_child_io(proc_data, current);
-	execute_single_command(current, ctx->env_list, ctx->exit_status, ctx->gc);
+	execute_single_command(current, ctx, ctx->file);
 	my_exit(*(ctx->exit_status), ctx->gc);
 }
 
@@ -56,19 +56,24 @@ void	handle_parent_io(t_process_data *proc_data, t_node *current, pid_t pid)
 		proc_data->prev_pipe = proc_data->fd[0];
 }
 
-void	handle_pipe_and_multiple_commands(t_node *head, t_exec_context *ctx)
+void	handle_pipe_and_multiple_commands(t_node *head, t_exec_context *ctx,
+		char **files)
 {
 	t_node			*current;
 	t_process_data	proc_data;
+	int				i;
 
 	current = head;
 	proc_data.prev_pipe = dup(STDIN_FILENO);
 	proc_data.last_pid = -1;
+	i = 0;
 	while (current != NULL)
 	{
+		if (is_herefoc1(current))
+			ctx->file = files[i++];
 		setup_pipe(&proc_data);
 		proc_data.pid = fork();
-		if (proc_data.pid == 0 && !is_herefoc1(current))
+		if (proc_data.pid == 0)
 			handle_child_process(&proc_data, current, ctx);
 		else if (proc_data.pid > 0)
 		{

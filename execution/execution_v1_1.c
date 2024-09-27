@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:02:51 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/23 05:17:18 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/27 22:05:40 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,40 +56,29 @@ void	handle_child_process1(t_node *node, t_env **env_list, int *exit_status,
 	}
 }
 
-// void	execute_external_command(t_node *node, t_env **env_list,
-// 		int *exit_status, t_MemoryManager *gc)
-// {
-// 	// pid_t	pid;
-
-// 	// pid = fork();
-// 	// if (pid == -1)
-// 	// {
-// 	// 	perror("fork");
-// 	// 	exit(EXIT_FAILURE);
-// 	// }
-// 	// else if (pid == 0)
-// 	// {
-// 		handle_child_process1(node, env_list, exit_status, gc);
-// 		my_exit(*exit_status, gc);
-// 	// }
-// 	// else
-// 	// 	ft_waitpid(pid, exit_status);
-// }
-
-void	execute_single_command(t_node *node, t_env **env_list, int *exit_status,
-		t_MemoryManager *gc)
+void	execute_single_command(t_node *node, t_exec_context *context,
+		char *files)
 {
 	char	*cmd;
+	int		fd;
 
 	if (node == NULL)
 		return ;
+	if (is_herefoc1(node) && files)
+	{
+		fd = open_temp_file(files, O_RDONLY);
+		dup2(fd, STDIN_FILENO);
+		unlink(files);
+	}
 	cmd = node->command->args[0];
 	if (cmd && is_builtin(cmd))
-		handle_builtin_command(node, env_list, exit_status, gc);
+		handle_builtin_command(node, context->env_list, context->exit_status,
+			context->gc);
 	else
 	{
-		handle_child_process1(node, env_list, exit_status, gc);
-		my_exit(*exit_status, gc);
+		handle_child_process1(node, context->env_list, context->exit_status,
+			context->gc);
+		my_exit(*(context->exit_status), context->gc);
 	}
 }
 

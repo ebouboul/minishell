@@ -6,20 +6,22 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:25 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/25 02:53:17 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/27 21:57:37 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*create_temp_filename(t_MemoryManager *manager)
+char	*create_temp_filename(t_MemoryManager *manager, int intdex)
+
 {
 	char	*tty;
 	char	*base;
 
 	tty = ttyname(STDIN_FILENO);
 	base = "/tmp/minishell_heredoc_";
-	return (ft_strjoin(base, tty + 9, manager));
+	ft_strjoin(base, tty + 9, manager);
+	return (ft_strjoin(base, ft_itoa(intdex, manager), manager));
 }
 
 int	open_temp_file(const char *filename, int flags)
@@ -51,7 +53,7 @@ char	**process_heredoc_input(const char *delimiter, t_MemoryManager *gc)
 	while (1)
 	{
 		line = readline("> ");
-		if (!line || strcmp(line, delimiter) == 0)
+		if (!line || ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
 			break ;

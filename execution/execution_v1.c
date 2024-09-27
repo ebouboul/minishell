@@ -13,45 +13,25 @@
 
 #include "../minishell.h"
 
-void	execute_heredoc(t_node *current, t_env **env_list, int *exit_status,
+char	**execute_heredoc(t_node *current, t_env **env_list, int *exit_status,
 		t_MemoryManager *gc)
 {
-	pid_t	pid;
+	char	**files;
 
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
-	else if (pid == 0)
-	{
-		handle_heredoc(current, env_list, exit_status, gc);
-		my_exit(*exit_status, gc);
-	}
-	else
-		ft_waitpid(pid, exit_status);
+	files = NULL;
+	files = handle_heredoc(current, env_list, exit_status, gc);
+	return (files);
 }
 
 void	exeall(t_node *current, t_exec_context *context)
 {
+	char	**files;
+
+	files = NULL;
 	if (is_heredoc(current))
-	{
-		execute_heredoc(current, context->env_list, context->exit_status,
-			context->gc);
-	}
-	while (current && !is_heredoc(current))
-	{
-		if (current->next)
-		{
-			handle_pipe_and_multiple_commands(current, context);
-			break ;
-		}
-		else
-			execute_single_command(current, context->env_list,
+		files = execute_heredoc(current, context->env_list,
 				context->exit_status, context->gc);
-		current = current->next;
-	}
+	handle_pipe_and_multiple_commands(current, context, files);
 	my_exit(*(context->exit_status), context->gc);
 }
 
@@ -66,6 +46,7 @@ void	execute_cmds(t_node *head, t_env **env_list, int *exit_status,
 	context.env_list = env_list;
 	context.exit_status = exit_status;
 	context.gc = gc;
+	context.file = NULL;
 	sig_ignore();
 	if (is_exe_bult(current, env_list, exit_status, gc))
 		return ;

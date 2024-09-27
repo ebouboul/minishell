@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 03:43:09 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/27 15:00:32 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/27 21:46:03 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,8 +187,8 @@ void		replace_wildcard_in_args(t_node *head, t_MemoryManager *manager);
 char		**resize_args(char **args, int new_size, t_MemoryManager *gc);
 void		shift_args(char **args, int i, int original_size, int num_splits);
 int			is_heredoc(t_node *node);
-void		execute_heredoc(t_node *current, t_env **env_list, int *exit_status,
-				t_MemoryManager *gc);
+char		**execute_heredoc(t_node *current, t_env **env_list,
+				int *exit_status, t_MemoryManager *gc);
 void		execute_piped_commands(t_node *current, t_env **env_list,
 				int *exit_status);
 void		execute_cmds(t_node *head, t_env **env_list, int *exit_status,
@@ -215,8 +215,8 @@ void		handle_builtin_command(t_node *node, t_env **env_list,
 				int *exit_status, t_MemoryManager *gc);
 void		execute_external_command(t_node *node, t_env **env_list,
 				int *exit_status, t_MemoryManager *gc);
-void		execute_single_command(t_node *node, t_env **env_list,
-				int *exit_status, t_MemoryManager *gc);
+void		execute_single_command(t_node *node, t_exec_context *context,
+				char *files);
 char		*find_executable(const char *command, char **paths,
 				t_MemoryManager *gc);
 int			count_env_variables(t_env *env_list);
@@ -236,7 +236,7 @@ void		sig_handler(int signo);
 void		sigoo(t_node *m);
 // heredocP1 functions
 
-char		*create_temp_filename(t_MemoryManager *manager);
+char		*create_temp_filename(t_MemoryManager *manager, int index);
 int			open_temp_file(const char *filename, int flags);
 void		write_to_file(int fd, const char *str);
 char		**process_heredoc_input(const char *delimiter, t_MemoryManager *gc);
@@ -246,7 +246,7 @@ void		handle_single_heredoc(t_redirect *redirect, const char *temp_file,
 
 void		execute_command_with_heredoc(t_node *temp, const char *temp_file,
 				t_exec_context *context);
-void		handle_heredoc(t_node *node, t_env **env_list, int *exit_status,
+char		**handle_heredoc(t_node *node, t_env **env_list, int *exit_status,
 				t_MemoryManager *gc);
 int			handle_piping_and_forking(t_node *node, t_process_data *pdata,
 				char *temp_file, t_exec_context *context);
@@ -278,8 +278,8 @@ void		handle_child_process(t_process_data *proc_data, t_node *current,
 				t_exec_context *ctx);
 void		handle_parent_io(t_process_data *proc_data, t_node *current,
 				pid_t pid);
-void		handle_pipe_and_multiple_commands(t_node *head,
-				t_exec_context *ctx);
+void		handle_pipe_and_multiple_commands(t_node *head, t_exec_context *ctx,
+				char **files);
 int			is_heredoc(t_node *node);
 int			is_exe_bult(t_node *node, t_env **env_list, int *exit_status,
 				t_MemoryManager *gc);

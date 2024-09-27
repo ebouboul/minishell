@@ -13,7 +13,7 @@ OBGDIR = obj
 # Your SRC files
 SRC = main.c \
 	execution/execute_heredocP1.c execution/execute_heredocP2.c execution/execution_v1.c \
-	execution/execution_v2.c execution/execute_pipe_and_cmds.c execution/execute_redirectionsP1.c execution/exect_herdc.c \
+	execution/execution_v2.c execution/execute_pipe_and_cmds.c execution/execute_redirectionsP1.c \
 	execution/execute_redirectionsP2.c execution/execution_v1_1.c execution/exect.c execution/execution_v1_2.c \
 	bultins/echo.c bultins/cd.c bultins/export.c bultins/unset.c bultins/ft_env.c \
 	bultins/ft_exit.c bultins/builtins.c bultins/export2.c \

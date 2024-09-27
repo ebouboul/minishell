@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 03:06:22 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/25 12:50:41 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/27 21:19:27 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ typedef struct s_exec_context
 	t_MemoryManager		*gc;
 	int					*k;
 	int					q;
+	char				*file;
 }						t_exec_context;
 
 typedef struct s_var

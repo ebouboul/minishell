@@ -6,67 +6,64 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:53 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/27 19:14:35 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/27 21:57:29 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 // NORM=OK!
-void	execute_command_with_heredoc(t_node *temp, const char *temp_file,
-		t_exec_context *context)
+void	unlink_all(char **files, int i)
 {
-	int		fd;
-	pid_t	pid;
+	int	j;
 
-	pid = fork();
-	if (pid == -1)
+	j = 0;
+	while (j <= i)
 	{
-		perror("fork");
-		return ;
+		unlink(files[j]);
+		j++;
 	}
-	else if (pid == 0)
-	{
-		fd = open_temp_file(temp_file, O_RDONLY);
-		if (fd != -1)
-		{
-			if (is_herefoc1(temp) || is_herefoc1(temp->next))
-				dup2(fd, STDIN_FILENO);
-			close(fd);
-			if (temp->command && temp->command->args && temp->command->args[0])
-				execute_single_command(temp, context->env_list,
-					context->exit_status, context->gc);
-		}
-		my_exit(*context->exit_status, context->gc);
-	}
-	else
-		ft_waitpid(pid, context->exit_status);
 }
 
-void	handle_heredoc(t_node *node, t_env **env_list, int *exit_status,
-	t_MemoryManager *gc)
+void	handle_heredoc_redirects(t_node *node, char *temp_file,
+		t_exec_context *context)
 {
-	char			*temp_file;
+	t_redirect	*redirect;
+
+	redirect = node->command->redirect;
+	while (redirect)
+	{
+		if (redirect->flag == 8)
+			handle_single_heredoc(redirect, temp_file, context);
+		redirect = redirect->next;
+	}
+}
+
+char	**handle_heredoc(t_node *node, t_env **env_list, int *exit_status,
+		t_MemoryManager *gc)
+{
+	char			**files;
 	t_node			*temp;
 	t_exec_context	context;
-	t_process_data	pdata;
+	int				i;
 
-	pdata.prev_pipe = -1;
-	temp_file = create_temp_filename(gc);
 	context.env_list = env_list;
 	context.exit_status = exit_status;
 	context.gc = gc;
 	temp = node;
+	i = -1;
+	files = gc_malloc(gc, sizeof(char *) * 100);
 	while (temp)
 	{
-		handle_heredoc_redirects(temp, temp_file, &context);
-		pdata.prev_pipe = handle_piping_and_forking(temp, &pdata,
-				temp_file, &context);
+		if (is_herefoc1(temp))
+		{
+			i++;
+			files[i] = ft_strdup(gc, create_temp_filename(gc, i));
+			handle_heredoc_redirects(temp, files[i], &context);
+		}
 		temp = temp->next;
 	}
-	wait_for_children(pdata.last_pid, exit_status);
-	unlink(temp_file);
-	gc_free(gc, temp_file);
+	return (files);
 }
 
 void	ft_waitpid(pid_t last_pid, int *exit_status)
