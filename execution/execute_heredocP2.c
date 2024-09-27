@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:53 by ansoulai          #+#    #+#             */
-/*   Updated: 2024/09/27 19:13:16 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/27 19:14:35 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	execute_command_with_heredoc(t_node *temp, const char *temp_file,
 		if (fd != -1)
 		{
 			if (is_herefoc1(temp) || is_herefoc1(temp->next))
-			dup2(fd, STDIN_FILENO);
+				dup2(fd, STDIN_FILENO);
 			close(fd);
 			if (temp->command && temp->command->args && temp->command->args[0])
 				execute_single_command(temp, context->env_list,
