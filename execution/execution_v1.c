@@ -89,9 +89,9 @@ int	is_redirection(t_node *node)
 	if (node == NULL || node->command == NULL || node->command->args == NULL
 		|| node->command->args[0] == NULL)
 		return (0);
-	return (strcmp(node->command->args[0], ">") == 0
-		|| strcmp(node->command->args[0], ">>") == 0
-		|| strcmp(node->command->args[0], "<") == 0);
+	return (ft_strcmp(node->command->args[0], ">") == 0
+		|| ft_strcmp(node->command->args[0], ">>") == 0
+		|| ft_strcmp(node->command->args[0], "<") == 0);
 }
 
 int	count_env_variables(t_env *env_list)
