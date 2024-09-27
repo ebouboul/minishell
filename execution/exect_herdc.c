@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exect_herdc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:43:54 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/26 21:56:19 by amousaid         ###   ########.fr       */
+/*   Updated: 2024/09/27 18:46:34 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ void	handle_child_process11(t_node *node, t_process_data *pdata,
 		dup2(pdata->fd[1], STDOUT_FILENO);
 		close(pdata->fd[1]);
 	}
-	if (!is_herefoc1(node))
-		close(2);
 	execute_command_with_heredoc(node, temp_file, context);
 	exit(EXIT_SUCCESS);
 }

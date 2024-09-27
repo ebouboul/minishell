@@ -40,7 +40,7 @@ void	exeall(t_node *current, t_exec_context *context)
 		execute_heredoc(current, context->env_list, context->exit_status,
 			context->gc);
 	}
-	while (current && !is_herefoc1(current))
+	while (current && !is_heredoc(current))
 	{
 		if (current->next)
 		{
