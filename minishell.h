@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amousaid <amousaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 03:43:09 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/26 22:04:11 by amousaid         ###   ########.fr       */
+/*   Updated: 2024/09/27 15:00:32 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 
-# define MAX_TOKEN_LENGTH 2147483647
-# define MAX_TOKENS 2147483647
+# define MAX_TOKEN_LENGTH 2147
+# define MAX_TOKENS 2147
 
 // tokenizer functions
 t_TokenInfo	*tokenizer(char **inputs, t_MemoryManager *manager);
