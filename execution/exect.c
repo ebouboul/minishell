@@ -6,7 +6,7 @@
 /*   By: ebouboul <ebouboul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 01:34:29 by ebouboul          #+#    #+#             */
-/*   Updated: 2024/09/22 22:28:27 by ebouboul         ###   ########.fr       */
+/*   Updated: 2024/09/27 19:05:06 by ebouboul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ int	is_heredoc(t_node *node)
 	t_redirect	*redirect;
 	t_node		*current;
 
+	if (!node)
+		return (0);
 	current = node;
 	while (current)
 	{
@@ -55,7 +57,8 @@ int	is_heredoc(t_node *node)
 int	is_herefoc1(t_node *node)
 {
 	t_redirect	*redirect;
-
+	if (!node)
+		return (0);
 	redirect = node->command->redirect;
 	while (redirect)
 	{
